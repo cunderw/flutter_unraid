@@ -8,7 +8,6 @@ import 'package:flutter_unraid/utils/log.dart';
 class VmCubit extends Cubit<VmState> {
   static const _tag = 'VmCubit';
   final VmRepository _repository;
-
   VmCubit(this._repository) : super(const VmInitial());
 
   Future<void> load() async {
@@ -44,7 +43,14 @@ class VmCubit extends Cubit<VmState> {
         stackTrace: st,
       );
       Log.e('Failed to $action VM $id', tag: _tag, error: e, stackTrace: st);
-      emit(VmError(error.message));
+      final current = state;
+      if (current is VmLoaded) {
+        emit(VmActionError(vms: current.vms, message: error.message));
+      } else if (current is VmActionError) {
+        emit(VmActionError(vms: current.vms, message: error.message));
+      } else {
+        emit(VmError(error.message));
+      }
     }
   }
 

@@ -5,10 +5,12 @@ import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/ui/widgets/cards/info_card.dart';
+import 'package:flutter_unraid/ui/widgets/cards/stat_card.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/key_value_row.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/usage_bar.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_display.dart';
+import 'package:flutter_unraid/ui/widgets/feedback/error_snackbar.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
 import 'package:flutter_unraid/ui/widgets/layout/section_header.dart';
 import 'package:flutter_unraid/utils/formatters.dart';
@@ -18,23 +20,86 @@ class MainTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SystemCubit, SystemState>(
-      builder: (context, state) => switch (state) {
-        SystemInitial() || SystemLoading() => const LoadingIndicator(
-          message: 'Loading system info...',
-        ),
-        SystemError(:final message) => ErrorDisplay(
-          message: message,
-          onRetry: () => context.read<SystemCubit>().refresh(),
-        ),
-        SystemLoaded(:final systemInfo, :final memory, :final arrayData) =>
-          RefreshIndicator(
+    return BlocListener<SystemCubit, SystemState>(
+      listenWhen: (_, current) => current is SystemActionError,
+      listener: (context, state) {
+        if (state is SystemActionError) {
+          showErrorSnackbar(context, message: state.message);
+        }
+      },
+      child: BlocBuilder<SystemCubit, SystemState>(
+        buildWhen: (_, current) => current is! SystemActionError,
+        builder: (context, state) => switch (state) {
+          SystemInitial() || SystemLoading() => const LoadingIndicator(
+            message: 'Loading system info...',
+          ),
+          SystemError(:final message) => ErrorDisplay(
+            message: message,
+            onRetry: () => context.read<SystemCubit>().refresh(),
+          ),
+          SystemLoaded(:final systemInfo, :final memory, :final arrayData) ||
+          SystemActionError(
+            :final systemInfo,
+            :final memory,
+            :final arrayData,
+          ) => RefreshIndicator(
             onRefresh: () => context.read<SystemCubit>().refresh(),
             color: AppColors.unraidOrange,
             child: ListView(
               padding: const EdgeInsets.only(bottom: 16),
               children: [
-                // ── System Overview ──────────────────────
+                // ── Quick Stats ──────────────────────────
+                const SectionHeader(title: 'Overview'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: StatCard(
+                          label: 'Uptime',
+                          value: Formatters.formatUptime(systemInfo.os?.uptime),
+                          icon: Icons.timer_outlined,
+                        ),
+                      ),
+                      Expanded(
+                        child: StatCard(
+                          label: 'Memory',
+                          value: memory?.percentTotal != null
+                              ? '${memory!.percentTotal!.toStringAsFixed(1)}%'
+                              : '--',
+                          icon: Icons.memory,
+                          valueColor: (memory?.percentTotal ?? 0) > 80
+                              ? AppColors.warning
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: StatCard(
+                          label: 'Array',
+                          value: arrayData.state.toUpperCase(),
+                          icon: Icons.storage,
+                          valueColor: AppColors.forArrayState(arrayData.state),
+                        ),
+                      ),
+                      Expanded(
+                        child: StatCard(
+                          label: 'Disks',
+                          value: '${arrayData.disks.length}',
+                          icon: Icons.disc_full_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ── System Detail ────────────────────────
                 const SectionHeader(title: 'System'),
                 InfoCard(
                   title: 'Server Info',
@@ -156,7 +221,8 @@ class MainTab extends StatelessWidget {
               ],
             ),
           ),
-      },
+        },
+      ),
     );
   }
 }

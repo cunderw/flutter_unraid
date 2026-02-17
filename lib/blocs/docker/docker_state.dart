@@ -37,3 +37,18 @@ final class DockerError extends DockerState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when an action (start/stop/etc.) fails but the loaded data
+/// should remain visible. The UI should show a snackbar instead of
+/// replacing the view.
+final class DockerActionError extends DockerState {
+  final List<DockerContainer> containers;
+  final String message;
+
+  const DockerActionError({required this.containers, required this.message});
+
+  int get running => containers.where((c) => c.isRunning).length;
+
+  @override
+  List<Object?> get props => [containers, message];
+}

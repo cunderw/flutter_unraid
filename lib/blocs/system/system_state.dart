@@ -41,3 +41,23 @@ final class SystemError extends SystemState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when an action (set array state, etc.) fails but the loaded data
+/// should remain visible. The UI should show a snackbar instead of
+/// replacing the view.
+final class SystemActionError extends SystemState {
+  final SystemInfo systemInfo;
+  final MemoryUtilization? memory;
+  final ArrayData arrayData;
+  final String message;
+
+  const SystemActionError({
+    required this.systemInfo,
+    required this.memory,
+    required this.arrayData,
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [systemInfo, memory, arrayData, message];
+}

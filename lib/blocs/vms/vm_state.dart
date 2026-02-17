@@ -37,3 +37,18 @@ final class VmError extends VmState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when an action (start/stop/etc.) fails but the loaded data
+/// should remain visible. The UI should show a snackbar instead of
+/// replacing the view.
+final class VmActionError extends VmState {
+  final List<VmDomain> vms;
+  final String message;
+
+  const VmActionError({required this.vms, required this.message});
+
+  int get running => vms.where((v) => v.isRunning).length;
+
+  @override
+  List<Object?> get props => [vms, message];
+}

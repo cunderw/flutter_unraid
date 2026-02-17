@@ -10,7 +10,6 @@ import 'package:flutter_unraid/utils/log.dart';
 class SystemCubit extends Cubit<SystemState> {
   static const _tag = 'SystemCubit';
   final SystemRepository _repository;
-
   SystemCubit(this._repository) : super(const SystemInitial());
 
   Future<void> load() async {
@@ -53,7 +52,28 @@ class SystemCubit extends Cubit<SystemState> {
         stackTrace: st,
       );
       Log.e('Failed to set array state', tag: _tag, error: e, stackTrace: st);
-      emit(SystemError(error.message));
+      final current = state;
+      if (current is SystemLoaded) {
+        emit(
+          SystemActionError(
+            systemInfo: current.systemInfo,
+            memory: current.memory,
+            arrayData: current.arrayData,
+            message: error.message,
+          ),
+        );
+      } else if (current is SystemActionError) {
+        emit(
+          SystemActionError(
+            systemInfo: current.systemInfo,
+            memory: current.memory,
+            arrayData: current.arrayData,
+            message: error.message,
+          ),
+        );
+      } else {
+        emit(SystemError(error.message));
+      }
     }
   }
 }

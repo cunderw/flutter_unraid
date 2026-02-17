@@ -8,7 +8,6 @@ import 'package:flutter_unraid/utils/log.dart';
 class DockerCubit extends Cubit<DockerState> {
   static const _tag = 'DockerCubit';
   final DockerRepository _repository;
-
   DockerCubit(this._repository) : super(const DockerInitial());
 
   Future<void> load() async {
@@ -34,18 +33,7 @@ class DockerCubit extends Cubit<DockerState> {
       await _repository.startContainer(id);
       await load();
     } catch (e, st) {
-      final error = AppException.from(
-        e,
-        operation: 'starting container',
-        stackTrace: st,
-      );
-      Log.e(
-        'Failed to start container $id',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
-      emit(DockerError(error.message));
+      _emitActionError(e, st, 'starting container', id: id);
     }
   }
 
@@ -54,18 +42,7 @@ class DockerCubit extends Cubit<DockerState> {
       await _repository.stopContainer(id);
       await load();
     } catch (e, st) {
-      final error = AppException.from(
-        e,
-        operation: 'stopping container',
-        stackTrace: st,
-      );
-      Log.e(
-        'Failed to stop container $id',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
-      emit(DockerError(error.message));
+      _emitActionError(e, st, 'stopping container', id: id);
     }
   }
 
@@ -74,18 +51,7 @@ class DockerCubit extends Cubit<DockerState> {
       await _repository.pauseContainer(id);
       await load();
     } catch (e, st) {
-      final error = AppException.from(
-        e,
-        operation: 'pausing container',
-        stackTrace: st,
-      );
-      Log.e(
-        'Failed to pause container $id',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
-      emit(DockerError(error.message));
+      _emitActionError(e, st, 'pausing container', id: id);
     }
   }
 
@@ -94,18 +60,7 @@ class DockerCubit extends Cubit<DockerState> {
       await _repository.unpauseContainer(id);
       await load();
     } catch (e, st) {
-      final error = AppException.from(
-        e,
-        operation: 'unpausing container',
-        stackTrace: st,
-      );
-      Log.e(
-        'Failed to unpause container $id',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
-      emit(DockerError(error.message));
+      _emitActionError(e, st, 'unpausing container', id: id);
     }
   }
 
@@ -114,17 +69,35 @@ class DockerCubit extends Cubit<DockerState> {
       await _repository.removeContainer(id, withImage: withImage);
       await load();
     } catch (e, st) {
-      final error = AppException.from(
-        e,
-        operation: 'removing container',
-        stackTrace: st,
+      _emitActionError(e, st, 'removing container', id: id);
+    }
+  }
+
+  void _emitActionError(
+    Object e,
+    StackTrace st,
+    String operation, {
+    String? id,
+  }) {
+    final error = AppException.from(e, operation: operation, stackTrace: st);
+    final label = id != null ? '$operation $id' : operation;
+    Log.e('Failed $label', tag: _tag, error: e, stackTrace: st);
+    final current = state;
+    if (current is DockerLoaded) {
+      emit(
+        DockerActionError(
+          containers: current.containers,
+          message: error.message,
+        ),
       );
-      Log.e(
-        'Failed to remove container $id',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
+    } else if (current is DockerActionError) {
+      emit(
+        DockerActionError(
+          containers: current.containers,
+          message: error.message,
+        ),
       );
+    } else {
       emit(DockerError(error.message));
     }
   }

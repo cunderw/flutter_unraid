@@ -5,10 +5,12 @@ import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
+import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/confirmation_dialog.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/empty_state.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_display.dart';
+import 'package:flutter_unraid/ui/widgets/feedback/error_snackbar.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
 import 'package:flutter_unraid/ui/widgets/layout/section_header.dart';
 
@@ -17,40 +19,63 @@ class VmsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VmCubit, VmState>(
-      builder: (context, state) => switch (state) {
-        VmInitial() || VmLoading() => const LoadingIndicator(
-          message: 'Loading virtual machines...',
-        ),
-        VmError(:final message) => ErrorDisplay(
-          message: message,
-          onRetry: () => context.read<VmCubit>().refresh(),
-        ),
-        VmLoaded(:final vms) =>
-          vms.isEmpty
-              ? const EmptyState(
-                  message: 'No virtual machines found.',
-                  icon: Icons.computer_outlined,
-                )
-              : RefreshIndicator(
-                  onRefresh: () => context.read<VmCubit>().refresh(),
-                  color: AppColors.unraidOrange,
-                  child: ListView(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    children: [
-                      SectionHeader(
-                        title: 'Virtual Machines',
-                        trailing: Text(
-                          '${(state).running} running / ${vms.length} total',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: AppColors.textSecondary),
-                        ),
-                      ),
-                      ...vms.map((vm) => _VmTile(vm: vm)),
-                    ],
+    return BlocListener<VmCubit, VmState>(
+      listenWhen: (_, current) => current is VmActionError,
+      listener: (context, state) {
+        if (state is VmActionError) {
+          showErrorSnackbar(context, message: state.message);
+        }
+      },
+      child: BlocBuilder<VmCubit, VmState>(
+        buildWhen: (_, current) => current is! VmActionError,
+        builder: (context, state) {
+          final vms = switch (state) {
+            VmLoaded(:final vms) => vms,
+            VmActionError(:final vms) => vms,
+            _ => null,
+          };
+
+          if (state is VmInitial || state is VmLoading) {
+            return const LoadingIndicator(
+              message: 'Loading virtual machines...',
+            );
+          }
+
+          if (state is VmError) {
+            return ErrorDisplay(
+              message: state.message,
+              onRetry: () => context.read<VmCubit>().refresh(),
+            );
+          }
+
+          if (vms == null || vms.isEmpty) {
+            return const EmptyState(
+              message: 'No virtual machines found.',
+              icon: Icons.computer_outlined,
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: () => context.read<VmCubit>().refresh(),
+            color: AppColors.unraidOrange,
+            child: ListView(
+              padding: const EdgeInsets.only(bottom: 16),
+              children: [
+                SectionHeader(
+                  title: 'Virtual Machines',
+                  trailing: Text(
+                    '${vms.where((v) => v.isRunning).length} running / ${vms.length} total',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
-      },
+                ...vms.map((vm) => _VmTile(vm: vm)),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -62,89 +87,112 @@ class _VmTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(Icons.computer, color: AppColors.unraidOrange),
+    return ActionCard(
+      title: vm.displayName,
+      leading: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(8),
         ),
-        title: Text(
-          vm.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+        child: const Icon(
+          Icons.computer,
+          color: AppColors.unraidOrange,
+          size: 18,
         ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 6),
-          child: StatusBadge.forVmState(vm.state),
-        ),
-        trailing: _buildActions(context),
+      ),
+      actions: _buildActions(context),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 2),
+        child: StatusBadge.forVmState(vm.state),
       ),
     );
   }
 
-  Widget _buildActions(BuildContext context) {
+  List<Widget> _buildActions(BuildContext context) {
     final cubit = context.read<VmCubit>();
-    return PopupMenuButton<String>(
-      onSelected: (action) => _handleAction(context, cubit, action),
-      itemBuilder: (context) => [
-        if (vm.isStopped)
-          const PopupMenuItem(value: 'start', child: Text('Start')),
-        if (vm.isRunning) ...[
-          const PopupMenuItem(value: 'stop', child: Text('Shutdown')),
-          const PopupMenuItem(value: 'pause', child: Text('Pause')),
-          const PopupMenuItem(value: 'reboot', child: Text('Reboot')),
-        ],
-        if (vm.isPaused)
-          const PopupMenuItem(value: 'resume', child: Text('Resume')),
-        if (vm.isRunning || vm.isPaused) ...[
-          const PopupMenuDivider(),
-          const PopupMenuItem(
-            value: 'forceStop',
-            child: Text(
-              'Force Stop',
-              style: TextStyle(color: AppColors.stopped),
-            ),
-          ),
-        ],
+    return [
+      if (vm.isStopped)
+        _actionButton(
+          context,
+          icon: Icons.play_arrow,
+          label: 'Start',
+          color: AppColors.running,
+          onPressed: () => cubit.startVm(vm.id),
+        ),
+      if (vm.isRunning) ...[
+        _actionButton(
+          context,
+          icon: Icons.stop,
+          label: 'Stop',
+          color: AppColors.stopped,
+          onPressed: () => cubit.stopVm(vm.id),
+        ),
+        _actionButton(
+          context,
+          icon: Icons.pause,
+          label: 'Pause',
+          color: AppColors.paused,
+          onPressed: () => cubit.pauseVm(vm.id),
+        ),
+        _actionButton(
+          context,
+          icon: Icons.restart_alt,
+          label: 'Reboot',
+          color: AppColors.textSecondary,
+          onPressed: () => cubit.rebootVm(vm.id),
+        ),
       ],
-    );
+      if (vm.isPaused)
+        _actionButton(
+          context,
+          icon: Icons.play_arrow,
+          label: 'Resume',
+          color: AppColors.running,
+          onPressed: () => cubit.resumeVm(vm.id),
+        ),
+      if (vm.isRunning || vm.isPaused)
+        _actionButton(
+          context,
+          icon: Icons.dangerous_outlined,
+          label: 'Force Stop',
+          color: AppColors.stopped,
+          onPressed: () => _confirmForceStop(context, cubit),
+        ),
+    ];
   }
 
-  Future<void> _handleAction(
-    BuildContext context,
-    VmCubit cubit,
-    String action,
-  ) async {
-    switch (action) {
-      case 'start':
-        await cubit.startVm(vm.id);
-      case 'stop':
-        await cubit.stopVm(vm.id);
-      case 'pause':
-        await cubit.pauseVm(vm.id);
-      case 'resume':
-        await cubit.resumeVm(vm.id);
-      case 'reboot':
-        await cubit.rebootVm(vm.id);
-      case 'forceStop':
-        if (!context.mounted) return;
-        final confirmed = await showConfirmationDialog(
-          context,
-          title: 'Force Stop VM',
-          message:
-              'Are you sure you want to force stop "${vm.displayName}"? Unsaved data may be lost.',
-          confirmLabel: 'Force Stop',
-          isDestructive: true,
-        );
-        if (confirmed) {
-          await cubit.forceStopVm(vm.id);
-        }
+  Future<void> _confirmForceStop(BuildContext context, VmCubit cubit) async {
+    final confirmed = await showConfirmationDialog(
+      context,
+      title: 'Force Stop VM',
+      message:
+          'Are you sure you want to force stop "${vm.displayName}"? Unsaved data may be lost.',
+      confirmLabel: 'Force Stop',
+      isDestructive: true,
+    );
+    if (confirmed) {
+      await cubit.forceStopVm(vm.id);
     }
+  }
+
+  Widget _actionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 16, color: color),
+      label: Text(label, style: TextStyle(color: color, fontSize: 12)),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+    );
   }
 }
