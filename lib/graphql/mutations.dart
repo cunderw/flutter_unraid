@@ -70,23 +70,10 @@ class Mutations {
     }
   ''';
 
-  static const String pauseContainer = r'''
-    mutation PauseContainer($id: PrefixedID!) {
+  static const String restartContainer = r'''
+    mutation RestartContainer($id: PrefixedID!) {
       docker {
-        pause(id: $id) {
-          id
-          names
-          state
-          status
-        }
-      }
-    }
-  ''';
-
-  static const String unpauseContainer = r'''
-    mutation UnpauseContainer($id: PrefixedID!) {
-      docker {
-        unpause(id: $id) {
+        restart(id: $id) {
           id
           names
           state

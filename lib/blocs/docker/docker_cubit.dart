@@ -46,21 +46,12 @@ class DockerCubit extends Cubit<DockerState> {
     }
   }
 
-  Future<void> pauseContainer(String id) async {
+  Future<void> restartContainer(String id) async {
     try {
-      await _repository.pauseContainer(id);
+      await _repository.restartContainer(id);
       await load();
     } catch (e, st) {
-      _emitActionError(e, st, 'pausing container', id: id);
-    }
-  }
-
-  Future<void> unpauseContainer(String id) async {
-    try {
-      await _repository.unpauseContainer(id);
-      await load();
-    } catch (e, st) {
-      _emitActionError(e, st, 'unpausing container', id: id);
+      _emitActionError(e, st, 'restarting container', id: id);
     }
   }
 

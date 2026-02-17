@@ -47,11 +47,8 @@ class DockerRepository {
   Future<void> stopContainer(String id) =>
       _mutateContainer(id, 'Stopping', Mutations.stopContainer);
 
-  Future<void> pauseContainer(String id) =>
-      _mutateContainer(id, 'Pausing', Mutations.pauseContainer);
-
-  Future<void> unpauseContainer(String id) =>
-      _mutateContainer(id, 'Unpausing', Mutations.unpauseContainer);
+  Future<void> restartContainer(String id) =>
+      _mutateContainer(id, 'Restarting', Mutations.restartContainer);
 
   Future<void> removeContainer(String id, {bool withImage = false}) async {
     Log.i('Removing container $id (withImage: $withImage)', tag: _tag);

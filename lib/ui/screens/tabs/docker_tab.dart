@@ -140,18 +140,10 @@ class _ContainerTile extends StatelessWidget {
       if (container.isRunning)
         _actionButton(
           context,
-          icon: Icons.pause,
-          label: 'Pause',
-          color: AppColors.paused,
-          onPressed: () => cubit.pauseContainer(container.id),
-        ),
-      if (container.isPaused)
-        _actionButton(
-          context,
-          icon: Icons.play_arrow,
-          label: 'Resume',
-          color: AppColors.running,
-          onPressed: () => cubit.unpauseContainer(container.id),
+          icon: Icons.restart_alt,
+          label: 'Restart',
+          color: AppColors.unraidOrange,
+          onPressed: () => cubit.restartContainer(container.id),
         ),
     ];
   }
