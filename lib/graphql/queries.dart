@@ -1,0 +1,176 @@
+/// All GraphQL query strings used by the app.
+///
+/// Using the raw `graphql` package with manual queries.
+/// These can be replaced with Ferry-generated operations once the
+/// Unraid schema is obtained from Apollo Studio.
+class Queries {
+  Queries._();
+
+  static const String systemInfo = r'''
+    query SystemInfo {
+      info {
+        os {
+          platform
+          distro
+          release
+          uptime
+        }
+        cpu {
+          manufacturer
+          brand
+          cores
+          threads
+        }
+      }
+      metrics {
+        memory {
+          total
+          free
+          used
+          active
+          available
+          percentTotal
+        }
+      }
+    }
+  ''';
+
+  static const String arrayStatus = r'''
+    query ArrayStatus {
+      array {
+        state
+        capacity {
+          kilobytes {
+            free
+            used
+            total
+          }
+          disks {
+            free
+            used
+            total
+          }
+        }
+        disks {
+          id
+          name
+          device
+          size
+          status
+          temp
+          fsFree
+          fsUsed
+          fsSize
+          type
+          color
+          fsType
+          numReads
+          numWrites
+          numErrors
+        }
+        parities {
+          id
+          name
+          size
+          status
+          temp
+          type
+        }
+        caches {
+          id
+          name
+          size
+          status
+          temp
+          fsFree
+          fsUsed
+          fsSize
+          type
+        }
+      }
+    }
+  ''';
+
+  static const String dockerContainers = r'''
+    query DockerContainers {
+      docker {
+        containers {
+          id
+          names
+          image
+          imageId
+          state
+          status
+          autoStart
+          ports {
+            ip
+            privatePort
+            publicPort
+            type
+          }
+
+        }
+      }
+    }
+  ''';
+
+  static const String dockerContainerLogs = r'''
+    query DockerContainerLogs($id: PrefixedID!, $tail: Int) {
+      docker {
+        logs(id: $id, tail: $tail) {
+          containerId
+          lines {
+            timestamp
+            message
+          }
+          cursor
+        }
+      }
+    }
+  ''';
+
+  static const String virtualMachines = r'''
+    query VirtualMachines {
+      vms {
+        domains {
+          id
+          name
+          state
+        }
+      }
+    }
+  ''';
+
+  static const String shares = r'''
+    query Shares {
+      shares {
+        id
+        name
+        free
+        used
+        size
+        comment
+        cache
+        include
+        exclude
+        allocator
+        splitLevel
+        floor
+        cow
+        color
+        luksStatus
+      }
+    }
+  ''';
+
+  /// Lightweight query used to test API connectivity.
+  static const String testConnection = r'''
+    query TestConnection {
+      info {
+        os {
+          platform
+        }
+      }
+    }
+  ''';
+}
