@@ -7,7 +7,7 @@ import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
 import 'package:flutter_unraid/graphql/client.dart';
-import 'package:flutter_unraid/ui/screens/home_screen.dart';
+import 'package:flutter_unraid/ui/screens/home/home_screen.dart';
 import 'package:flutter_unraid/ui/screens/login_screen.dart';
 
 class UnraidApp extends StatelessWidget {

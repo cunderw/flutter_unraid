@@ -108,7 +108,6 @@ class Queries {
             publicPort
             type
           }
-
         }
       }
     }

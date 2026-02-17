@@ -5,6 +5,7 @@ import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/container_detail_screen.dart';
 import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/empty_state.dart';
@@ -86,6 +87,16 @@ class _ContainerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionCard(
       title: container.displayName,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => BlocProvider.value(
+              value: context.read<DockerCubit>(),
+              child: ContainerDetailScreen(containerId: container.id),
+            ),
+          ),
+        );
+      },
       leading: Container(
         width: 32,
         height: 32,

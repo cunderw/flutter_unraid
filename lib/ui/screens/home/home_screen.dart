@@ -12,10 +12,10 @@ import 'package:flutter_unraid/data/repositories/share_repository.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/data/repositories/vm_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
-import 'package:flutter_unraid/ui/screens/tabs/main_tab.dart';
-import 'package:flutter_unraid/ui/screens/tabs/docker_tab.dart';
-import 'package:flutter_unraid/ui/screens/tabs/vms_tab.dart';
-import 'package:flutter_unraid/ui/screens/tabs/shares_tab.dart';
+import 'package:flutter_unraid/ui/screens/home/tabs/main_tab.dart';
+import 'package:flutter_unraid/ui/screens/home/tabs/docker_tab.dart';
+import 'package:flutter_unraid/ui/screens/home/tabs/vms_tab.dart';
+import 'package:flutter_unraid/ui/screens/home/tabs/shares_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

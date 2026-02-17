@@ -62,7 +62,10 @@ class DockerRepository {
     Log.i('Container $id removed', tag: _tag);
   }
 
-  Future<String> getContainerLogs(String id, {int tail = 100}) async {
+  Future<List<Map<String, dynamic>>> getContainerLogs(
+    String id, {
+    int tail = 100,
+  }) async {
     Log.d('Fetching logs for container $id (tail: $tail)', tag: _tag);
     final result = await _clientManager.client.query(
       QueryOptions(
@@ -73,6 +76,8 @@ class DockerRepository {
     );
     if (result.hasException) throw result.exception!;
     Log.d('Fetched logs for container $id', tag: _tag);
-    return result.data!['docker']['container']['logs'] as String? ?? '';
+    final logs = result.data!['docker']['logs'] as Map<String, dynamic>?;
+    final lines = logs?['lines'] as List<dynamic>? ?? [];
+    return lines.cast<Map<String, dynamic>>();
   }
 }
