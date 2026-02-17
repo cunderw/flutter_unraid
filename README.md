@@ -1,16 +1,30 @@
-# flutter_unraid
+# Flutter Unraid
 
-A new Flutter project.
+A Flutter app for managing an [Unraid](https://unraid.net/) server via its GraphQL API — monitor system health, control Docker containers, manage VMs, and browse shares, all from your phone.
+
+## About This Project
+
+I'm a senior Flutter developer who loves homelabbing and automation. This project is an experiment to see how well I can build a fully functional app **without writing any of the code manually** — using AI agents to do all the heavy lifting. Every line of code in this repo was generated through AI-assisted development.
+
+## Features
+
+- **System Dashboard** — Array status, memory usage, system info at a glance
+- **Docker Management** — Start, stop, restart containers; view config, ports, and logs
+- **VM Control** — Start, stop, pause, resume, reboot virtual machines
+- **Share Browser** — View shares with usage stats and configuration details
+- **Secure Connection** — API key authentication with secure local storage
+
+## Tech Stack
+
+- **Flutter** (Dart SDK ^3.10.7)
+- **BLoC / Cubit** for state management
+- **GraphQL** (`graphql` package) for API communication
+- **GetIt** for dependency injection
+- **Flutter Secure Storage** for credential persistence
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repo
+2. Run `flutter pub get`
+3. Launch with `flutter run`
+4. Enter your Unraid server URL and API key to connect
