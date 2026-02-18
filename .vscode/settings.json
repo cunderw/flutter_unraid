@@ -1,0 +1,27 @@
+{
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": ".github/copilot-instructions.md"
+    },
+    {
+      "file": ".github/instructions/state-classes.instructions.md",
+      "applyTo": "**/*_state.dart"
+    },
+    {
+      "file": ".github/instructions/cubit-classes.instructions.md",
+      "applyTo": "**/*_cubit.dart"
+    },
+    {
+      "file": ".github/instructions/test-files.instructions.md",
+      "applyTo": "**/*_test.dart"
+    },
+    {
+      "file": ".github/instructions/model-classes.instructions.md",
+      "applyTo": "**/models/*.dart"
+    },
+    {
+      "file": ".github/instructions/repository-classes.instructions.md",
+      "applyTo": "**/repositories/*.dart"
+    }
+  ]
+}
