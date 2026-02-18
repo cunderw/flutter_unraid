@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_unraid/blocs/container_logs/container_logs_cubit.dart';
-import 'package:flutter_unraid/blocs/container_logs/container_logs_state.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/cubit/container_logs_cubit.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/cubit/container_logs_state.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/inline_error.dart';
