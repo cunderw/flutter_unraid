@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill out the sections below so we can reproduce and fix it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect to happen?
+      placeholder: "When I navigate to the Docker screen, the container list fails to load and shows a blank screen."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to trigger the bug.
+      placeholder: |
+        1. Open the app
+        2. Navigate to Docker screen
+        3. Observe blank screen
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error output
+      description: Paste the full error message, stack trace, or analyzer output.
+      render: text
+    validations:
+      required: false
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Suspected architecture layer
+      description: Which layer do you think is affected?
+      options:
+        - Unknown
+        - UI (Screens/Widgets)
+        - Cubit / State
+        - Repository
+        - GraphQL query/mutation
+        - Model (fromJson parsing)
+        - DI (GetIt registration)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature area
+      description: Which feature area is affected?
+      options:
+        - Docker
+        - VMs
+        - Shares
+        - System
+        - Auth / Login
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Flutter version, device/emulator, Unraid server version.
+      placeholder: |
+        Flutter: 3.x.x
+        Device: iOS Simulator / Android Emulator / Physical device
+        Unraid: 7.x.x
+    validations:
+      required: false

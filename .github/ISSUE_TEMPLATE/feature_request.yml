@@ -1,0 +1,61 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the feature you'd like to see added to the Flutter Unraid app.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should this feature do?
+      placeholder: "Add the ability to view and manage Unraid notifications from the app."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? What problem does it solve?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature area
+      description: Which area of the app does this relate to?
+      options:
+        - Docker
+        - VMs
+        - Shares
+        - System
+        - Auth / Login
+        - New feature area
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: How large is this feature?
+      options:
+        - Small (single screen or minor change)
+        - Medium (new cubit/repository, touches multiple layers)
+        - Large (new feature area across all architecture layers)
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Mockups, API references, links, or anything else that helps describe the feature.
+    validations:
+      required: false
