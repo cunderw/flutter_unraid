@@ -1,4 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql/client.dart';
 import 'package:mocktail/mocktail.dart';
@@ -53,3 +55,21 @@ class MockSharesCubit extends MockCubit<SharesState> implements SharesCubit {}
 
 class MockContainerLogsCubit extends MockCubit<ContainerLogsState>
     implements ContainerLogsCubit {}
+
+/// Helper class to create a BlocProvider with a mocked cubit for testing.
+class MockBlocProvider<C extends StateStreamableSource<S>, S>
+    extends BlocProvider<C> {
+  MockBlocProvider({
+    required C cubit,
+    required S state,
+    super.key,
+  }) : super.value(
+          value: cubit,
+          child: Builder(
+            builder: (context) {
+              when(() => cubit.state).thenReturn(state);
+              return const SizedBox.shrink();
+            },
+          ),
+        );
+}
