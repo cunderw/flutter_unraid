@@ -208,7 +208,7 @@ Map<String, dynamic> makeSharesResponseJson({int count = 2}) {
 Map<String, dynamic> makeContainerLogsResponseJson({int lineCount = 3}) {
   return {
     'docker': {
-      'logs': {
+      'containerLogs': {
         'lines': List.generate(
           lineCount,
           (i) => {

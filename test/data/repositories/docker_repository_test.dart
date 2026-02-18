@@ -224,7 +224,7 @@ void main() {
 
       test('returns empty list when logs is null', () async {
         when(() => mockClient.query(any())).thenAnswer(
-          (_) async => makeQueryResult({'docker': {'logs': null}}),
+          (_) async => makeQueryResult({'docker': {'containerLogs': null}}),
         );
 
         final result = await repo.getContainerLogs('container-1');

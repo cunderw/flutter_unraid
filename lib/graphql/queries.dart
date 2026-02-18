@@ -116,7 +116,7 @@ class Queries {
   static const String dockerContainerLogs = r'''
     query DockerContainerLogs($id: PrefixedID!, $tail: Int) {
       docker {
-        logs(id: $id, tail: $tail) {
+        containerLogs(id: $id, tail: $tail) {
           containerId
           lines {
             timestamp
