@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/blocs/auth/auth_state.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/ui/widgets/inputs/app_text_field.dart';
 
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxxl),
             child: Form(
               key: _formKey,
               child: Column(
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     size: 72,
                     color: AppColors.unraidOrange,
                   ),
-                  const SizedBox(height: 16),
+                  AppSpacing.verticalLg,
                   Text(
                     'Unraid Manager',
                     textAlign: TextAlign.center,
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  AppSpacing.verticalSm,
                   Text(
                     'Connect to your Unraid server',
                     textAlign: TextAlign.center,
@@ -71,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  AppSpacing.verticalXxxxl,
 
                   // Server URL
                   AppTextField(
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 16),
+                  AppSpacing.verticalLg,
 
                   // API Key
                   AppTextField(
@@ -119,14 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 8),
+                  AppSpacing.verticalSm,
                   Text(
                     'Find your API key in Unraid Settings → Management Access → API.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  AppSpacing.verticalXxxl,
 
                   // Login Button / State
                   BlocConsumer<AuthCubit, AuthState>(
@@ -155,9 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           if (state is AuthError) ...[
-                            const SizedBox(height: 16),
+                            AppSpacing.verticalLg,
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(AppSpacing.md),
                               decoration: BoxDecoration(
                                 color: AppColors.stopped.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
@@ -174,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: AppColors.stopped,
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 8),
+                                  AppSpacing.horizontalSm,
                                   Expanded(
                                     child: Text(
                                       state.message,

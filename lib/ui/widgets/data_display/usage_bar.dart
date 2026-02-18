@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Horizontal bar showing usage percentage with label.
@@ -34,7 +35,7 @@ class UsageBar extends StatelessWidget {
       children: [
         if (label != null || detail != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

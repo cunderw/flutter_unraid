@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Card with primary and optional secondary actions.
@@ -26,7 +27,7 @@ class ActionCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -36,7 +37,7 @@ class ActionCard extends StatelessWidget {
                   children: [
                     if (leading != null) ...[
                       leading!,
-                      const SizedBox(width: 8),
+                      AppSpacing.horizontalSm,
                     ],
                     Expanded(
                       child: Text(
@@ -50,15 +51,15 @@ class ActionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              if (title != null) const SizedBox(height: 12),
+              if (title != null) AppSpacing.verticalMd,
               child,
               if (actions != null && actions!.isNotEmpty) ...[
-                const SizedBox(height: 12),
+                AppSpacing.verticalMd,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children:
                       actions!
-                          .expand((a) => [a, const SizedBox(width: 8)])
+                          .expand((a) => [a, AppSpacing.horizontalSm])
                           .toList()
                         ..removeLast(),
                 ),

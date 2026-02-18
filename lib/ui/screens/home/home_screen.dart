@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Icon(Icons.logout, size: 20),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppSpacing.sm),
                       Text('Disconnect'),
                     ],
                   ),

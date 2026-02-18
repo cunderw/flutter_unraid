@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
+
 class AppColors {
   AppColors._();
 
@@ -73,7 +75,7 @@ final ThemeData unraidDarkTheme = ThemeData(
   cardTheme: const CardThemeData(
     color: AppColors.card,
     elevation: 1,
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+    margin: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(12)),
     ),
@@ -111,14 +113,14 @@ final ThemeData unraidDarkTheme = ThemeData(
     ),
     labelStyle: const TextStyle(color: AppColors.textSecondary),
     hintStyle: const TextStyle(color: AppColors.textSecondary),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.mdl),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.unraidOrange,
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.mdl),
       textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
     ),
   ),
@@ -127,7 +129,7 @@ final ThemeData unraidDarkTheme = ThemeData(
       foregroundColor: AppColors.unraidOrange,
       side: const BorderSide(color: AppColors.unraidOrange),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.mdl),
     ),
   ),
   iconButtonTheme: IconButtonThemeData(

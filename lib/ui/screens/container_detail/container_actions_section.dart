@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 
@@ -15,7 +16,7 @@ class ContainerActionsSection extends StatelessWidget {
     final cubit = context.read<DockerCubit>();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,56 +27,69 @@ class ContainerActionsSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            AppSpacing.verticalMd,
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: [
                 if (container.isStopped)
-                  _actionChip(
-                    context,
-                    icon: Icons.play_arrow,
-                    label: 'Start',
-                    color: AppColors.running,
+                  ActionChip(
+                    avatar: const Icon(
+                      Icons.play_arrow,
+                      size: 18,
+                      color: AppColors.running,
+                    ),
+                    label: const Text(
+                      'Start',
+                      style: TextStyle(color: AppColors.running),
+                    ),
                     onPressed: () => cubit.startContainer(container.id),
+                    backgroundColor: AppColors.running.withValues(alpha: 0.1),
+                    side: BorderSide(
+                      color: AppColors.running.withValues(alpha: 0.3),
+                    ),
                   ),
                 if (container.isRunning)
-                  _actionChip(
-                    context,
-                    icon: Icons.stop,
-                    label: 'Stop',
-                    color: AppColors.stopped,
+                  ActionChip(
+                    avatar: const Icon(
+                      Icons.stop,
+                      size: 18,
+                      color: AppColors.stopped,
+                    ),
+                    label: const Text(
+                      'Stop',
+                      style: TextStyle(color: AppColors.stopped),
+                    ),
                     onPressed: () => cubit.stopContainer(container.id),
+                    backgroundColor: AppColors.stopped.withValues(alpha: 0.1),
+                    side: BorderSide(
+                      color: AppColors.stopped.withValues(alpha: 0.3),
+                    ),
                   ),
                 if (container.isRunning)
-                  _actionChip(
-                    context,
-                    icon: Icons.restart_alt,
-                    label: 'Restart',
-                    color: AppColors.unraidOrange,
+                  ActionChip(
+                    avatar: const Icon(
+                      Icons.restart_alt,
+                      size: 18,
+                      color: AppColors.unraidOrange,
+                    ),
+                    label: const Text(
+                      'Restart',
+                      style: TextStyle(color: AppColors.unraidOrange),
+                    ),
                     onPressed: () => cubit.restartContainer(container.id),
+                    backgroundColor: AppColors.unraidOrange.withValues(
+                      alpha: 0.1,
+                    ),
+                    side: BorderSide(
+                      color: AppColors.unraidOrange.withValues(alpha: 0.3),
+                    ),
                   ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _actionChip(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return ActionChip(
-      avatar: Icon(icon, size: 18, color: color),
-      label: Text(label, style: TextStyle(color: color)),
-      onPressed: onPressed,
-      backgroundColor: color.withValues(alpha: 0.1),
-      side: BorderSide(color: color.withValues(alpha: 0.3)),
     );
   }
 }

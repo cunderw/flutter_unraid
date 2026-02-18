@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 
@@ -12,7 +13,7 @@ class ContainerPortsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,10 +24,10 @@ class ContainerPortsSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            AppSpacing.verticalMd,
             ...container.ports.map(
               (p) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                 child: Row(
                   children: [
                     const Icon(
@@ -34,7 +35,7 @@ class ContainerPortsSection extends StatelessWidget {
                       size: 16,
                       color: AppColors.textSecondary,
                     ),
-                    const SizedBox(width: 8),
+                    AppSpacing.horizontalSm,
                     Text(
                       p.displayString,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(

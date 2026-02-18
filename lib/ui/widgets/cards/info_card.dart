@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Themed card container used throughout the app.
@@ -28,7 +29,7 @@ class InfoCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: padding ?? const EdgeInsets.all(16),
+          padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -38,7 +39,7 @@ class InfoCard extends StatelessWidget {
                   children: [
                     if (leading != null) ...[
                       leading!,
-                      const SizedBox(width: 8),
+                      AppSpacing.horizontalSm,
                     ],
                     Expanded(
                       child: Text(
@@ -53,7 +54,7 @@ class InfoCard extends StatelessWidget {
                     if (trailing != null) ?trailing,
                   ],
                 ),
-                const SizedBox(height: 12),
+                AppSpacing.verticalMd,
               ],
               child,
             ],

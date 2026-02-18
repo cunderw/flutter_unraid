@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/shares/shares_state.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/share.dart';
 import 'package:flutter_unraid/ui/widgets/cards/info_card.dart';
@@ -36,7 +37,7 @@ class SharesTab extends StatelessWidget {
                   onRefresh: () => context.read<SharesCubit>().refresh(),
                   color: AppColors.unraidOrange,
                   child: ListView(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                     children: [
                       SectionHeader(
                         title: 'Shares',
@@ -71,7 +72,7 @@ class _ShareTile extends StatelessWidget {
       ),
       trailing: share.cache == true
           ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xxxs),
               decoration: BoxDecoration(
                 color: AppColors.paused.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
@@ -94,7 +95,7 @@ class _ShareTile extends StatelessWidget {
                 context,
               ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
-            const SizedBox(height: 12),
+            AppSpacing.verticalMd,
           ],
           UsageBar(
             percentage: share.usagePercent,

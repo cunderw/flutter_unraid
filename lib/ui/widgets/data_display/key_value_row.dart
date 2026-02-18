@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Row displaying a label-value pair.
@@ -22,7 +23,7 @@ class KeyValueRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,6 +43,8 @@ class KeyValueRow extends StatelessWidget {
                 valueWidget ??
                 Text(
                   value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style:
                       valueStyle ??
                       Theme.of(context).textTheme.bodyMedium?.copyWith(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_state.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
 import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
@@ -59,7 +60,7 @@ class VmsTab extends StatelessWidget {
             onRefresh: () => context.read<VmCubit>().refresh(),
             color: AppColors.unraidOrange,
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
               children: [
                 SectionHeader(
                   title: 'Virtual Machines',
@@ -104,7 +105,7 @@ class _VmTile extends StatelessWidget {
       ),
       actions: _buildActions(context),
       child: Padding(
-        padding: const EdgeInsets.only(top: 2),
+        padding: const EdgeInsets.only(top: AppSpacing.xxxs),
         child: StatusBadge.forVmState(vm.state),
       ),
     );
@@ -189,7 +190,7 @@ class _VmTile extends StatelessWidget {
       icon: Icon(icon, size: 16, color: color),
       label: Text(label, style: TextStyle(color: color, fontSize: 12)),
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),

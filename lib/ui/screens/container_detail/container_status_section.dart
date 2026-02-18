@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
@@ -13,7 +14,7 @@ class ContainerStatusSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Row(
           children: [
             Container(
@@ -29,7 +30,7 @@ class ContainerStatusSection extends StatelessWidget {
                 size: 28,
               ),
             ),
-            const SizedBox(width: 16),
+            AppSpacing.horizontalLg,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +42,7 @@ class ContainerStatusSection extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  AppSpacing.verticalXxs,
                   Text(
                     container.status,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

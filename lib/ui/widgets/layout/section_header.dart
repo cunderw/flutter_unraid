@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Section header with optional trailing widget.
@@ -12,7 +13,7 @@ class SectionHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.trailing,
-    this.padding = const EdgeInsets.fromLTRB(16, 20, 16, 8),
+    this.padding = const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.sm),
   });
 
   @override

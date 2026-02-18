@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_snackbar.dart';
@@ -65,7 +66,7 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
               bottom: Radius.circular(12),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Row(
                 children: [
                   Expanded(
@@ -94,7 +95,7 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
-                  const SizedBox(width: 8),
+                  AppSpacing.horizontalSm,
                   Icon(
                     _expanded
                         ? Icons.keyboard_arrow_up
@@ -107,7 +108,12 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
           ),
           if (_expanded && _error != null)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
               child: Text(
                 _error!,
                 style: const TextStyle(color: AppColors.stopped, fontSize: 13),
@@ -117,14 +123,19 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
             Container(
               width: double.infinity,
               constraints: const BoxConstraints(maxHeight: 400),
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              margin: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.background,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: _lines!.isEmpty
                   ? const Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(AppSpacing.lg),
                       child: Text(
                         'No logs available.',
                         style: TextStyle(
@@ -135,7 +146,7 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
                     )
                   : Scrollbar(
                       child: ListView.builder(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         shrinkWrap: true,
                         itemCount: _lines!.length,
                         itemBuilder: (context, index) {
@@ -143,7 +154,9 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
                           final timestamp = line['timestamp'] as String?;
                           final message = line['message'] as String? ?? '';
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 2),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.xxxs,
+                            ),
                             child: Text.rich(
                               TextSpan(
                                 children: [

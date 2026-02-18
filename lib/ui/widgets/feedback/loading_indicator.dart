@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Centered loading spinner with optional message.
@@ -16,7 +17,7 @@ class LoadingIndicator extends StatelessWidget {
         children: [
           const CircularProgressIndicator(color: AppColors.unraidOrange),
           if (message != null) ...[
-            const SizedBox(height: 16),
+            AppSpacing.verticalLg,
             Text(
               message!,
               style: Theme.of(

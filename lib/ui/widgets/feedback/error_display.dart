@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 
 /// Error message display with retry action.
@@ -19,12 +20,12 @@ class ErrorDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppSpacing.xxxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 48, color: AppColors.stopped),
-            const SizedBox(height: 16),
+            AppSpacing.verticalLg,
             Text(
               message,
               textAlign: TextAlign.center,
@@ -33,7 +34,7 @@ class ErrorDisplay extends StatelessWidget {
               ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 20),
+              AppSpacing.verticalXl,
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),

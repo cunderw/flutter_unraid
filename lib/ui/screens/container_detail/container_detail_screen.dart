@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
@@ -57,18 +58,18 @@ class ContainerDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         ContainerStatusSection(container: container),
-        const SizedBox(height: 16),
+        AppSpacing.verticalLg,
         ContainerConfigSection(container: container),
         if (container.ports.isNotEmpty) ...[
-          const SizedBox(height: 16),
+          AppSpacing.verticalLg,
           ContainerPortsSection(container: container),
         ],
-        const SizedBox(height: 16),
+        AppSpacing.verticalLg,
         ContainerActionsSection(container: container),
-        const SizedBox(height: 16),
+        AppSpacing.verticalLg,
         ContainerLogsSection(containerId: container.id),
       ],
     );

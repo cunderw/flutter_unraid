@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_state.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/ui/widgets/cards/info_card.dart';
 import 'package:flutter_unraid/ui/widgets/cards/stat_card.dart';
@@ -46,12 +47,14 @@ class MainTab extends StatelessWidget {
             onRefresh: () => context.read<SystemCubit>().refresh(),
             color: AppColors.unraidOrange,
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
               children: [
                 // ── Quick Stats ──────────────────────────
                 const SectionHeader(title: 'Overview'),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -77,7 +80,9 @@ class MainTab extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -171,7 +176,7 @@ class MainTab extends StatelessWidget {
                           detail:
                               '${Formatters.formatKilobytes(num.tryParse(arrayData.capacity!.kilobytes!.used))} / ${Formatters.formatKilobytes(num.tryParse(arrayData.capacity!.kilobytes!.total))}',
                         ),
-                        const SizedBox(height: 12),
+                        AppSpacing.verticalMd,
                       ],
                       KeyValueRow(
                         label: 'Data Disks',

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
+import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_detail_screen.dart';
@@ -57,7 +58,7 @@ class DockerTab extends StatelessWidget {
             onRefresh: () => context.read<DockerCubit>().refresh(),
             color: AppColors.unraidOrange,
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
               children: [
                 SectionHeader(
                   title: 'Containers',
@@ -122,7 +123,7 @@ class _ContainerTile extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
+          AppSpacing.verticalSm,
           StatusBadge.forContainerState(container.state),
         ],
       ),
@@ -171,7 +172,7 @@ class _ContainerTile extends StatelessWidget {
       icon: Icon(icon, size: 16, color: color),
       label: Text(label, style: TextStyle(color: color, fontSize: 12)),
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
