@@ -19,25 +19,29 @@ void main() {
   });
 
   group('SharesTab', () {
-    testWidgets('displays loading indicator when SharesInitial', (tester) async {
+    testWidgets('displays loading indicator when SharesInitial', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const SharesTab(),
         sharesCubit: mockSharesCubit,
         sharesState: const SharesInitial(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading shares...'), findsOneWidget);
     });
 
-    testWidgets('displays loading indicator when SharesLoading', (tester) async {
+    testWidgets('displays loading indicator when SharesLoading', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const SharesTab(),
         sharesCubit: mockSharesCubit,
         sharesState: const SharesLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });

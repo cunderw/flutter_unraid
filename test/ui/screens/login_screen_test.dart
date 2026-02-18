@@ -19,6 +19,7 @@ void main() {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
+        authState: const AuthInitial(),
       );
       await tester.pumpAndSettle();
 
@@ -34,6 +35,7 @@ void main() {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
+        authState: const AuthInitial(),
       );
       await tester.pumpAndSettle();
 
@@ -44,6 +46,7 @@ void main() {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
+        authState: const AuthInitial(),
       );
       await tester.pumpAndSettle();
 
@@ -59,6 +62,7 @@ void main() {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
+        authState: const AuthInitial(),
       );
       await tester.pumpAndSettle();
 
@@ -69,6 +73,7 @@ void main() {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
+        authState: const AuthInitial(),
       );
       await tester.pumpAndSettle();
 
@@ -87,13 +92,15 @@ void main() {
       expect(find.byIcon(Icons.error_outline), findsOneWidget);
     });
 
-    testWidgets('shows loading indicator when AuthLoading state', (tester) async {
+    testWidgets('shows loading indicator when AuthLoading state', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const LoginScreen(),
         authCubit: mockAuthCubit,
         authState: const AuthLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -104,11 +111,11 @@ void main() {
         authCubit: mockAuthCubit,
         authState: const AuthLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      final button = tester.widget<ElevatedButton>(
-        find.widgetWithText(ElevatedButton, 'Connect'),
-      );
+      // During loading the button text is replaced with a spinner,
+      // so locate the ElevatedButton by type.
+      final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
       expect(button.onPressed, isNull);
     });
   });

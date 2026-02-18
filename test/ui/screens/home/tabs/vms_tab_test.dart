@@ -25,7 +25,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmInitial(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading virtual machines...'), findsOneWidget);
@@ -37,7 +37,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -68,10 +68,7 @@ void main() {
     });
 
     testWidgets('displays VMs when VmLoaded with data', (tester) async {
-      final vms = [
-        makeRunningVm(id: 'vm1'),
-        makeStoppedVm(id: 'vm2'),
-      ];
+      final vms = [makeRunningVm(id: 'vm1'), makeStoppedVm(id: 'vm2')];
 
       await tester.pumpAppWithBlocs(
         const VmsTab(),
@@ -86,10 +83,7 @@ void main() {
     });
 
     testWidgets('displays VM tiles with status badges', (tester) async {
-      final vms = [
-        makeRunningVm(id: 'vm1'),
-        makeStoppedVm(id: 'vm2'),
-      ];
+      final vms = [makeRunningVm(id: 'vm1'), makeStoppedVm(id: 'vm2')];
 
       await tester.pumpAppWithBlocs(
         const VmsTab(),

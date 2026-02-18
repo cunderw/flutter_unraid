@@ -19,25 +19,29 @@ void main() {
   });
 
   group('DockerTab', () {
-    testWidgets('displays loading indicator when DockerInitial', (tester) async {
+    testWidgets('displays loading indicator when DockerInitial', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const DockerTab(),
         dockerCubit: mockDockerCubit,
         dockerState: const DockerInitial(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading containers...'), findsOneWidget);
     });
 
-    testWidgets('displays loading indicator when DockerLoading', (tester) async {
+    testWidgets('displays loading indicator when DockerLoading', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const DockerTab(),
         dockerCubit: mockDockerCubit,
         dockerState: const DockerLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -67,7 +71,9 @@ void main() {
       expect(find.byIcon(Icons.inventory_2_outlined), findsOneWidget);
     });
 
-    testWidgets('displays containers when DockerLoaded with data', (tester) async {
+    testWidgets('displays containers when DockerLoaded with data', (
+      tester,
+    ) async {
       final containers = [
         makeRunningContainer(id: 'c1'),
         makeStoppedContainer(id: 'c2'),
@@ -100,12 +106,14 @@ void main() {
 
       // Should display container names
       expect(find.text('test-container'), findsNWidgets(2));
-      
+
       // Should display container images
       expect(find.text('nginx:latest'), findsNWidgets(2));
     });
 
-    testWidgets('displays action buttons for running containers', (tester) async {
+    testWidgets('displays action buttons for running containers', (
+      tester,
+    ) async {
       final containers = [makeRunningContainer()];
 
       await tester.pumpAppWithBlocs(

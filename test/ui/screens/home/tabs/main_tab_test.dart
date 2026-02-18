@@ -25,7 +25,7 @@ void main() {
         systemCubit: mockSystemCubit,
         systemState: const SystemInitial(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading system info...'), findsOneWidget);
@@ -37,7 +37,7 @@ void main() {
         systemCubit: mockSystemCubit,
         systemState: const SystemLoading(),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -83,8 +83,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Uptime'), findsOneWidget);
-      expect(find.text('Memory'), findsOneWidget);
+      // "Uptime" appears in both StatCard and KeyValueRow; "Memory" in StatCard and InfoCard
+      expect(find.text('Uptime'), findsNWidgets(2));
+      expect(find.text('Memory'), findsNWidgets(2));
       expect(find.text('45.5%'), findsOneWidget);
     });
 

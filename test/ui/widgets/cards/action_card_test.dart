@@ -8,21 +8,14 @@ import '../../../helpers/pump_helpers.dart';
 void main() {
   group('ActionCard', () {
     testWidgets('displays child content', (tester) async {
-      await tester.pumpApp(
-        const ActionCard(
-          child: Text('Test Content'),
-        ),
-      );
+      await tester.pumpApp(const ActionCard(child: Text('Test Content')));
 
       expect(find.text('Test Content'), findsOneWidget);
     });
 
     testWidgets('displays title when provided', (tester) async {
       await tester.pumpApp(
-        const ActionCard(
-          title: 'Test Title',
-          child: Text('Content'),
-        ),
+        const ActionCard(title: 'Test Title', child: Text('Content')),
       );
 
       expect(find.text('Test Title'), findsOneWidget);
@@ -44,11 +37,11 @@ void main() {
       await tester.pumpApp(
         ActionCard(
           title: 'Title',
-          child: const Text('Content'),
           actions: [
             TextButton(onPressed: () {}, child: const Text('Action 1')),
             TextButton(onPressed: () {}, child: const Text('Action 2')),
           ],
+          child: const Text('Content'),
         ),
       );
 
@@ -57,11 +50,7 @@ void main() {
     });
 
     testWidgets('renders in a Card', (tester) async {
-      await tester.pumpApp(
-        const ActionCard(
-          child: Text('Content'),
-        ),
-      );
+      await tester.pumpApp(const ActionCard(child: Text('Content')));
 
       expect(find.byType(Card), findsOneWidget);
     });
@@ -69,10 +58,7 @@ void main() {
     testWidgets('is tappable when onTap is provided', (tester) async {
       var tapped = false;
       await tester.pumpApp(
-        ActionCard(
-          child: const Text('Content'),
-          onTap: () => tapped = true,
-        ),
+        ActionCard(child: const Text('Content'), onTap: () => tapped = true),
       );
 
       await tester.tap(find.byType(InkWell));
@@ -80,11 +66,7 @@ void main() {
     });
 
     testWidgets('does not display title when not provided', (tester) async {
-      await tester.pumpApp(
-        const ActionCard(
-          child: Text('Content'),
-        ),
-      );
+      await tester.pumpApp(const ActionCard(child: Text('Content')));
 
       // Title should not render a Text widget for the title itself
       expect(find.text('Content'), findsOneWidget);

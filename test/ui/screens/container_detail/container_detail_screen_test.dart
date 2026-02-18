@@ -17,15 +17,17 @@ void main() {
   late MockDockerCubit mockDockerCubit;
   late MockDockerRepository mockDockerRepo;
 
-  setUp(() {
+  setUp(() async {
     mockDockerCubit = MockDockerCubit();
     mockDockerRepo = MockDockerRepository();
-    resetGetIt();
+    await resetGetIt();
     registerMockRepositories(dockerRepo: mockDockerRepo);
   });
 
   group('ContainerDetailScreen', () {
-    testWidgets('displays container not found when container is missing', (tester) async {
+    testWidgets('displays container not found when container is missing', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const ContainerDetailScreen(containerId: 'missing-id'),
         dockerCubit: mockDockerCubit,
@@ -36,7 +38,9 @@ void main() {
       expect(find.text('Container not found.'), findsOneWidget);
     });
 
-    testWidgets('displays container name in app bar when container exists', (tester) async {
+    testWidgets('displays container name in app bar when container exists', (
+      tester,
+    ) async {
       final container = makeRunningContainer(id: 'c1');
       await tester.pumpAppWithBlocs(
         const ContainerDetailScreen(containerId: 'c1'),
@@ -45,7 +49,14 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('test-container'), findsOneWidget);
+      // Name appears in both AppBar and status section
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('test-container'),
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('displays all sections when container exists', (tester) async {
@@ -60,10 +71,16 @@ void main() {
       expect(find.byType(ContainerStatusSection), findsOneWidget);
       expect(find.byType(ContainerActionsSection), findsOneWidget);
       expect(find.byType(ContainerConfigSection), findsOneWidget);
+
+      // ContainerLogsSection is at the bottom of the ListView;
+      // scroll down so the lazy list builds it.
+      await tester.scrollUntilVisible(find.byType(ContainerLogsSection), 200);
       expect(find.byType(ContainerLogsSection), findsOneWidget);
     });
 
-    testWidgets('displays ports section only when container has ports', (tester) async {
+    testWidgets('displays ports section only when container has ports', (
+      tester,
+    ) async {
       final containerWithPorts = makeDockerContainer(
         id: 'c1',
         state: 'RUNNING',
@@ -79,8 +96,14 @@ void main() {
       expect(find.text('Ports'), findsOneWidget);
     });
 
-    testWidgets('hides ports section when container has no ports', (tester) async {
-      final containerNoPorts = makeDockerContainer(id: 'c1', state: 'RUNNING', ports: []);
+    testWidgets('hides ports section when container has no ports', (
+      tester,
+    ) async {
+      final containerNoPorts = makeDockerContainer(
+        id: 'c1',
+        state: 'RUNNING',
+        ports: [],
+      );
       await tester.pumpAppWithBlocs(
         const ContainerDetailScreen(containerId: 'c1'),
         dockerCubit: mockDockerCubit,
@@ -91,7 +114,9 @@ void main() {
       expect(find.text('Ports'), findsNothing);
     });
 
-    testWidgets('displays Container as default title when container is null', (tester) async {
+    testWidgets('displays Container as default title when container is null', (
+      tester,
+    ) async {
       await tester.pumpAppWithBlocs(
         const ContainerDetailScreen(containerId: 'missing'),
         dockerCubit: mockDockerCubit,

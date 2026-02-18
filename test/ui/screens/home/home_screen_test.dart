@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
+import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/data/models/share.dart';
+import 'package:flutter_unraid/data/models/vm_domain.dart';
 import 'package:flutter_unraid/ui/screens/home/home_screen.dart';
 
+import '../../../helpers/factories.dart';
 import '../../../helpers/get_it_helpers.dart';
 import '../../../helpers/mocks.dart';
 import '../../../helpers/pump_helpers.dart';
@@ -13,13 +18,30 @@ void main() {
   late MockVmRepository mockVmRepo;
   late MockShareRepository mockShareRepo;
 
-  setUp(() {
+  setUp(() async {
     mockSystemRepo = MockSystemRepository();
     mockDockerRepo = MockDockerRepository();
     mockVmRepo = MockVmRepository();
     mockShareRepo = MockShareRepository();
-    
-    resetGetIt();
+
+    // Stub repo methods so cubits load successfully
+    when(() => mockSystemRepo.getSystemInfo()).thenAnswer(
+      (_) async => (systemInfo: makeSystemInfo(), memory: makeMemoryUtilization()),
+    );
+    when(() => mockSystemRepo.getArrayData()).thenAnswer(
+      (_) async => makeArrayData(),
+    );
+    when(() => mockDockerRepo.getContainers()).thenAnswer(
+      (_) async => <DockerContainer>[],
+    );
+    when(() => mockVmRepo.getVms()).thenAnswer(
+      (_) async => <VmDomain>[],
+    );
+    when(() => mockShareRepo.getShares()).thenAnswer(
+      (_) async => <Share>[],
+    );
+
+    await resetGetIt();
     registerMockRepositories(
       systemRepo: mockSystemRepo,
       dockerRepo: mockDockerRepo,
@@ -67,10 +89,12 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.dashboard_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.inventory_2_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.computer_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.folder_shared_outlined), findsOneWidget);
+      // Selected tab shows filled icon; unselected tabs show outlined icons.
+      // NavigationBar may render both in the tree, so use findsWidgets.
+      expect(find.byIcon(Icons.dashboard), findsWidgets);
+      expect(find.byIcon(Icons.inventory_2_outlined), findsWidgets);
+      expect(find.byIcon(Icons.computer_outlined), findsWidgets);
+      expect(find.byIcon(Icons.folder_shared_outlined), findsWidgets);
     });
 
     testWidgets('displays disconnect menu option', (tester) async {

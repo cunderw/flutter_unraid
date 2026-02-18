@@ -9,7 +9,10 @@ import '../../../helpers/pump_helpers.dart';
 void main() {
   group('ContainerPortsSection', () {
     testWidgets('displays Ports title', (tester) async {
-      final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
+      final container = makeDockerContainer(
+        state: "RUNNING",
+        ports: [makeContainerPort()],
+      );
       await tester.pumpApp(ContainerPortsSection(container: container));
       await tester.pumpAndSettle();
 
@@ -19,9 +22,9 @@ void main() {
 
     testWidgets('displays port information', (tester) async {
       final port = makeContainerPort(
-        hostPort: '8080',
-        containerPort: '80',
-        protocol: 'tcp',
+        publicPort: 8080,
+        privatePort: 80,
+        type: 'tcp',
       );
       final container = makeDockerContainer(state: "RUNNING", ports: [port]);
       await tester.pumpApp(ContainerPortsSection(container: container));
@@ -33,8 +36,8 @@ void main() {
 
     testWidgets('displays port IP when available', (tester) async {
       final port = makeContainerPort(
-        hostPort: '8080',
-        containerPort: '80',
+        publicPort: 8080,
+        privatePort: 80,
         ip: '0.0.0.0',
       );
       final container = makeDockerContainer(state: "RUNNING", ports: [port]);
@@ -47,8 +50,8 @@ void main() {
 
     testWidgets('displays multiple ports', (tester) async {
       final ports = [
-        makeContainerPort(hostPort: '8080', containerPort: '80'),
-        makeContainerPort(hostPort: '8443', containerPort: '443'),
+        makeContainerPort(publicPort: 8080, privatePort: 80),
+        makeContainerPort(publicPort: 8443, privatePort: 443),
       ];
       final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
@@ -61,8 +64,8 @@ void main() {
 
     testWidgets('displays port icon for each port', (tester) async {
       final ports = [
-        makeContainerPort(hostPort: '8080', containerPort: '80'),
-        makeContainerPort(hostPort: '8443', containerPort: '443'),
+        makeContainerPort(publicPort: 8080, privatePort: 80),
+        makeContainerPort(publicPort: 8443, privatePort: 443),
       ];
       final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
@@ -73,7 +76,10 @@ void main() {
     });
 
     testWidgets('displays in a card', (tester) async {
-      final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
+      final container = makeDockerContainer(
+        state: "RUNNING",
+        ports: [makeContainerPort()],
+      );
       await tester.pumpApp(ContainerPortsSection(container: container));
       await tester.pumpAndSettle();
 
