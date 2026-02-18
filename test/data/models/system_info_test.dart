@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_unraid/data/models/system_info.dart';
 
-import '../../helpers/factories.dart';
-
 void main() {
   group('OsInfo', () {
     group('fromJson', () {
