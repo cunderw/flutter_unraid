@@ -188,6 +188,19 @@ class Queries {
     }
   ''';
 
+  static const String notifications = r'''
+    query Notifications {
+      notifications {
+        id
+        subject
+        description
+        severity
+        timestamp
+        read
+      }
+    }
+  ''';
+
   /// Lightweight query used to test API connectivity.
   static const String testConnection = r'''
     query TestConnection {

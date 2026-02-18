@@ -1,5 +1,6 @@
 import 'package:flutter_unraid/data/models/array_data.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/data/models/notification.dart';
 import 'package:flutter_unraid/data/models/share.dart';
 import 'package:flutter_unraid/data/models/system_info.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
@@ -261,3 +262,43 @@ Share makeShare({
   color: color,
   luksStatus: luksStatus,
 );
+
+// -- Notification --
+
+Notification makeNotification({
+  String id = 'notif-1',
+  String subject = 'Test Notification',
+  String description = 'This is a test notification',
+  NotificationSeverity severity = NotificationSeverity.normal,
+  String? timestamp,
+  bool read = false,
+}) => Notification(
+  id: id,
+  subject: subject,
+  description: description,
+  severity: severity,
+  timestamp: timestamp ?? DateTime.now().toIso8601String(),
+  read: read,
+);
+
+Notification makeUnreadNotification({String id = 'notif-1'}) =>
+    makeNotification(id: id, read: false);
+
+Notification makeReadNotification({String id = 'notif-2'}) =>
+    makeNotification(id: id, read: true);
+
+Notification makeAlertNotification({String id = 'notif-3'}) =>
+    makeNotification(
+      id: id,
+      subject: 'Critical Alert',
+      severity: NotificationSeverity.alert,
+      read: false,
+    );
+
+Notification makeWarningNotification({String id = 'notif-4'}) =>
+    makeNotification(
+      id: id,
+      subject: 'Warning',
+      severity: NotificationSeverity.warning,
+      read: false,
+    );

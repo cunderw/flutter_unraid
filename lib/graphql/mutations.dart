@@ -162,4 +162,41 @@ class Mutations {
       }
     }
   ''';
+
+  // ── Notifications ──────────────────────────────────────────────────────
+
+  static const String markNotificationAsRead = r'''
+    mutation MarkNotificationAsRead($id: PrefixedID!) {
+      notifications {
+        markAsRead(id: $id) {
+          id
+          read
+        }
+      }
+    }
+  ''';
+
+  static const String markAllNotificationsAsRead = r'''
+    mutation MarkAllNotificationsAsRead {
+      notifications {
+        markAllAsRead
+      }
+    }
+  ''';
+
+  static const String deleteNotification = r'''
+    mutation DeleteNotification($id: PrefixedID!) {
+      notifications {
+        delete(id: $id)
+      }
+    }
+  ''';
+
+  static const String deleteAllNotifications = r'''
+    mutation DeleteAllNotifications {
+      notifications {
+        deleteAll
+      }
+    }
+  ''';
 }

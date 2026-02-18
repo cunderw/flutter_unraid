@@ -7,16 +7,19 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:flutter_unraid/blocs/auth/auth_state.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
+import 'package:flutter_unraid/blocs/notifications/notification_state.dart';
 import 'package:flutter_unraid/blocs/shares/shares_state.dart';
 import 'package:flutter_unraid/blocs/system/system_state.dart';
 import 'package:flutter_unraid/blocs/vms/vm_state.dart';
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
+import 'package:flutter_unraid/blocs/notifications/notification_cubit.dart';
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
+import 'package:flutter_unraid/data/repositories/notification_repository.dart';
 import 'package:flutter_unraid/data/repositories/share_repository.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/data/repositories/vm_repository.dart';
@@ -44,6 +47,8 @@ class MockVmRepository extends Mock implements VmRepository {}
 
 class MockShareRepository extends Mock implements ShareRepository {}
 
+class MockNotificationRepository extends Mock implements NotificationRepository {}
+
 // Cubits (for widget tests)
 class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
 
@@ -54,6 +59,9 @@ class MockDockerCubit extends MockCubit<DockerState> implements DockerCubit {}
 class MockVmCubit extends MockCubit<VmState> implements VmCubit {}
 
 class MockSharesCubit extends MockCubit<SharesState> implements SharesCubit {}
+
+class MockNotificationCubit extends MockCubit<NotificationState>
+    implements NotificationCubit {}
 
 class MockContainerLogsCubit extends MockCubit<ContainerLogsState>
     implements ContainerLogsCubit {}
