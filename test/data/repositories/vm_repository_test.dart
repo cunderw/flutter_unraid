@@ -56,6 +56,74 @@ void main() {
       });
     });
 
+    group('getVmDetails', () {
+      test('returns VM details on success', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeQueryResult(makeVmDetailsResponseJson(
+            id: 'vm-1',
+            name: 'TestVM',
+            state: 'RUNNING',
+          )),
+        );
+
+        final result = await repo.getVmDetails('vm-1');
+
+        expect(result.id, 'vm-1');
+        expect(result.name, 'TestVM');
+        expect(result.state, 'RUNNING');
+        expect(result.cpus, 4);
+        expect(result.memory, 4294967296);
+        verify(() => mockClient.query(any())).called(1);
+      });
+
+      test('throws exception when query fails', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeErrorQueryResult(
+            OperationException(
+              graphqlErrors: [GraphQLError(message: 'Network error')],
+            ),
+          ),
+        );
+
+        expect(
+          () => repo.getVmDetails('vm-1'),
+          throwsA(isA<OperationException>()),
+        );
+      });
+    });
+
+    group('getVmLogs', () {
+      test('returns list of log lines on success', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeQueryResult(makeVmLogsResponseJson(
+            vmId: 'vm-1',
+            lineCount: 3,
+          )),
+        );
+
+        final result = await repo.getVmLogs('vm-1');
+
+        expect(result.length, 3);
+        expect(result[0], contains('Log line 0'));
+        verify(() => mockClient.query(any())).called(1);
+      });
+
+      test('throws exception when query fails', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeErrorQueryResult(
+            OperationException(
+              graphqlErrors: [GraphQLError(message: 'Network error')],
+            ),
+          ),
+        );
+
+        expect(
+          () => repo.getVmLogs('vm-1'),
+          throwsA(isA<OperationException>()),
+        );
+      });
+    });
+
     group('startVm', () {
       test('calls mutation with correct variables', () async {
         when(() => mockClient.mutate(any())).thenAnswer(
