@@ -100,6 +100,17 @@ void main() {
           verify(() => mockRepo.stopContainer('container-2')).called(1);
         },
       );
+
+      blocTest<DockerCubit, DockerState>(
+        'emits DockerActionError when action fails and state is DockerLoaded',
+        seed: () => DockerLoaded([makeRunningContainer()]),
+        build: () {
+          when(() => mockRepo.stopContainer(any())).thenThrow(Exception('fail'));
+          return buildCubit();
+        },
+        act: (cubit) => cubit.stopContainer('container-1'),
+        expect: () => [isA<DockerActionError>()],
+      );
     });
 
     group('restartContainer', () {
@@ -117,6 +128,17 @@ void main() {
         verify: (_) {
           verify(() => mockRepo.restartContainer('container-1')).called(1);
         },
+      );
+
+      blocTest<DockerCubit, DockerState>(
+        'emits DockerActionError when action fails and state is DockerLoaded',
+        seed: () => DockerLoaded([makeRunningContainer()]),
+        build: () {
+          when(() => mockRepo.restartContainer(any())).thenThrow(Exception('fail'));
+          return buildCubit();
+        },
+        act: (cubit) => cubit.restartContainer('container-1'),
+        expect: () => [isA<DockerActionError>()],
       );
     });
 
