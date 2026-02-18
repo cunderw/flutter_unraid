@@ -134,5 +134,46 @@ void main() {
         );
       });
     });
+
+    group('getSystemLogs', () {
+      test('returns log lines on success', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeQueryResult(makeSystemLogsResponseJson()),
+        );
+
+        final result = await repo.getSystemLogs();
+
+        expect(result.length, 3);
+        expect(result[0]['message'], 'System log line 0');
+        verify(() => mockClient.query(any())).called(1);
+      });
+
+      test('calls query with tail parameter', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeQueryResult(makeSystemLogsResponseJson(lineCount: 10)),
+        );
+
+        await repo.getSystemLogs(tail: 10);
+
+        final captured = verify(() => mockClient.query(captureAny())).captured;
+        final options = captured.first as QueryOptions;
+        expect(options.variables['tail'], 10);
+      });
+
+      test('throws exception when query fails', () async {
+        when(() => mockClient.query(any())).thenAnswer(
+          (_) async => makeErrorQueryResult(
+            OperationException(
+              graphqlErrors: [GraphQLError(message: 'Network error')],
+            ),
+          ),
+        );
+
+        expect(
+          () => repo.getSystemLogs(),
+          throwsA(isA<OperationException>()),
+        );
+      });
+    });
   });
 }

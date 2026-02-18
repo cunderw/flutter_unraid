@@ -128,6 +128,17 @@ class Queries {
     }
   ''';
 
+  static const String systemLogs = r'''
+    query SystemLogs($tail: Int) {
+      syslog(tail: $tail) {
+        lines {
+          timestamp
+          message
+        }
+      }
+    }
+  ''';
+
   static const String virtualMachines = r'''
     query VirtualMachines {
       vms {

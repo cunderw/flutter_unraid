@@ -9,14 +9,22 @@ import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
 import 'package:flutter_unraid/ui/widgets/layout/collapsible_section.dart';
 
 import '../../../../helpers/factories.dart';
+import '../../../../helpers/get_it_helpers.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/pump_helpers.dart';
 
 void main() {
   late MockSystemCubit mockSystemCubit;
+  late MockSystemRepository mockSystemRepo;
 
   setUp(() {
     mockSystemCubit = MockSystemCubit();
+    mockSystemRepo = MockSystemRepository();
+    registerMockRepositories(systemRepo: mockSystemRepo);
+  });
+
+  tearDown(() async {
+    await resetGetIt();
   });
 
   group('MainTab', () {
