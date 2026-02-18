@@ -122,5 +122,41 @@ void main() {
       );
       expect(navigationBar.selectedIndex, 0);
     });
+
+    testWidgets('refresh button calls SystemCubit.refresh on main tab', (tester) async {
+      await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+
+      // Tap refresh button
+      await tester.tap(find.byIcon(Icons.refresh));
+      await tester.pumpAndSettle();
+
+      // Verify SystemCubit methods were called (initial load + refresh)
+      verify(() => mockSystemRepo.getSystemInfo()).called(greaterThanOrEqualTo(2));
+      verify(() => mockSystemRepo.getArrayData()).called(greaterThanOrEqualTo(2));
+    });
+
+    testWidgets('refresh button calls DockerCubit.refresh on docker tab', (tester) async {
+      await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+
+      // Switch to Docker tab
+      await tester.tap(find.text('Docker'));
+      await tester.pumpAndSettle();
+
+      // Reset mock to count only refresh calls
+      reset(mockDockerRepo);
+
+      // Tap refresh button
+      await tester.tap(find.byIcon(Icons.refresh));
+      await tester.pumpAndSettle();
+
+      // Verify DockerCubit.refresh was called
+      verify(() => mockDockerRepo.getContainers()).called(1);
+    });
   });
 }
