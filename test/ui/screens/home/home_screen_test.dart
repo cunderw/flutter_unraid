@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/data/models/notification.dart' as models;
 import 'package:flutter_unraid/data/models/share.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
 import 'package:flutter_unraid/ui/screens/home/home_screen.dart';
@@ -17,12 +18,14 @@ void main() {
   late MockDockerRepository mockDockerRepo;
   late MockVmRepository mockVmRepo;
   late MockShareRepository mockShareRepo;
+  late MockNotificationRepository mockNotificationRepo;
 
   setUp(() async {
     mockSystemRepo = MockSystemRepository();
     mockDockerRepo = MockDockerRepository();
     mockVmRepo = MockVmRepository();
     mockShareRepo = MockShareRepository();
+    mockNotificationRepo = MockNotificationRepository();
 
     // Stub repo methods so cubits load successfully
     when(() => mockSystemRepo.getSystemInfo()).thenAnswer(
@@ -40,6 +43,9 @@ void main() {
     when(() => mockShareRepo.getShares()).thenAnswer(
       (_) async => <Share>[],
     );
+    when(() => mockNotificationRepo.getNotifications()).thenAnswer(
+      (_) async => <models.Notification>[],
+    );
 
     await resetGetIt();
     registerMockRepositories(
@@ -47,6 +53,7 @@ void main() {
       dockerRepo: mockDockerRepo,
       vmRepo: mockVmRepo,
       shareRepo: mockShareRepo,
+      notificationRepo: mockNotificationRepo,
     );
   });
 
@@ -70,7 +77,7 @@ void main() {
       expect(find.byTooltip('Refresh'), findsOneWidget);
     });
 
-    testWidgets('displays bottom navigation bar with 4 tabs', (tester) async {
+    testWidgets('displays bottom navigation bar with 5 tabs', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
@@ -81,6 +88,7 @@ void main() {
       expect(find.text('Docker'), findsOneWidget);
       expect(find.text('VMs'), findsOneWidget);
       expect(find.text('Shares'), findsOneWidget);
+      expect(find.text('Notifications'), findsOneWidget);
     });
 
     testWidgets('displays navigation icons', (tester) async {

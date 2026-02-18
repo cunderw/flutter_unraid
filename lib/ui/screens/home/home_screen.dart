@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
+import 'package:flutter_unraid/blocs/notifications/notification_cubit.dart';
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
+import 'package:flutter_unraid/data/repositories/notification_repository.dart';
 import 'package:flutter_unraid/data/repositories/share_repository.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/data/repositories/vm_repository.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_unraid/ui/screens/home/tabs/main_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/docker_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/vms_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/shares_tab.dart';
+import 'package:flutter_unraid/ui/screens/home/tabs/notifications_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const DockerTab(),
     const VmsTab(),
     const SharesTab(),
+    const NotificationsTab(),
   ];
 
   @override
@@ -48,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider(create: (_) => VmCubit(getIt<VmRepository>())..load()),
         BlocProvider(
           create: (_) => SharesCubit(getIt<ShareRepository>())..load(),
+        ),
+        BlocProvider(
+          create: (_) => NotificationCubit(getIt<NotificationRepository>())..load(),
         ),
       ],
       child: Builder(
@@ -109,6 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 selectedIcon: Icon(Icons.folder_shared),
                 label: 'Shares',
               ),
+              NavigationDestination(
+                icon: Icon(Icons.notifications_outlined),
+                selectedIcon: Icon(Icons.notifications),
+                label: 'Notifications',
+              ),
             ],
           ),
         ),
@@ -126,6 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<VmCubit>().refresh();
       case 3:
         context.read<SharesCubit>().refresh();
+      case 4:
+        context.read<NotificationCubit>().refresh();
     }
   }
 }
