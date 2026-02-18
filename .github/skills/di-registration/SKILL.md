@@ -34,6 +34,7 @@ When a new repository, service, or cubit is created, ensure all registration poi
    ```dart
    class MockNewCubit extends MockCubit<NewState> implements NewCubit {}
    ```
+3. **If app-wide cubit** (used across multiple screens): add named parameters (`newCubit:` / `newState:`) to `pumpAppWithBlocs()` in `test/helpers/pump_helpers.dart` so screen tests can provide it.
 
 ## When creating a new core service
 
@@ -46,6 +47,12 @@ When a new repository, service, or cubit is created, ensure all registration poi
    ```dart
    class MockNewService extends Mock implements NewService {}
    ```
+
+## When creating a new Repository (test helpers)
+
+In addition to the production registration above, update `test/helpers/get_it_helpers.dart`:
+
+- Add a new optional parameter to `registerMockRepositories()` for the new repository so screen tests using `resetGetIt()` can register it.
 
 ## Registration order in injection.dart
 

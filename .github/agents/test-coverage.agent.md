@@ -42,6 +42,7 @@ For every file in `lib/`, verify a corresponding test file exists:
 | `lib/blocs/<feature>/<feature>_cubit.dart` | `test/blocs/<feature>/<feature>_cubit_test.dart` |
 | `lib/ui/screens/<feature>/<screen>.dart` | `test/ui/screens/<feature>/<screen>_test.dart` |
 | `lib/ui/screens/<screen>/cubit/<cubit>.dart` | `test/ui/screens/<screen>/cubit/<cubit>_test.dart` |
+| `lib/ui/widgets/<category>/<name>.dart` | `test/ui/widgets/<category>/<name>_test.dart` |
 
 ### 3. Check test helpers
 

@@ -13,8 +13,8 @@ void main() {
   late MockAuthRepository mockAuthRepo;
   late MockGraphQLClientManager mockClientManager;
 
-  setUp(() {
-    resetGetIt();
+  setUp(() async {
+    await resetGetIt();
     mockAuthRepo = MockAuthRepository();
     mockClientManager = MockGraphQLClientManager();
 
@@ -25,8 +25,8 @@ void main() {
     getIt.registerSingleton<GraphQLClientManager>(mockClientManager);
   });
 
-  tearDown(() {
-    resetGetIt();
+  tearDown(() async {
+    await resetGetIt();
   });
 
   testWidgets('App renders without crashing', (WidgetTester tester) async {
