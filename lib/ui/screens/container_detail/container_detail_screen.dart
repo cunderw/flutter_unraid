@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
+import 'package:flutter_unraid/blocs/container_logs/container_logs_cubit.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/data/repositories/docker_repository.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_actions_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_config_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_logs_section.dart';
@@ -70,7 +73,13 @@ class ContainerDetailBody extends StatelessWidget {
         AppSpacing.verticalLg,
         ContainerActionsSection(container: container),
         AppSpacing.verticalLg,
-        ContainerLogsSection(containerId: container.id),
+        BlocProvider(
+          create: (_) => ContainerLogsCubit(
+            GetIt.I<DockerRepository>(),
+            containerId: container.id,
+          ),
+          child: ContainerLogsSection(containerId: container.id),
+        ),
       ],
     );
   }
