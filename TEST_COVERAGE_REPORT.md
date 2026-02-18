@@ -48,12 +48,25 @@ test/
 │   │       ├── container_config_section_test.dart
 │   │       ├── container_ports_section_test.dart
 │   │       └── container_logs_section_test.dart
-│   └── widgets/                     # Widget tests (3 files) ✨ NEW
+│   └── widgets/                     # Widget tests (13 files) ✨ NEW
+│       ├── cards/
+│       │   ├── action_card_test.dart
+│       │   ├── info_card_test.dart
+│       │   └── stat_card_test.dart
+│       ├── data_display/
+│       │   ├── status_badge_test.dart
+│       │   ├── key_value_row_test.dart
+│       │   └── usage_bar_test.dart
 │       ├── feedback/
 │       │   ├── loading_indicator_test.dart
-│       │   └── empty_state_test.dart
-│       └── data_display/
-│           └── status_badge_test.dart
+│       │   ├── empty_state_test.dart
+│       │   ├── error_display_test.dart
+│       │   ├── inline_error_test.dart
+│       │   └── confirmation_dialog_test.dart
+│       ├── inputs/
+│       │   └── app_text_field_test.dart
+│       └── layout/
+│           └── section_header_test.dart
 └── helpers/                         # Test utilities
     ├── factories.dart
     ├── get_it_helpers.dart
@@ -95,15 +108,42 @@ All repositories now have comprehensive tests covering:
 | `share_repository.dart` | `share_repository_test.dart` | ✅ getShares |
 | `vm_repository.dart` | `vm_repository_test.dart` | ✅ getVms, startVm, stopVm, forceStopVm, pauseVm, resumeVm, rebootVm |
 
-### Widget Tests (3 new files)
+### Widget Tests (13 new files)
 
-Representative widget tests demonstrating the testing pattern for UI components:
+Comprehensive widget tests covering all reusable UI components:
 
+**Cards:**
+| Widget | Test File | Tests |
+|--------|-----------|-------|
+| `action_card.dart` | `action_card_test.dart` | ✅ Child display, title, leading widget, actions, tappability, Card rendering |
+| `info_card.dart` | `info_card_test.dart` | ✅ Child display, title, leading/trailing widgets, custom padding, tappability |
+| `stat_card.dart` | `stat_card_test.dart` | ✅ Label/value display, icon, trailing widget, Card rendering |
+
+**Data Display:**
+| Widget | Test File | Tests |
+|--------|-----------|-------|
+| `status_badge.dart` | `status_badge_test.dart` | ✅ Label display, factory methods (forContainerState, forVmState, forArrayState), color indicators |
+| `key_value_row.dart` | `key_value_row_test.dart` | ✅ Label/value display, valueWidget, fixed width, ellipsis overflow |
+| `usage_bar.dart` | `usage_bar_test.dart` | ✅ Progress bar, label/detail, percentage clamping, custom height |
+
+**Feedback:**
 | Widget | Test File | Tests |
 |--------|-----------|-------|
 | `loading_indicator.dart` | `loading_indicator_test.dart` | ✅ Displays spinner, optional message, centering |
-| `status_badge.dart` | `status_badge_test.dart` | ✅ Label display, factory methods (forContainerState, forVmState, forArrayState), color indicators |
 | `empty_state.dart` | `empty_state_test.dart` | ✅ Message display, custom icons, optional actions, centering |
+| `error_display.dart` | `error_display_test.dart` | ✅ Error message, icon, retry button, centering, text alignment |
+| `inline_error.dart` | `inline_error_test.dart` | ✅ Error message, icon, retry button with tooltip, full width |
+| `confirmation_dialog.dart` | `confirmation_dialog_test.dart` | ✅ Title/message display, custom labels, return values, AlertDialog |
+
+**Inputs:**
+| Widget | Test File | Tests |
+|--------|-----------|-------|
+| `app_text_field.dart` | `app_text_field_test.dart` | ✅ Label/hint, prefix/suffix icons, obscureText, validation, callbacks |
+
+**Layout:**
+| Widget | Test File | Tests |
+|--------|-----------|-------|
+| `section_header.dart` | `section_header_test.dart` | ✅ Title uppercase, trailing widget, custom padding, Row layout |
 
 ### Screen Tests (12 new files)
 
@@ -289,8 +329,8 @@ With the newly added tests, the project now has comprehensive coverage of:
 - ✅ All 5 data models (100%)
 - ✅ All 5 repositories (100%)
 - ✅ All 6 cubits with proper error handling paths (100%)
-- ✅ Core screen tests (12 screens/sections tested)
-- ✅ Representative widget tests (3 widgets tested)
+- ✅ All 12 screens/sections (100%)
+- ✅ All 13 reusable widgets (93% - error_snackbar is a helper function)
 - ✅ Critical business logic paths
 - ✅ Error scenarios and edge cases
 
@@ -302,25 +342,25 @@ With the newly added tests, the project now has comprehensive coverage of:
 | Repository tests | 1 | 5 | +4 |
 | Cubit tests | 6 | 6 | Enhanced |
 | Screen tests | 0 | 12 | +12 |
-| Widget tests | 1 | 4 | +3 |
-| **Total** | **8** | **32** | **+24** |
+| Widget tests | 1 | 14 | +13 |
+| **Total** | **8** | **42** | **+34** |
 
 ### UI Test Coverage
 
 | Category | Tested | Total | Coverage |
 |----------|--------|-------|----------|
 | Screens | 12 | 12 | 100% |
-| Widgets | 3 | 14 | 21% |
+| Widgets | 13 | 14 | 93% |
 
-**Note**: All screen files now have comprehensive test coverage including the container_detail screen and all its sections. The 3 widget tests provide a foundation and testing pattern for future UI test additions.
+**Note**: All screen files and nearly all widget files now have comprehensive test coverage. The only untested file is `error_snackbar.dart` which is a helper function rather than a traditional widget component.
 
 ## Key Achievements
 
 1. **Complete model coverage**: All 5 models have comprehensive tests
 2. **Complete repository coverage**: All 5 repositories have comprehensive tests
 3. **Enhanced cubit tests**: Added missing ActionError test cases
-4. **Core screen coverage**: Tests for login, home, and all main tabs
-5. **Widget test foundation**: Added representative widget tests demonstrating UI testing patterns
+4. **Complete screen coverage**: Tests for all 12 screens/sections (100%)
+5. **Complete widget coverage**: Tests for 13 of 14 widgets (93%)
 6. **Enhanced test helpers**: Updated pump_helpers and get_it_helpers for easier testing
 7. **Consistent patterns**: All tests follow project conventions
 8. **Comprehensive helpers**: Full suite of mocks, factories, and test data
@@ -328,8 +368,8 @@ With the newly added tests, the project now has comprehensive coverage of:
 ## Next Steps
 
 The test infrastructure is complete and ready for:
-1. ✅ Adding tests for new features (models, repositories, cubits)
-2. 🔄 UI/Widget tests for screens and components (optional)
+1. ✅ Adding tests for new features (models, repositories, cubits, screens, widgets)
+2. ✅ UI/Widget tests for all components (complete)
 3. 🔄 Integration tests for end-to-end flows (optional)
 4. ✅ Running tests in CI/CD pipeline
 
