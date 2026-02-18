@@ -25,6 +25,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmInitial(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading virtual machines...'), findsOneWidget);
@@ -36,6 +37,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmLoading(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -46,6 +48,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmError('Failed to load VMs'),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ErrorDisplay), findsOneWidget);
       expect(find.text('Failed to load VMs'), findsOneWidget);
@@ -57,6 +60,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: const VmLoaded([]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(EmptyState), findsOneWidget);
       expect(find.text('No virtual machines found.'), findsOneWidget);
@@ -74,6 +78,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: VmLoaded(vms),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Virtual Machines'), findsOneWidget);
       expect(find.text('1 running / 2 total'), findsOneWidget);
@@ -91,6 +96,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: VmLoaded(vms),
       );
+      await tester.pumpAndSettle();
 
       // Should display VM names
       expect(find.text('TestVM'), findsNWidgets(2));
@@ -104,6 +110,7 @@ void main() {
         vmCubit: mockVmCubit,
         vmState: VmLoaded(vms),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.computer), findsOneWidget);
     });

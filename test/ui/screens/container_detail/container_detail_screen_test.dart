@@ -31,6 +31,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerLoaded([]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Container not found.'), findsOneWidget);
     });
@@ -42,6 +43,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded([container]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('test-container'), findsOneWidget);
     });
@@ -53,6 +55,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded([container]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ContainerStatusSection), findsOneWidget);
       expect(find.byType(ContainerActionsSection), findsOneWidget);
@@ -71,6 +74,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded([containerWithPorts]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Ports'), findsOneWidget);
     });
@@ -82,6 +86,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded([containerNoPorts]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Ports'), findsNothing);
     });
@@ -92,6 +97,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerLoaded([]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Container'), findsOneWidget);
     });

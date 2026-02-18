@@ -21,6 +21,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Actions'), findsOneWidget);
     });
@@ -31,6 +32,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Start'), findsOneWidget);
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
@@ -42,6 +44,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Stop'), findsOneWidget);
       expect(find.text('Restart'), findsOneWidget);
@@ -55,6 +58,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Start'), findsNothing);
     });
@@ -65,6 +69,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Stop'), findsNothing);
       expect(find.text('Restart'), findsNothing);
@@ -76,6 +81,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(Card), findsOneWidget);
     });
@@ -86,6 +92,7 @@ void main() {
         ContainerActionsSection(container: container),
         dockerCubit: mockDockerCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(Wrap), findsOneWidget);
       expect(find.byType(ActionChip), findsNWidgets(2));

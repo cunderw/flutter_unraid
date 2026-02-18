@@ -25,6 +25,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: const SharesInitial(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading shares...'), findsOneWidget);
@@ -36,6 +37,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: const SharesLoading(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -46,6 +48,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: const SharesError('Failed to load shares'),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ErrorDisplay), findsOneWidget);
       expect(find.text('Failed to load shares'), findsOneWidget);
@@ -57,6 +60,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: const SharesLoaded([]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(EmptyState), findsOneWidget);
       expect(find.text('No shares found.'), findsOneWidget);
@@ -74,6 +78,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: SharesLoaded(shares),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Shares'), findsOneWidget);
       expect(find.text('2 total'), findsOneWidget);
@@ -91,6 +96,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: SharesLoaded(shares),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('appdata'), findsOneWidget);
       expect(find.text('media'), findsOneWidget);
@@ -104,6 +110,7 @@ void main() {
         sharesCubit: mockSharesCubit,
         sharesState: SharesLoaded(shares),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.folder), findsOneWidget);
     });

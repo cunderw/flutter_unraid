@@ -25,6 +25,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerInitial(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading containers...'), findsOneWidget);
@@ -36,6 +37,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerLoading(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -46,6 +48,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerError('Failed to load containers'),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ErrorDisplay), findsOneWidget);
       expect(find.text('Failed to load containers'), findsOneWidget);
@@ -57,6 +60,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: const DockerLoaded([]),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(EmptyState), findsOneWidget);
       expect(find.text('No Docker containers found.'), findsOneWidget);
@@ -74,6 +78,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded(containers),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Containers'), findsOneWidget);
       expect(find.text('1 running / 2 total'), findsOneWidget);
@@ -91,6 +96,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded(containers),
       );
+      await tester.pumpAndSettle();
 
       // Should display container names
       expect(find.text('test-container'), findsNWidgets(2));
@@ -107,6 +113,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded(containers),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Stop'), findsOneWidget);
       expect(find.text('Restart'), findsOneWidget);
@@ -120,6 +127,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded(containers),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Start'), findsOneWidget);
     });
@@ -132,6 +140,7 @@ void main() {
         dockerCubit: mockDockerCubit,
         dockerState: DockerLoaded(containers),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.inventory_2), findsOneWidget);
     });

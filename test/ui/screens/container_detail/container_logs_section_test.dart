@@ -26,6 +26,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Logs'), findsOneWidget);
     });
@@ -40,6 +41,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -54,6 +56,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.refresh), findsOneWidget);
     });
@@ -68,6 +71,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
       
       // Expand the section
       await tester.tap(find.text('Logs'));
@@ -87,6 +91,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
       
       // Expand the section
       await tester.tap(find.text('Logs'));
@@ -110,6 +115,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
       
       // Expand the section
       await tester.tap(find.text('Logs'));
@@ -129,6 +135,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(Card), findsOneWidget);
     });
@@ -143,6 +150,7 @@ void main() {
           ),
         ],
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
       

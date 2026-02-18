@@ -11,8 +11,10 @@ void main() {
     testWidgets('displays Ports title', (tester) async {
       final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('Ports'), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays port information', (tester) async {
@@ -23,8 +25,10 @@ void main() {
       );
       final container = makeDockerContainer(state: "RUNNING", ports: [port]);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('8080:80/tcp'), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays port IP when available', (tester) async {
@@ -35,8 +39,10 @@ void main() {
       );
       final container = makeDockerContainer(state: "RUNNING", ports: [port]);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('0.0.0.0'), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays multiple ports', (tester) async {
@@ -46,8 +52,10 @@ void main() {
       ];
       final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('8080:80/tcp'), findsOneWidget);
+      await tester.pumpAndSettle();
       expect(find.text('8443:443/tcp'), findsOneWidget);
     });
 
@@ -58,15 +66,19 @@ void main() {
       ];
       final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.lan_outlined), findsNWidgets(2));
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays in a card', (tester) async {
       final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
       await tester.pumpApp(ContainerPortsSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.byType(Card), findsOneWidget);
+      await tester.pumpAndSettle();
     });
   });
 }

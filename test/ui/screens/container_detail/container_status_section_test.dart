@@ -12,36 +12,46 @@ void main() {
     testWidgets('displays container icon', (tester) async {
       final container = makeRunningContainer();
       await tester.pumpApp(ContainerStatusSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.inventory_2), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays container name', (tester) async {
       final container = makeRunningContainer();
       await tester.pumpApp(ContainerStatusSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('test-container'), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays container status text', (tester) async {
       final container = makeDockerContainer(state: "RUNNING", status: 'Up 2 hours');
       await tester.pumpApp(ContainerStatusSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.text('Up 2 hours'), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays status badge', (tester) async {
       final container = makeRunningContainer();
       await tester.pumpApp(ContainerStatusSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.byType(StatusBadge), findsOneWidget);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('displays in a card', (tester) async {
       final container = makeRunningContainer();
       await tester.pumpApp(ContainerStatusSection(container: container));
+      await tester.pumpAndSettle();
 
       expect(find.byType(Card), findsOneWidget);
+      await tester.pumpAndSettle();
     });
   });
 }

@@ -20,6 +20,7 @@ void main() {
         const LoginScreen(),
         authCubit: mockAuthCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Unraid Manager'), findsOneWidget);
       expect(find.text('Connect to your Unraid server'), findsOneWidget);
@@ -34,6 +35,7 @@ void main() {
         const LoginScreen(),
         authCubit: mockAuthCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.dns_rounded), findsOneWidget);
     });
@@ -43,6 +45,7 @@ void main() {
         const LoginScreen(),
         authCubit: mockAuthCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(
         find.text(
@@ -57,6 +60,7 @@ void main() {
         const LoginScreen(),
         authCubit: mockAuthCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.visibility_off), findsOneWidget);
     });
@@ -66,6 +70,7 @@ void main() {
         const LoginScreen(),
         authCubit: mockAuthCubit,
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('https://your-unraid-server'), findsOneWidget);
     });
@@ -76,6 +81,7 @@ void main() {
         authCubit: mockAuthCubit,
         authState: const AuthError('Invalid credentials'),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Invalid credentials'), findsOneWidget);
       expect(find.byIcon(Icons.error_outline), findsOneWidget);
@@ -87,6 +93,7 @@ void main() {
         authCubit: mockAuthCubit,
         authState: const AuthLoading(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -97,6 +104,7 @@ void main() {
         authCubit: mockAuthCubit,
         authState: const AuthLoading(),
       );
+      await tester.pumpAndSettle();
 
       final button = tester.widget<ElevatedButton>(
         find.widgetWithText(ElevatedButton, 'Connect'),

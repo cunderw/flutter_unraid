@@ -25,6 +25,7 @@ void main() {
         systemCubit: mockSystemCubit,
         systemState: const SystemInitial(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
       expect(find.text('Loading system info...'), findsOneWidget);
@@ -36,6 +37,7 @@ void main() {
         systemCubit: mockSystemCubit,
         systemState: const SystemLoading(),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
@@ -46,6 +48,7 @@ void main() {
         systemCubit: mockSystemCubit,
         systemState: const SystemError('Failed to load system info'),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ErrorDisplay), findsOneWidget);
       expect(find.text('Failed to load system info'), findsOneWidget);
@@ -61,6 +64,7 @@ void main() {
           arrayData: makeArrayData(),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Overview'), findsOneWidget);
       expect(find.byType(StatCard), findsWidgets);
@@ -77,6 +81,7 @@ void main() {
           arrayData: makeArrayData(),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Uptime'), findsOneWidget);
       expect(find.text('Memory'), findsOneWidget);
@@ -93,6 +98,7 @@ void main() {
           arrayData: makeArrayData(),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('System Information'), findsOneWidget);
     });
@@ -107,6 +113,7 @@ void main() {
           arrayData: makeArrayData(state: 'STARTED'),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.text('Array Status'), findsOneWidget);
     });

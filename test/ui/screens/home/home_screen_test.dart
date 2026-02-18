@@ -32,12 +32,16 @@ void main() {
     testWidgets('displays app bar with title', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
       expect(find.text('Unraid Manager'), findsOneWidget);
     });
 
     testWidgets('displays refresh button in app bar', (tester) async {
       await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.refresh), findsOneWidget);
@@ -46,6 +50,8 @@ void main() {
 
     testWidgets('displays bottom navigation bar with 4 tabs', (tester) async {
       await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
       expect(find.byType(NavigationBar), findsOneWidget);
@@ -58,6 +64,8 @@ void main() {
     testWidgets('displays navigation icons', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.dashboard_outlined), findsOneWidget);
       expect(find.byIcon(Icons.inventory_2_outlined), findsOneWidget);
@@ -67,6 +75,8 @@ void main() {
 
     testWidgets('displays disconnect menu option', (tester) async {
       await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
       // Open popup menu
@@ -79,6 +89,8 @@ void main() {
 
     testWidgets('main tab is selected by default', (tester) async {
       await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
       final navigationBar = tester.widget<NavigationBar>(
