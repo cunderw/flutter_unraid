@@ -180,27 +180,6 @@ Map<String, dynamic> makeVmDetailsResponseJson({
   };
 }
 
-Map<String, dynamic> makeVmLogsResponseJson({
-  String vmId = 'vm-1',
-  int lineCount = 10,
-}) {
-  return {
-    'vms': {
-      'logs': {
-        'vmId': vmId,
-        'lines': List.generate(
-          lineCount,
-          (i) => {
-            'timestamp': DateTime.now().subtract(Duration(minutes: i)).toIso8601String(),
-            'message': 'Log line $i from VM $vmId',
-          },
-        ),
-        'cursor': 'cursor-123',
-      },
-    },
-  };
-}
-
 Map<String, dynamic> makeSharesResponseJson({int count = 2}) {
   return {
     'shares': List.generate(

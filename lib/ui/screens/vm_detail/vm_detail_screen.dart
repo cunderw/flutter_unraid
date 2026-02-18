@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
-import 'package:flutter_unraid/ui/screens/vm_detail/cubit/vm_logs_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/vms/vm_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
-import 'package:flutter_unraid/data/repositories/vm_repository.dart';
 import 'package:flutter_unraid/ui/screens/vm_detail/vm_actions_section.dart';
 import 'package:flutter_unraid/ui/screens/vm_detail/vm_config_section.dart';
-import 'package:flutter_unraid/ui/screens/vm_detail/vm_logs_section.dart';
 import 'package:flutter_unraid/ui/screens/vm_detail/vm_status_section.dart';
 
 class VmDetailScreen extends StatelessWidget {
@@ -65,14 +61,6 @@ class VmDetailBody extends StatelessWidget {
         VmConfigSection(vm: vm),
         AppSpacing.verticalLg,
         VmActionsSection(vm: vm),
-        AppSpacing.verticalLg,
-        BlocProvider(
-          create: (_) => VmLogsCubit(
-            GetIt.I<VmRepository>(),
-            vmId: vm.id,
-          ),
-          child: VmLogsSection(vmId: vm.id),
-        ),
       ],
     );
   }

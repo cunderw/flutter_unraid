@@ -43,24 +43,6 @@ class VmRepository {
     return VmDomain.fromJson(domain);
   }
 
-  Future<List<String>> getVmLogs(String id, {int tail = 100}) async {
-    Log.d('Fetching VM logs for $id', tag: _tag);
-    final result = await _clientManager.client.query(
-      QueryOptions(
-        document: gql(Queries.vmLogs),
-        variables: {'id': id, 'tail': tail},
-        fetchPolicy: FetchPolicy.networkOnly,
-      ),
-    );
-    if (result.hasException) throw result.exception!;
-    final logs = result.data!['vms']['logs'];
-    final lines = logs['lines'] as List<dynamic>;
-    Log.d('Fetched ${lines.length} log lines for VM $id', tag: _tag);
-    return lines
-        .map((e) => e['message'] as String)
-        .toList();
-  }
-
   Future<void> _mutateVm(String id, String action, String mutation) async {
     Log.i('$action VM $id', tag: _tag);
     final result = await _clientManager.client.mutate(

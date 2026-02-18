@@ -157,21 +157,6 @@ class Queries {
     }
   ''';
 
-  static const String vmLogs = r'''
-    query VmLogs($id: PrefixedID!, $tail: Int) {
-      vms {
-        logs(id: $id, tail: $tail) {
-          vmId
-          lines {
-            timestamp
-            message
-          }
-          cursor
-        }
-      }
-    }
-  ''';
-
   static const String shares = r'''
     query Shares {
       shares {
