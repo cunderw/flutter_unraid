@@ -200,7 +200,22 @@ VmDomain makeVmDomain({
   String id = 'vm-1',
   String? name = 'TestVM',
   String state = 'RUNNING',
-}) => VmDomain(id: id, name: name, state: state);
+  int? cpus = 4,
+  int? memory = 4294967296,
+  bool? autostart = true,
+  String? template = 'Ubuntu',
+  String? description = 'Test VM',
+}) =>
+    VmDomain(
+      id: id,
+      name: name,
+      state: state,
+      cpus: cpus,
+      memory: memory,
+      autostart: autostart,
+      template: template,
+      description: description,
+    );
 
 VmDomain makeRunningVm({String id = 'vm-1'}) =>
     makeVmDomain(id: id, state: 'RUNNING');

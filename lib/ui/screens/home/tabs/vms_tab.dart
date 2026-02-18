@@ -6,6 +6,7 @@ import 'package:flutter_unraid/blocs/vms/vm_state.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
+import 'package:flutter_unraid/ui/screens/vm_detail/vm_detail_screen.dart';
 import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/confirmation_dialog.dart';
@@ -90,6 +91,16 @@ class _VmTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionCard(
       title: vm.displayName,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => BlocProvider.value(
+              value: context.read<VmCubit>(),
+              child: VmDetailScreen(vmId: vm.id),
+            ),
+          ),
+        );
+      },
       leading: Container(
         width: 32,
         height: 32,

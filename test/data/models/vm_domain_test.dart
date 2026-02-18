@@ -12,11 +12,21 @@ void main() {
           'id': 'vm-1',
           'name': 'TestVM',
           'state': 'RUNNING',
+          'cpus': 4,
+          'memory': 4294967296,
+          'autostart': true,
+          'template': 'Ubuntu',
+          'description': 'Test VM',
         };
         final vm = VmDomain.fromJson(json);
         expect(vm.id, 'vm-1');
         expect(vm.name, 'TestVM');
         expect(vm.state, 'RUNNING');
+        expect(vm.cpus, 4);
+        expect(vm.memory, 4294967296);
+        expect(vm.autostart, true);
+        expect(vm.template, 'Ubuntu');
+        expect(vm.description, 'Test VM');
       });
 
       test('handles missing optional fields', () {
@@ -25,6 +35,11 @@ void main() {
         expect(vm.id, 'vm-1');
         expect(vm.name, isNull);
         expect(vm.state, 'NOSTATE');
+        expect(vm.cpus, isNull);
+        expect(vm.memory, isNull);
+        expect(vm.autostart, isNull);
+        expect(vm.template, isNull);
+        expect(vm.description, isNull);
       });
     });
 
@@ -71,6 +86,23 @@ void main() {
         expect(vm.isPaused, false);
         expect(vm.isStopped, false);
         expect(vm.isCrashed, true);
+      });
+    });
+
+    group('memoryDisplay', () {
+      test('returns N/A when memory is null', () {
+        final vm = makeVmDomain(memory: null);
+        expect(vm.memoryDisplay, 'N/A');
+      });
+
+      test('returns MB when memory is less than 1GB', () {
+        final vm = makeVmDomain(memory: 536870912); // 512 MB
+        expect(vm.memoryDisplay, '512 MB');
+      });
+
+      test('returns GB when memory is 1GB or more', () {
+        final vm = makeVmDomain(memory: 4294967296); // 4 GB
+        expect(vm.memoryDisplay, '4.0 GB');
       });
     });
   });

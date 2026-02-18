@@ -28,6 +28,21 @@ class VmRepository {
         .toList();
   }
 
+  Future<VmDomain> getVmDetails(String id) async {
+    Log.d('Fetching VM details for $id', tag: _tag);
+    final result = await _clientManager.client.query(
+      QueryOptions(
+        document: gql(Queries.vmDetails),
+        variables: {'id': id},
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+    if (result.hasException) throw result.exception!;
+    final domain = result.data!['vms']['domain'] as Map<String, dynamic>;
+    Log.d('Fetched VM details for $id', tag: _tag);
+    return VmDomain.fromJson(domain);
+  }
+
   Future<void> _mutateVm(String id, String action, String mutation) async {
     Log.i('$action VM $id', tag: _tag);
     final result = await _clientManager.client.mutate(
