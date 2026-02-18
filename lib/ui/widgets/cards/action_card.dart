@@ -55,11 +55,13 @@ class ActionCard extends StatelessWidget {
               child,
               if (actions != null && actions!.isNotEmpty) ...[
                 AppSpacing.verticalMd,
-                Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: actions!,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children:
+                      actions!
+                          .expand((a) => [a, AppSpacing.horizontalSm])
+                          .toList()
+                        ..removeLast(),
                 ),
               ],
             ],

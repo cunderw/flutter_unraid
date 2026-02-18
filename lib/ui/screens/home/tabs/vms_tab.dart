@@ -144,8 +144,9 @@ class _VmTile extends StatelessWidget {
           color: AppColors.textSecondary,
           onPressed: () => cubit.rebootVm(vm.id),
         ),
+        _moreActionsButton(context, cubit),
       ],
-      if (vm.isPaused)
+      if (vm.isPaused) ...[
         _actionButton(
           context,
           icon: Icons.play_arrow,
@@ -153,14 +154,8 @@ class _VmTile extends StatelessWidget {
           color: AppColors.running,
           onPressed: () => cubit.resumeVm(vm.id),
         ),
-      if (vm.isRunning || vm.isPaused)
-        _actionButton(
-          context,
-          icon: Icons.dangerous_outlined,
-          label: 'Force Stop',
-          color: AppColors.stopped,
-          onPressed: () => _confirmForceStop(context, cubit),
-        ),
+        _moreActionsButton(context, cubit),
+      ],
     ];
   }
 
@@ -176,6 +171,44 @@ class _VmTile extends StatelessWidget {
     if (confirmed) {
       await cubit.forceStopVm(vm.id);
     }
+  }
+
+  Widget _moreActionsButton(BuildContext context, VmCubit cubit) {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_vert,
+        size: 16,
+        color: AppColors.textSecondary,
+      ),
+      iconSize: 16,
+      padding: EdgeInsets.zero,
+      tooltip: 'More actions',
+      offset: const Offset(0, 32),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 'force_stop',
+          child: Row(
+            children: [
+              Icon(
+                Icons.dangerous_outlined,
+                size: 18,
+                color: AppColors.stopped,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                'Force Stop',
+                style: TextStyle(color: AppColors.stopped, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      ],
+      onSelected: (value) {
+        if (value == 'force_stop') {
+          _confirmForceStop(context, cubit);
+        }
+      },
+    );
   }
 
   Widget _actionButton(
