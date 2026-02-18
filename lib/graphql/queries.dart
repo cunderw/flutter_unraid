@@ -191,12 +191,14 @@ class Queries {
   static const String notifications = r'''
     query Notifications {
       notifications {
-        id
-        subject
-        description
-        severity
-        timestamp
-        read
+        items {
+          id
+          subject
+          description
+          severity
+          timestamp
+          read
+        }
       }
     }
   ''';

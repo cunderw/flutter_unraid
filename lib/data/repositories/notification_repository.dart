@@ -21,7 +21,8 @@ class NotificationRepository {
       ),
     );
     if (result.hasException) throw result.exception!;
-    final notifications = result.data!['notifications'] as List<dynamic>;
+    final notificationsData = result.data!['notifications'] as Map<String, dynamic>;
+    final notifications = notificationsData['items'] as List<dynamic>;
     Log.d('Fetched ${notifications.length} notifications', tag: _tag);
     return notifications
         .map((e) => Notification.fromJson(e as Map<String, dynamic>))

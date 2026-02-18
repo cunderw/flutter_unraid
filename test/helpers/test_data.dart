@@ -242,17 +242,19 @@ Map<String, dynamic> makeTestConnectionResponseJson() {
 
 Map<String, dynamic> makeNotificationsResponseJson({int count = 2}) {
   return {
-    'notifications': List.generate(
-      count,
-      (i) => {
-        'id': 'notif-$i',
-        'subject': 'Notification $i',
-        'description': 'Description for notification $i',
-        'severity': i == 0 ? 'ALERT' : (i == 1 ? 'WARNING' : 'NORMAL'),
-        'timestamp': '2025-01-01T00:00:0${i}Z',
-        'read': i.isEven,
-      },
-    ),
+    'notifications': {
+      'items': List.generate(
+        count,
+        (i) => {
+          'id': 'notif-$i',
+          'subject': 'Notification $i',
+          'description': 'Description for notification $i',
+          'severity': i == 0 ? 'ALERT' : (i == 1 ? 'WARNING' : 'NORMAL'),
+          'timestamp': '2025-01-01T00:00:0${i}Z',
+          'read': i.isEven,
+        },
+      ),
+    },
   };
 }
 
