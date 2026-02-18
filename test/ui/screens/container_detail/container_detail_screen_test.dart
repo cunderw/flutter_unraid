@@ -61,8 +61,9 @@ void main() {
     });
 
     testWidgets('displays ports section only when container has ports', (tester) async {
-      final containerWithPorts = makeRunningContainer(
+      final containerWithPorts = makeDockerContainer(
         id: 'c1',
+        state: 'RUNNING',
         ports: [makeContainerPort()],
       );
       await tester.pumpAppWithBlocs(
@@ -75,7 +76,7 @@ void main() {
     });
 
     testWidgets('hides ports section when container has no ports', (tester) async {
-      final containerNoPorts = makeRunningContainer(id: 'c1', ports: []);
+      final containerNoPorts = makeDockerContainer(id: 'c1', state: 'RUNNING', ports: []);
       await tester.pumpAppWithBlocs(
         const ContainerDetailScreen(containerId: 'c1'),
         dockerCubit: mockDockerCubit,

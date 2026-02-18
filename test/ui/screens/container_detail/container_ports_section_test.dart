@@ -9,7 +9,7 @@ import '../../../helpers/pump_helpers.dart';
 void main() {
   group('ContainerPortsSection', () {
     testWidgets('displays Ports title', (tester) async {
-      final container = makeRunningContainer(ports: [makeContainerPort()]);
+      final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.text('Ports'), findsOneWidget);
@@ -21,7 +21,7 @@ void main() {
         containerPort: '80',
         protocol: 'tcp',
       );
-      final container = makeRunningContainer(ports: [port]);
+      final container = makeDockerContainer(state: "RUNNING", ports: [port]);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.text('8080:80/tcp'), findsOneWidget);
@@ -33,7 +33,7 @@ void main() {
         containerPort: '80',
         ip: '0.0.0.0',
       );
-      final container = makeRunningContainer(ports: [port]);
+      final container = makeDockerContainer(state: "RUNNING", ports: [port]);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.text('0.0.0.0'), findsOneWidget);
@@ -44,7 +44,7 @@ void main() {
         makeContainerPort(hostPort: '8080', containerPort: '80'),
         makeContainerPort(hostPort: '8443', containerPort: '443'),
       ];
-      final container = makeRunningContainer(ports: ports);
+      final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.text('8080:80/tcp'), findsOneWidget);
@@ -56,14 +56,14 @@ void main() {
         makeContainerPort(hostPort: '8080', containerPort: '80'),
         makeContainerPort(hostPort: '8443', containerPort: '443'),
       ];
-      final container = makeRunningContainer(ports: ports);
+      final container = makeDockerContainer(state: "RUNNING", ports: ports);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.byIcon(Icons.lan_outlined), findsNWidgets(2));
     });
 
     testWidgets('displays in a card', (tester) async {
-      final container = makeRunningContainer(ports: [makeContainerPort()]);
+      final container = makeDockerContainer(state: "RUNNING", ports: [makeContainerPort()]);
       await tester.pumpApp(ContainerPortsSection(container: container));
 
       expect(find.byType(Card), findsOneWidget);

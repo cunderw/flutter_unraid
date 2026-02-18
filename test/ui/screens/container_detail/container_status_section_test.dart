@@ -24,7 +24,7 @@ void main() {
     });
 
     testWidgets('displays container status text', (tester) async {
-      final container = makeRunningContainer(status: 'Up 2 hours');
+      final container = makeDockerContainer(state: "RUNNING", status: 'Up 2 hours');
       await tester.pumpApp(ContainerStatusSection(container: container));
 
       expect(find.text('Up 2 hours'), findsOneWidget);

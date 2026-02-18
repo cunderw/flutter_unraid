@@ -17,7 +17,7 @@ void main() {
     });
 
     testWidgets('displays image information', (tester) async {
-      final container = makeRunningContainer(
+      final container = makeDockerContainer(
         image: 'nginx:latest',
         imageId: 'sha256:abc123',
       );
@@ -28,7 +28,7 @@ void main() {
     });
 
     testWidgets('displays image ID', (tester) async {
-      final container = makeRunningContainer(imageId: 'sha256:abc123');
+      final container = makeDockerContainer(imageId: 'sha256:abc123');
       await tester.pumpApp(ContainerConfigSection(container: container));
 
       expect(find.text('Image ID'), findsOneWidget);
@@ -36,7 +36,7 @@ void main() {
     });
 
     testWidgets('displays container ID', (tester) async {
-      final container = makeRunningContainer(id: 'container-123');
+      final container = makeDockerContainer(id: 'container-123');
       await tester.pumpApp(ContainerConfigSection(container: container));
 
       expect(find.text('Container ID'), findsOneWidget);
@@ -44,7 +44,7 @@ void main() {
     });
 
     testWidgets('displays auto start as Yes when true', (tester) async {
-      final container = makeRunningContainer(autoStart: true);
+      final container = makeDockerContainer(autoStart: true);
       await tester.pumpApp(ContainerConfigSection(container: container));
 
       expect(find.text('Auto Start'), findsOneWidget);
@@ -52,7 +52,7 @@ void main() {
     });
 
     testWidgets('displays auto start as No when false', (tester) async {
-      final container = makeRunningContainer(autoStart: false);
+      final container = makeDockerContainer(autoStart: false);
       await tester.pumpApp(ContainerConfigSection(container: container));
 
       expect(find.text('Auto Start'), findsOneWidget);

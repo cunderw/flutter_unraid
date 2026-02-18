@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_unraid/ui/screens/home/home_screen.dart';
 
-import '../../helpers/get_it_helpers.dart';
-import '../../helpers/mocks.dart';
-import '../../helpers/pump_helpers.dart';
+import '../../../helpers/get_it_helpers.dart';
+import '../../../helpers/mocks.dart';
+import '../../../helpers/pump_helpers.dart';
 
 void main() {
   late MockSystemRepository mockSystemRepo;
