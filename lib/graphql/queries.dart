@@ -130,10 +130,12 @@ class Queries {
 
   static const String systemLogs = r'''
     query SystemLogs($tail: Int) {
-      syslog(tail: $tail) {
-        lines {
-          timestamp
-          message
+      system {
+        logs(tail: $tail) {
+          lines {
+            timestamp
+            message
+          }
         }
       }
     }

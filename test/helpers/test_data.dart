@@ -224,14 +224,16 @@ Map<String, dynamic> makeContainerLogsResponseJson({int lineCount = 3}) {
 
 Map<String, dynamic> makeSystemLogsResponseJson({int lineCount = 3}) {
   return {
-    'syslog': {
-      'lines': List.generate(
-        lineCount,
-        (i) => {
-          'timestamp': '2025-01-01T00:00:0${i}Z',
-          'message': 'System log line $i',
-        },
-      ),
+    'system': {
+      'logs': {
+        'lines': List.generate(
+          lineCount,
+          (i) => {
+            'timestamp': '2025-01-01T00:00:0${i}Z',
+            'message': 'System log line $i',
+          },
+        ),
+      },
     },
   };
 }

@@ -74,7 +74,7 @@ class SystemRepository {
     );
     if (result.hasException) throw result.exception!;
     Log.d('System logs loaded', tag: _tag);
-    final lines = result.data!['syslog']['lines'] as List;
+    final lines = result.data!['system']['logs']['lines'] as List;
     return lines.cast<Map<String, dynamic>>();
   }
 }
