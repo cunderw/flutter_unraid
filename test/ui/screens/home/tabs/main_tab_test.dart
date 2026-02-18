@@ -6,6 +6,7 @@ import 'package:flutter_unraid/ui/screens/home/tabs/main_tab.dart';
 import 'package:flutter_unraid/ui/widgets/cards/stat_card.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_display.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
+import 'package:flutter_unraid/ui/widgets/layout/collapsible_section.dart';
 
 import '../../../../helpers/factories.dart';
 import '../../../../helpers/mocks.dart';
@@ -116,7 +117,99 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(find.text('ARRAY'), 200);
       expect(find.text('ARRAY'), findsOneWidget);
+    });
+
+    testWidgets('has collapsible sections', (tester) async {
+      await tester.pumpAppWithBlocs(
+        const MainTab(),
+        systemCubit: mockSystemCubit,
+        systemState: SystemLoaded(
+          systemInfo: makeSystemInfo(),
+          memory: makeMemoryUtilization(),
+          arrayData: makeArrayData(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Scroll to see all sections
+      await tester.scrollUntilVisible(find.text('DISKS'), 200);
+
+      expect(find.byType(CollapsibleSection), findsNWidgets(4));
+    });
+
+    testWidgets('Overview and System sections are expanded by default',
+        (tester) async {
+      await tester.pumpAppWithBlocs(
+        const MainTab(),
+        systemCubit: mockSystemCubit,
+        systemState: SystemLoaded(
+          systemInfo: makeSystemInfo(),
+          memory: makeMemoryUtilization(),
+          arrayData: makeArrayData(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Overview is expanded - stat cards should be visible
+      expect(find.byType(StatCard), findsWidgets);
+
+      // System is expanded - server info should be visible
+      expect(find.text('Server Info'), findsOneWidget);
+    });
+
+    testWidgets('Array and Disks sections are collapsed by default',
+        (tester) async {
+      await tester.pumpAppWithBlocs(
+        const MainTab(),
+        systemCubit: mockSystemCubit,
+        systemState: SystemLoaded(
+          systemInfo: makeSystemInfo(),
+          memory: makeMemoryUtilization(),
+          arrayData: makeArrayData(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Array section header is visible (scroll to it)
+      await tester.scrollUntilVisible(find.text('ARRAY'), 200);
+      expect(find.text('ARRAY'), findsOneWidget);
+      // But Array Status card should not be visible (collapsed)
+      expect(find.text('Array Status'), findsNothing);
+    });
+
+    testWidgets('can expand and collapse sections', (tester) async {
+      await tester.pumpAppWithBlocs(
+        const MainTab(),
+        systemCubit: mockSystemCubit,
+        systemState: SystemLoaded(
+          systemInfo: makeSystemInfo(),
+          memory: makeMemoryUtilization(),
+          arrayData: makeArrayData(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Scroll to Array section
+      await tester.scrollUntilVisible(find.text('ARRAY'), 200);
+
+      // Array section is collapsed
+      expect(find.text('Array Status'), findsNothing);
+
+      // Tap to expand
+      await tester.tap(find.text('ARRAY'));
+      await tester.pumpAndSettle();
+
+      // Now Array Status should be visible
+      expect(find.text('Array Status'), findsOneWidget);
+
+      // Tap again to collapse
+      await tester.tap(find.text('ARRAY'));
+      await tester.pumpAndSettle();
+
+      // Array Status should be hidden again
+      expect(find.text('Array Status'), findsNothing);
     });
   });
 }
