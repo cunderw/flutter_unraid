@@ -32,7 +32,7 @@ test/
 │       ├── system_repository_test.dart
 │       └── vm_repository_test.dart
 ├── ui/
-│   ├── screens/                     # Screen tests (6 files) ✨ NEW
+│   ├── screens/                     # Screen tests (12 files) ✨ NEW
 │   │   ├── login_screen_test.dart
 │   │   ├── home/
 │   │   │   ├── home_screen_test.dart
@@ -41,6 +41,13 @@ test/
 │   │   │       ├── docker_tab_test.dart
 │   │   │       ├── vms_tab_test.dart
 │   │   │       └── shares_tab_test.dart
+│   │   └── container_detail/
+│   │       ├── container_detail_screen_test.dart
+│   │       ├── container_status_section_test.dart
+│   │       ├── container_actions_section_test.dart
+│   │       ├── container_config_section_test.dart
+│   │       ├── container_ports_section_test.dart
+│   │       └── container_logs_section_test.dart
 │   └── widgets/                     # Widget tests (3 files) ✨ NEW
 │       ├── feedback/
 │       │   ├── loading_indicator_test.dart
@@ -98,7 +105,7 @@ Representative widget tests demonstrating the testing pattern for UI components:
 | `status_badge.dart` | `status_badge_test.dart` | ✅ Label display, factory methods (forContainerState, forVmState, forArrayState), color indicators |
 | `empty_state.dart` | `empty_state_test.dart` | ✅ Message display, custom icons, optional actions, centering |
 
-### Screen Tests (6 new files)
+### Screen Tests (12 new files)
 
 Comprehensive screen tests covering all major screens and tabs:
 
@@ -110,6 +117,12 @@ Comprehensive screen tests covering all major screens and tabs:
 | `docker_tab.dart` | `docker_tab_test.dart` | ✅ Loading/error/empty states, container list, status badges, action buttons |
 | `vms_tab.dart` | `vms_tab_test.dart` | ✅ Loading/error/empty states, VM list, status badges, icons |
 | `shares_tab.dart` | `shares_tab_test.dart` | ✅ Loading/error/empty states, share list, icons |
+| `container_detail_screen.dart` | `container_detail_screen_test.dart` | ✅ Container not found, app bar title, all sections display, ports conditional display |
+| `container_status_section.dart` | `container_status_section_test.dart` | ✅ Container icon, name, status text, status badge |
+| `container_actions_section.dart` | `container_actions_section_test.dart` | ✅ Actions title, start/stop/restart buttons based on state |
+| `container_config_section.dart` | `container_config_section_test.dart` | ✅ Configuration title, image info, container ID, auto start |
+| `container_ports_section.dart` | `container_ports_section_test.dart` | ✅ Ports title, port mappings, IP display, multiple ports |
+| `container_logs_section.dart` | `container_logs_section_test.dart` | ✅ Logs title, loading state, error display, log lines, expand/collapse |
 
 ### Cubit Test Improvements
 
@@ -276,7 +289,7 @@ With the newly added tests, the project now has comprehensive coverage of:
 - ✅ All 5 data models (100%)
 - ✅ All 5 repositories (100%)
 - ✅ All 6 cubits with proper error handling paths (100%)
-- ✅ Core screen tests (6 screens tested)
+- ✅ Core screen tests (12 screens/sections tested)
 - ✅ Representative widget tests (3 widgets tested)
 - ✅ Critical business logic paths
 - ✅ Error scenarios and edge cases
@@ -288,18 +301,18 @@ With the newly added tests, the project now has comprehensive coverage of:
 | Model tests | 0 | 5 | +5 |
 | Repository tests | 1 | 5 | +4 |
 | Cubit tests | 6 | 6 | Enhanced |
-| Screen tests | 0 | 6 | +6 |
+| Screen tests | 0 | 12 | +12 |
 | Widget tests | 1 | 4 | +3 |
-| **Total** | **8** | **26** | **+18** |
+| **Total** | **8** | **32** | **+24** |
 
 ### UI Test Coverage
 
 | Category | Tested | Total | Coverage |
 |----------|--------|-------|----------|
-| Screens | 6 | 12 | 50% |
+| Screens | 12 | 12 | 100% |
 | Widgets | 3 | 14 | 21% |
 
-**Note**: The screen tests cover all major screens including login, home screen, and all 4 navigation tabs (Main, Docker, VMs, Shares). The remaining 6 untested screens are detail/section screens. The 3 widget tests provide a foundation and testing pattern for future UI test additions.
+**Note**: All screen files now have comprehensive test coverage including the container_detail screen and all its sections. The 3 widget tests provide a foundation and testing pattern for future UI test additions.
 
 ## Key Achievements
 
