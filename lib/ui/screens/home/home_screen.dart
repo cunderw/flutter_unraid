@@ -50,65 +50,67 @@ class _HomeScreenState extends State<HomeScreen> {
           create: (_) => SharesCubit(getIt<ShareRepository>())..load(),
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Unraid Manager'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              tooltip: 'Refresh',
-              onPressed: () => _refreshCurrentTab(context),
-            ),
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'logout') {
-                  context.read<AuthCubit>().logout();
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'logout',
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout, size: 20),
-                      SizedBox(width: AppSpacing.sm),
-                      Text('Disconnect'),
-                    ],
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Unraid Manager'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Refresh',
+                onPressed: () => _refreshCurrentTab(context),
+              ),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    context.read<AuthCubit>().logout();
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, size: 20),
+                        SizedBox(width: AppSpacing.sm),
+                        Text('Disconnect'),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: IndexedStack(index: _currentIndex, children: _tabs),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) =>
-              setState(() => _currentIndex = index),
-          backgroundColor: AppColors.surface,
-          indicatorColor: AppColors.unraidOrange.withValues(alpha: 0.2),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.dashboard_outlined),
-              selectedIcon: Icon(Icons.dashboard),
-              label: 'Main',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.inventory_2_outlined),
-              selectedIcon: Icon(Icons.inventory_2),
-              label: 'Docker',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.computer_outlined),
-              selectedIcon: Icon(Icons.computer),
-              label: 'VMs',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.folder_shared_outlined),
-              selectedIcon: Icon(Icons.folder_shared),
-              label: 'Shares',
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
+          body: IndexedStack(index: _currentIndex, children: _tabs),
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) =>
+                setState(() => _currentIndex = index),
+            backgroundColor: AppColors.surface,
+            indicatorColor: AppColors.unraidOrange.withValues(alpha: 0.2),
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.dashboard_outlined),
+                selectedIcon: Icon(Icons.dashboard),
+                label: 'Main',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.inventory_2_outlined),
+                selectedIcon: Icon(Icons.inventory_2),
+                label: 'Docker',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.computer_outlined),
+                selectedIcon: Icon(Icons.computer),
+                label: 'VMs',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.folder_shared_outlined),
+                selectedIcon: Icon(Icons.folder_shared),
+                label: 'Shares',
+              ),
+            ],
+          ),
         ),
       ),
     );
