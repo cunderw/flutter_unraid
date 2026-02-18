@@ -140,6 +140,38 @@ class Queries {
     }
   ''';
 
+  static const String vmDetails = r'''
+    query VmDetails($id: PrefixedID!) {
+      vms {
+        domain(id: $id) {
+          id
+          name
+          state
+          cpus
+          memory
+          autostart
+          template
+          description
+        }
+      }
+    }
+  ''';
+
+  static const String vmLogs = r'''
+    query VmLogs($id: PrefixedID!, $tail: Int) {
+      vms {
+        logs(id: $id, tail: $tail) {
+          vmId
+          lines {
+            timestamp
+            message
+          }
+          cursor
+        }
+      }
+    }
+  ''';
+
   static const String shares = r'''
     query Shares {
       shares {

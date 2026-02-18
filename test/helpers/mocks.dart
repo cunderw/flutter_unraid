@@ -23,6 +23,8 @@ import 'package:flutter_unraid/data/repositories/vm_repository.dart';
 import 'package:flutter_unraid/graphql/client.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/cubit/container_logs_cubit.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/cubit/container_logs_state.dart';
+import 'package:flutter_unraid/ui/screens/vm_detail/cubit/vm_logs_cubit.dart';
+import 'package:flutter_unraid/ui/screens/vm_detail/cubit/vm_logs_state.dart';
 
 // Core services
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
@@ -55,6 +57,8 @@ class MockSharesCubit extends MockCubit<SharesState> implements SharesCubit {}
 
 class MockContainerLogsCubit extends MockCubit<ContainerLogsState>
     implements ContainerLogsCubit {}
+
+class MockVmLogsCubit extends MockCubit<VmLogsState> implements VmLogsCubit {}
 
 /// Helper class to create a BlocProvider with a mocked cubit for testing.
 class MockBlocProvider<C extends StateStreamableSource<S>, S>

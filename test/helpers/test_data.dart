@@ -143,8 +143,60 @@ Map<String, dynamic> makeVmsResponseJson({int count = 2}) {
           'id': 'vm-$i',
           'name': 'VM-$i',
           'state': i.isEven ? 'RUNNING' : 'SHUTOFF',
+          'cpus': 4,
+          'memory': 4294967296,
+          'autostart': true,
+          'template': 'Ubuntu',
+          'description': 'Test VM $i',
         },
       ),
+    },
+  };
+}
+
+Map<String, dynamic> makeVmDetailsResponseJson({
+  String id = 'vm-1',
+  String name = 'TestVM',
+  String state = 'RUNNING',
+  int cpus = 4,
+  int memory = 4294967296,
+  bool autostart = true,
+  String template = 'Ubuntu',
+  String description = 'Test VM',
+}) {
+  return {
+    'vms': {
+      'domain': {
+        'id': id,
+        'name': name,
+        'state': state,
+        'cpus': cpus,
+        'memory': memory,
+        'autostart': autostart,
+        'template': template,
+        'description': description,
+      },
+    },
+  };
+}
+
+Map<String, dynamic> makeVmLogsResponseJson({
+  String vmId = 'vm-1',
+  int lineCount = 10,
+}) {
+  return {
+    'vms': {
+      'logs': {
+        'vmId': vmId,
+        'lines': List.generate(
+          lineCount,
+          (i) => {
+            'timestamp': DateTime.now().subtract(Duration(minutes: i)).toIso8601String(),
+            'message': 'Log line $i from VM $vmId',
+          },
+        ),
+        'cursor': 'cursor-123',
+      },
     },
   };
 }
