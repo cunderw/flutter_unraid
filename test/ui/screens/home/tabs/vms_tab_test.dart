@@ -80,7 +80,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Virtual Machines'), findsOneWidget);
+      expect(find.text('VIRTUAL MACHINES'), findsOneWidget);
       expect(find.text('1 running / 2 total'), findsOneWidget);
       expect(find.byType(RefreshIndicator), findsOneWidget);
     });

@@ -66,7 +66,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Overview'), findsOneWidget);
+      expect(find.text('OVERVIEW'), findsOneWidget);
       expect(find.byType(StatCard), findsWidgets);
       expect(find.byType(RefreshIndicator), findsOneWidget);
     });
@@ -100,7 +100,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('System Information'), findsOneWidget);
+      expect(find.text('SYSTEM'), findsOneWidget);
     });
 
     testWidgets('displays array status section', (tester) async {
@@ -115,7 +115,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Array Status'), findsOneWidget);
+      expect(find.text('ARRAY'), findsOneWidget);
     });
   });
 }

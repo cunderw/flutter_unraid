@@ -80,7 +80,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Shares'), findsOneWidget);
+      expect(find.text('SHARES'), findsOneWidget);
       expect(find.text('2 total'), findsOneWidget);
       expect(find.byType(RefreshIndicator), findsOneWidget);
     });
