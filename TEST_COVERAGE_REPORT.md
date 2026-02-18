@@ -32,13 +32,22 @@ test/
 │       ├── system_repository_test.dart
 │       └── vm_repository_test.dart
 ├── ui/
-│   └── widgets/                    # Widget tests (3 files) ✨ NEW
+│   ├── screens/                     # Screen tests (6 files) ✨ NEW
+│   │   ├── login_screen_test.dart
+│   │   ├── home/
+│   │   │   ├── home_screen_test.dart
+│   │   │   └── tabs/
+│   │   │       ├── main_tab_test.dart
+│   │   │       ├── docker_tab_test.dart
+│   │   │       ├── vms_tab_test.dart
+│   │   │       └── shares_tab_test.dart
+│   └── widgets/                     # Widget tests (3 files) ✨ NEW
 │       ├── feedback/
 │       │   ├── loading_indicator_test.dart
 │       │   └── empty_state_test.dart
 │       └── data_display/
 │           └── status_badge_test.dart
-└── helpers/                        # Test utilities
+└── helpers/                         # Test utilities
     ├── factories.dart
     ├── get_it_helpers.dart
     ├── mocks.dart
@@ -88,6 +97,19 @@ Representative widget tests demonstrating the testing pattern for UI components:
 | `loading_indicator.dart` | `loading_indicator_test.dart` | ✅ Displays spinner, optional message, centering |
 | `status_badge.dart` | `status_badge_test.dart` | ✅ Label display, factory methods (forContainerState, forVmState, forArrayState), color indicators |
 | `empty_state.dart` | `empty_state_test.dart` | ✅ Message display, custom icons, optional actions, centering |
+
+### Screen Tests (6 new files)
+
+Comprehensive screen tests covering all major screens and tabs:
+
+| Screen | Test File | Tests |
+|--------|-----------|-------|
+| `login_screen.dart` | `login_screen_test.dart` | ✅ Form display, validation hints, error states, loading states, visibility toggle |
+| `home_screen.dart` | `home_screen_test.dart` | ✅ App bar, navigation bar, tabs, menu options |
+| `main_tab.dart` | `main_tab_test.dart` | ✅ Loading/error/loaded states, system info display, stat cards, array status |
+| `docker_tab.dart` | `docker_tab_test.dart` | ✅ Loading/error/empty states, container list, status badges, action buttons |
+| `vms_tab.dart` | `vms_tab_test.dart` | ✅ Loading/error/empty states, VM list, status badges, icons |
+| `shares_tab.dart` | `shares_tab_test.dart` | ✅ Loading/error/empty states, share list, icons |
 
 ### Cubit Test Improvements
 
@@ -238,6 +260,7 @@ flutter test test/data/models/docker_container_test.dart
 flutter test test/data/models/
 flutter test test/data/repositories/
 flutter test test/blocs/
+flutter test test/ui/screens/
 flutter test test/ui/widgets/
 
 # Run tests with coverage
@@ -253,7 +276,8 @@ With the newly added tests, the project now has comprehensive coverage of:
 - ✅ All 5 data models (100%)
 - ✅ All 5 repositories (100%)
 - ✅ All 6 cubits with proper error handling paths (100%)
-- ✅ Representative widget tests (3 widgets tested as examples)
+- ✅ Core screen tests (6 screens tested)
+- ✅ Representative widget tests (3 widgets tested)
 - ✅ Critical business logic paths
 - ✅ Error scenarios and edge cases
 
@@ -264,26 +288,29 @@ With the newly added tests, the project now has comprehensive coverage of:
 | Model tests | 0 | 5 | +5 |
 | Repository tests | 1 | 5 | +4 |
 | Cubit tests | 6 | 6 | Enhanced |
+| Screen tests | 0 | 6 | +6 |
 | Widget tests | 1 | 4 | +3 |
-| **Total** | **8** | **20** | **+12** |
+| **Total** | **8** | **26** | **+18** |
 
-### Widget Test Coverage
+### UI Test Coverage
 
 | Category | Tested | Total | Coverage |
 |----------|--------|-------|----------|
-| Screens | 0 | 14 | 0% |
+| Screens | 6 | 12 | 50% |
 | Widgets | 3 | 14 | 21% |
 
-**Note**: The 3 widget tests provide a foundation and testing pattern for future widget/screen test additions. Comprehensive UI testing would require additional tests for the remaining 25 UI components.
+**Note**: The screen tests cover all major screens including login, home screen, and all 4 navigation tabs (Main, Docker, VMs, Shares). The remaining 6 untested screens are detail/section screens. The 3 widget tests provide a foundation and testing pattern for future UI test additions.
 
 ## Key Achievements
 
 1. **Complete model coverage**: All 5 models have comprehensive tests
 2. **Complete repository coverage**: All 5 repositories have comprehensive tests
 3. **Enhanced cubit tests**: Added missing ActionError test cases
-4. **Widget test foundation**: Added representative widget tests demonstrating UI testing patterns
-5. **Consistent patterns**: All tests follow project conventions
-6. **Comprehensive helpers**: Full suite of mocks, factories, and test data
+4. **Core screen coverage**: Tests for login, home, and all main tabs
+5. **Widget test foundation**: Added representative widget tests demonstrating UI testing patterns
+6. **Enhanced test helpers**: Updated pump_helpers and get_it_helpers for easier testing
+7. **Consistent patterns**: All tests follow project conventions
+8. **Comprehensive helpers**: Full suite of mocks, factories, and test data
 
 ## Next Steps
 
