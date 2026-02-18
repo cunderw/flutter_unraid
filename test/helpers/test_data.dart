@@ -208,15 +208,17 @@ Map<String, dynamic> makeSharesResponseJson({int count = 2}) {
 Map<String, dynamic> makeContainerLogsResponseJson({int lineCount = 3}) {
   return {
     'docker': {
-      'containerLogs': {
-        'lines': List.generate(
-          lineCount,
-          (i) => {
-            'timestamp': '2025-01-01T00:00:0${i}Z',
-            'message': 'Log line $i',
-            'stream': 'stdout',
-          },
-        ),
+      'container': {
+        'logs': {
+          'lines': List.generate(
+            lineCount,
+            (i) => {
+              'timestamp': '2025-01-01T00:00:0${i}Z',
+              'message': 'Log line $i',
+              'stream': 'stdout',
+            },
+          ),
+        },
       },
     },
   };

@@ -76,7 +76,8 @@ class DockerRepository {
     );
     if (result.hasException) throw result.exception!;
     Log.d('Fetched logs for container $id', tag: _tag);
-    final logs = result.data!['docker']['containerLogs'] as Map<String, dynamic>?;
+    final container = result.data!['docker']['container'] as Map<String, dynamic>?;
+    final logs = container?['logs'] as Map<String, dynamic>?;
     final lines = logs?['lines'] as List<dynamic>? ?? [];
     return lines.cast<Map<String, dynamic>>();
   }
