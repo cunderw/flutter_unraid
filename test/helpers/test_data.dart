@@ -224,7 +224,7 @@ Map<String, dynamic> makeContainerLogsResponseJson({int lineCount = 3}) {
 
 Map<String, dynamic> makeSystemLogsResponseJson({int lineCount = 3}) {
   return {
-    'system': {
+    'info': {
       'logs': {
         'lines': List.generate(
           lineCount,
