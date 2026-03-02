@@ -62,4 +62,19 @@ class SystemRepository {
     if (result.hasException) throw result.exception!;
     Log.i('Array state set to $desiredState', tag: _tag);
   }
+
+  Future<List<String>> getSystemLogs({int? lines}) async {
+    Log.d('Fetching system logs (lines: $lines)', tag: _tag);
+    final result = await _clientManager.client.query(
+      QueryOptions(
+        document: gql(Queries.systemLogs),
+        variables: {'lines': ?lines},
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+    if (result.hasException) throw result.exception!;
+    Log.d('System logs loaded', tag: _tag);
+    final content = result.data!['logFile']['content'] as String;
+    return content.split('\n').where((line) => line.isNotEmpty).toList();
+  }
 }

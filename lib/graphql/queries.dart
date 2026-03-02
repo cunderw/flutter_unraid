@@ -128,6 +128,15 @@ class Queries {
     }
   ''';
 
+  static const String systemLogs = r'''
+    query SystemLogs($lines: Int) {
+      logFile(path: "/var/log/syslog", lines: $lines) {
+        content
+        totalLines
+      }
+    }
+  ''';
+
   static const String virtualMachines = r'''
     query VirtualMachines {
       vms {
