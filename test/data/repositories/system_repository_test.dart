@@ -68,18 +68,15 @@ void main() {
           ),
         );
 
-        expect(
-          () => repo.getSystemInfo(),
-          throwsA(isA<OperationException>()),
-        );
+        expect(() => repo.getSystemInfo(), throwsA(isA<OperationException>()));
       });
     });
 
     group('getArrayData', () {
       test('returns array data on success', () async {
-        when(() => mockClient.query(any())).thenAnswer(
-          (_) async => makeQueryResult(makeArrayDataResponseJson()),
-        );
+        when(
+          () => mockClient.query(any()),
+        ).thenAnswer((_) async => makeQueryResult(makeArrayDataResponseJson()));
 
         final result = await repo.getArrayData();
 
@@ -99,18 +96,15 @@ void main() {
           ),
         );
 
-        expect(
-          () => repo.getArrayData(),
-          throwsA(isA<OperationException>()),
-        );
+        expect(() => repo.getArrayData(), throwsA(isA<OperationException>()));
       });
     });
 
     group('setArrayState', () {
       test('calls mutation with correct variables', () async {
-        when(() => mockClient.mutate(any())).thenAnswer(
-          (_) async => makeQueryResult(makeMutationResponseJson()),
-        );
+        when(
+          () => mockClient.mutate(any()),
+        ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
 
         await repo.setArrayState('STARTED');
 
@@ -144,20 +138,21 @@ void main() {
         final result = await repo.getSystemLogs();
 
         expect(result.length, 3);
-        expect(result[0]['message'], 'System log line 0');
+        expect(result[0], contains('System log line 0'));
         verify(() => mockClient.query(any())).called(1);
       });
 
-      test('calls query with tail parameter', () async {
+      test('calls query with lines parameter', () async {
         when(() => mockClient.query(any())).thenAnswer(
-          (_) async => makeQueryResult(makeSystemLogsResponseJson(lineCount: 10)),
+          (_) async =>
+              makeQueryResult(makeSystemLogsResponseJson(lineCount: 10)),
         );
 
-        await repo.getSystemLogs(tail: 10);
+        await repo.getSystemLogs(lines: 10);
 
         final captured = verify(() => mockClient.query(captureAny())).captured;
         final options = captured.first as QueryOptions;
-        expect(options.variables['tail'], 10);
+        expect(options.variables['lines'], 10);
       });
 
       test('throws exception when query fails', () async {
@@ -169,10 +164,7 @@ void main() {
           ),
         );
 
-        expect(
-          () => repo.getSystemLogs(),
-          throwsA(isA<OperationException>()),
-        );
+        expect(() => repo.getSystemLogs(), throwsA(isA<OperationException>()));
       });
     });
   });

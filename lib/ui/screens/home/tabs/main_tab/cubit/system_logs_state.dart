@@ -16,7 +16,7 @@ final class SystemLogsLoading extends SystemLogsState {
 }
 
 final class SystemLogsLoaded extends SystemLogsState {
-  final List<Map<String, dynamic>> lines;
+  final List<String> lines;
 
   const SystemLogsLoaded(this.lines);
 

@@ -223,18 +223,12 @@ Map<String, dynamic> makeContainerLogsResponseJson({int lineCount = 3}) {
 }
 
 Map<String, dynamic> makeSystemLogsResponseJson({int lineCount = 3}) {
+  final lines = List.generate(
+    lineCount,
+    (i) => 'Jan  1 00:00:0$i tower kernel: System log line $i',
+  );
   return {
-    'info': {
-      'logs': {
-        'lines': List.generate(
-          lineCount,
-          (i) => {
-            'timestamp': '2025-01-01T00:00:0${i}Z',
-            'message': 'System log line $i',
-          },
-        ),
-      },
-    },
+    'logFile': {'content': lines.join('\n'), 'totalLines': lineCount},
   };
 }
 

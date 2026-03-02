@@ -11,26 +11,21 @@ class SystemLogsCubit extends Cubit<SystemLogsState> {
 
   SystemLogsCubit(this._repository) : super(const SystemLogsInitial());
 
-  Future<void> load({int? tail}) async {
+  Future<void> load({int? lines}) async {
     emit(const SystemLogsLoading());
     try {
-      final lines = await _repository.getSystemLogs(tail: tail);
-      emit(SystemLogsLoaded(lines));
+      final logLines = await _repository.getSystemLogs(lines: lines);
+      emit(SystemLogsLoaded(logLines));
     } catch (e, st) {
       final error = AppException.from(
         e,
         operation: 'loading system logs',
         stackTrace: st,
       );
-      Log.e(
-        'Failed to load system logs',
-        tag: _tag,
-        error: e,
-        stackTrace: st,
-      );
+      Log.e('Failed to load system logs', tag: _tag, error: e, stackTrace: st);
       emit(SystemLogsError(error.message));
     }
   }
 
-  Future<void> refresh({int? tail}) => load(tail: tail);
+  Future<void> refresh({int? lines}) => load(lines: lines);
 }

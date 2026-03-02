@@ -17,10 +17,12 @@ void main() {
   setUp(() {
     mockLogsCubit = MockSystemLogsCubit();
     // Stub async methods so taps don't throw Null/Future<void> errors
-    when(() => mockLogsCubit.load(tail: any(named: 'tail')))
-        .thenAnswer((_) async {});
-    when(() => mockLogsCubit.refresh(tail: any(named: 'tail')))
-        .thenAnswer((_) async {});
+    when(
+      () => mockLogsCubit.load(lines: any(named: 'lines')),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockLogsCubit.refresh(lines: any(named: 'lines')),
+    ).thenAnswer((_) async {});
   });
 
   /// Helper to pump the widget with a stubbed SystemLogsCubit.
@@ -59,9 +61,7 @@ void main() {
       expect(find.byIcon(Icons.refresh), findsOneWidget);
     });
 
-    testWidgets('displays error message when SystemLogsError', (
-      tester,
-    ) async {
+    testWidgets('displays error message when SystemLogsError', (tester) async {
       await pumpLogsSection(
         tester,
         state: const SystemLogsError('Failed to load logs'),
@@ -91,8 +91,8 @@ void main() {
 
     testWidgets('displays log lines when logs are available', (tester) async {
       final logLines = [
-        {'message': 'System log line 1', 'timestamp': '2024-01-01T12:00:00Z'},
-        {'message': 'System log line 2', 'timestamp': '2024-01-01T12:00:01Z'},
+        'Jan  1 12:00:00 tower kernel: System log line 1',
+        'Jan  1 12:00:01 tower kernel: System log line 2',
       ];
 
       await pumpLogsSection(tester, state: SystemLogsLoaded(logLines));
@@ -102,13 +102,12 @@ void main() {
       await tester.tap(find.text('System Logs'));
       await tester.pumpAndSettle();
 
-      // Use textContaining because each Text.rich includes both timestamp and message spans
       expect(
-        find.textContaining('System log line 1', findRichText: true),
+        find.text('Jan  1 12:00:00 tower kernel: System log line 1'),
         findsOneWidget,
       );
       expect(
-        find.textContaining('System log line 2', findRichText: true),
+        find.text('Jan  1 12:00:01 tower kernel: System log line 2'),
         findsOneWidget,
       );
     });
@@ -133,12 +132,8 @@ void main() {
       expect(find.byIcon(Icons.keyboard_arrow_up), findsOneWidget);
     });
 
-    testWidgets('shows View All button when logs are expanded', (
-      tester,
-    ) async {
-      final logLines = [
-        {'message': 'Log line 1', 'timestamp': '2024-01-01T12:00:00Z'},
-      ];
+    testWidgets('shows View All button when logs are expanded', (tester) async {
+      final logLines = ['Jan  1 12:00:00 tower kernel: Log line 1'];
 
       await pumpLogsSection(tester, state: SystemLogsLoaded(logLines));
       await tester.pumpAndSettle();
@@ -150,9 +145,7 @@ void main() {
       expect(find.text('View All'), findsOneWidget);
     });
 
-    testWidgets('calls load with tail=10 when first expanded', (
-      tester,
-    ) async {
+    testWidgets('calls load with tail=10 when first expanded', (tester) async {
       await pumpLogsSection(tester, state: const SystemLogsInitial());
       await tester.pumpAndSettle();
 
@@ -160,15 +153,11 @@ void main() {
       await tester.tap(find.text('System Logs'));
       await tester.pumpAndSettle();
 
-      verify(() => mockLogsCubit.load(tail: 10)).called(1);
+      verify(() => mockLogsCubit.load(lines: 10)).called(1);
     });
 
-    testWidgets('toggles between View All and Show Last 10', (
-      tester,
-    ) async {
-      final logLines = [
-        {'message': 'Log line 1', 'timestamp': '2024-01-01T12:00:00Z'},
-      ];
+    testWidgets('toggles between View All and Show Last 10', (tester) async {
+      final logLines = ['Jan  1 12:00:00 tower kernel: Log line 1'];
 
       await pumpLogsSection(tester, state: SystemLogsLoaded(logLines));
       await tester.pumpAndSettle();
@@ -183,7 +172,7 @@ void main() {
       await tester.tap(find.text('View All'));
       await tester.pumpAndSettle();
 
-      verify(() => mockLogsCubit.load(tail: null)).called(1);
+      verify(() => mockLogsCubit.load(lines: null)).called(1);
     });
   });
 }

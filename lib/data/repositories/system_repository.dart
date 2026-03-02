@@ -63,18 +63,18 @@ class SystemRepository {
     Log.i('Array state set to $desiredState', tag: _tag);
   }
 
-  Future<List<Map<String, dynamic>>> getSystemLogs({int? tail}) async {
-    Log.d('Fetching system logs (tail: $tail)', tag: _tag);
+  Future<List<String>> getSystemLogs({int? lines}) async {
+    Log.d('Fetching system logs (lines: $lines)', tag: _tag);
     final result = await _clientManager.client.query(
       QueryOptions(
         document: gql(Queries.systemLogs),
-        variables: {'tail': tail},
+        variables: {'lines': ?lines},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
     if (result.hasException) throw result.exception!;
     Log.d('System logs loaded', tag: _tag);
-    final lines = result.data!['info']['logs']['lines'] as List;
-    return lines.cast<Map<String, dynamic>>();
+    final content = result.data!['logFile']['content'] as String;
+    return content.split('\n').where((line) => line.isNotEmpty).toList();
   }
 }

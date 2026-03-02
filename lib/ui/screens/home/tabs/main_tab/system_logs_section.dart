@@ -33,7 +33,7 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
               InkWell(
                 onTap: () {
                   if (state is SystemLogsInitial && !isLoading) {
-                    context.read<SystemLogsCubit>().load(tail: 10);
+                    context.read<SystemLogsCubit>().load(lines: 10);
                     setState(() => _expanded = true);
                   } else {
                     setState(() => _expanded = !_expanded);
@@ -50,9 +50,7 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
                       Expanded(
                         child: Text(
                           'System Logs',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
+                          style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(
                                 color: AppColors.unraidOrange,
                                 fontWeight: FontWeight.bold,
@@ -73,8 +71,10 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
                           icon: const Icon(Icons.refresh, size: 20),
                           color: AppColors.textSecondary,
                           onPressed: () {
-                            final tail = _showAll ? null : 10;
-                            context.read<SystemLogsCubit>().refresh(tail: tail);
+                            final lines = _showAll ? null : 10;
+                            context.read<SystemLogsCubit>().refresh(
+                              lines: lines,
+                            );
                           },
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -101,8 +101,8 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
                   child: InlineError(
                     message: state.message,
                     onRetry: () {
-                      final tail = _showAll ? null : 10;
-                      context.read<SystemLogsCubit>().refresh(tail: tail);
+                      final lines = _showAll ? null : 10;
+                      context.read<SystemLogsCubit>().refresh(lines: lines);
                     },
                   ),
                 ),
@@ -112,8 +112,8 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
                   showAll: _showAll,
                   onViewAllToggle: () {
                     setState(() => _showAll = !_showAll);
-                    final tail = !_showAll ? 10 : null;
-                    context.read<SystemLogsCubit>().load(tail: tail);
+                    final lines = !_showAll ? 10 : null;
+                    context.read<SystemLogsCubit>().load(lines: lines);
                   },
                 ),
             ],
@@ -125,7 +125,7 @@ class _SystemLogsSectionState extends State<SystemLogsSection> {
 }
 
 class _LogsContent extends StatelessWidget {
-  final List<Map<String, dynamic>> lines;
+  final List<String> lines;
   final bool showAll;
   final VoidCallback onViewAllToggle;
 
@@ -164,39 +164,21 @@ class _LogsContent extends StatelessWidget {
                     ),
                   ),
                 )
-              : Scrollbar(
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(AppSpacing.md),
-                    shrinkWrap: true,
                     itemCount: lines.length,
                     itemBuilder: (context, index) {
                       final line = lines[index];
-                      final timestamp = line['timestamp'] as String?;
-                      final message = line['message'] as String? ?? '';
                       return Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: AppSpacing.xxxs),
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              if (timestamp != null)
-                                TextSpan(
-                                  text: '${_formatTimestamp(timestamp)} ',
-                                  style: const TextStyle(
-                                    color: AppColors.textSecondary,
-                                    fontSize: 11,
-                                    fontFamily: 'monospace',
-                                  ),
-                                ),
-                              TextSpan(
-                                text: message,
-                                style: const TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 11,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
-                            ],
+                        padding: const EdgeInsets.only(bottom: AppSpacing.xxxs),
+                        child: Text(
+                          line,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 11,
+                            fontFamily: 'monospace',
                           ),
                         ),
                       );
@@ -228,14 +210,5 @@ class _LogsContent extends StatelessWidget {
           ),
       ],
     );
-  }
-
-  String _formatTimestamp(String timestamp) {
-    final dt = DateTime.tryParse(timestamp);
-    if (dt == null) return timestamp;
-    final local = dt.toLocal();
-    return '${local.hour.toString().padLeft(2, '0')}:'
-        '${local.minute.toString().padLeft(2, '0')}:'
-        '${local.second.toString().padLeft(2, '0')}';
   }
 }

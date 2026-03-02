@@ -23,70 +23,65 @@ void main() {
 
     group('load', () {
       final logLines = [
-        {
-          'timestamp': '2025-01-01T00:00:00Z',
-          'message': 'System log line 1',
-        },
-        {
-          'timestamp': '2025-01-01T00:00:01Z',
-          'message': 'System log line 2',
-        },
+        'Jan  1 00:00:00 tower kernel: System log line 1',
+        'Jan  1 00:00:01 tower kernel: System log line 2',
       ];
 
       blocTest<SystemLogsCubit, SystemLogsState>(
         'emits [SystemLogsLoading, SystemLogsLoaded] on success',
         build: () {
-          when(() => mockRepo.getSystemLogs(tail: any(named: 'tail')))
-              .thenAnswer((_) async => logLines);
+          when(
+            () => mockRepo.getSystemLogs(lines: any(named: 'lines')),
+          ).thenAnswer((_) async => logLines);
           return buildCubit();
         },
         act: (cubit) => cubit.load(),
-        expect: () => [
-          const SystemLogsLoading(),
-          SystemLogsLoaded(logLines),
-        ],
+        expect: () => [const SystemLogsLoading(), SystemLogsLoaded(logLines)],
         verify: (_) {
-          verify(() => mockRepo.getSystemLogs(tail: null)).called(1);
+          verify(() => mockRepo.getSystemLogs(lines: null)).called(1);
         },
       );
 
       blocTest<SystemLogsCubit, SystemLogsState>(
-        'emits [SystemLogsLoading, SystemLogsLoaded] with tail parameter',
+        'emits [SystemLogsLoading, SystemLogsLoaded] with lines parameter',
         build: () {
-          when(() => mockRepo.getSystemLogs(tail: any(named: 'tail')))
-              .thenAnswer((_) async => logLines.take(1).toList());
+          when(
+            () => mockRepo.getSystemLogs(lines: any(named: 'lines')),
+          ).thenAnswer((_) async => logLines.take(1).toList());
           return buildCubit();
         },
-        act: (cubit) => cubit.load(tail: 10),
+        act: (cubit) => cubit.load(lines: 10),
         expect: () => [
           const SystemLogsLoading(),
-          isA<SystemLogsLoaded>()
-              .having((s) => s.lines.length, 'lines count', 1),
+          isA<SystemLogsLoaded>().having(
+            (s) => s.lines.length,
+            'lines count',
+            1,
+          ),
         ],
         verify: (_) {
-          verify(() => mockRepo.getSystemLogs(tail: 10)).called(1);
+          verify(() => mockRepo.getSystemLogs(lines: 10)).called(1);
         },
       );
 
       blocTest<SystemLogsCubit, SystemLogsState>(
         'emits [SystemLogsLoading, SystemLogsLoaded] with empty logs',
         build: () {
-          when(() => mockRepo.getSystemLogs(tail: any(named: 'tail')))
-              .thenAnswer((_) async => []);
+          when(
+            () => mockRepo.getSystemLogs(lines: any(named: 'lines')),
+          ).thenAnswer((_) async => <String>[]);
           return buildCubit();
         },
         act: (cubit) => cubit.load(),
-        expect: () => [
-          const SystemLogsLoading(),
-          const SystemLogsLoaded([]),
-        ],
+        expect: () => [const SystemLogsLoading(), const SystemLogsLoaded([])],
       );
 
       blocTest<SystemLogsCubit, SystemLogsState>(
         'emits [SystemLogsLoading, SystemLogsError] on failure',
         build: () {
-          when(() => mockRepo.getSystemLogs(tail: any(named: 'tail')))
-              .thenThrow(Exception('fail'));
+          when(
+            () => mockRepo.getSystemLogs(lines: any(named: 'lines')),
+          ).thenThrow(Exception('fail'));
           return buildCubit();
         },
         act: (cubit) => cubit.load(),
@@ -96,19 +91,17 @@ void main() {
 
     group('refresh', () {
       blocTest<SystemLogsCubit, SystemLogsState>(
-        'delegates to load with tail parameter',
+        'delegates to load with lines parameter',
         build: () {
-          when(() => mockRepo.getSystemLogs(tail: any(named: 'tail')))
-              .thenAnswer((_) async => []);
+          when(
+            () => mockRepo.getSystemLogs(lines: any(named: 'lines')),
+          ).thenAnswer((_) async => <String>[]);
           return buildCubit();
         },
-        act: (cubit) => cubit.refresh(tail: 10),
-        expect: () => [
-          const SystemLogsLoading(),
-          const SystemLogsLoaded([]),
-        ],
+        act: (cubit) => cubit.refresh(lines: 10),
+        expect: () => [const SystemLogsLoading(), const SystemLogsLoaded([])],
         verify: (_) {
-          verify(() => mockRepo.getSystemLogs(tail: 10)).called(1);
+          verify(() => mockRepo.getSystemLogs(lines: 10)).called(1);
         },
       );
     });
