@@ -162,4 +162,63 @@ class Mutations {
       }
     }
   ''';
+
+  // ── Notifications ──────────────────────────────────────────────────────
+
+  static const String archiveNotification = r'''
+    mutation ArchiveNotification($id: PrefixedID!) {
+      archiveNotification(id: $id) {
+        id
+        type
+      }
+    }
+  ''';
+
+  static const String archiveNotifications = r'''
+    mutation ArchiveNotifications($ids: [PrefixedID!]!) {
+      archiveNotifications(ids: $ids) {
+        unread {
+          total
+        }
+        archive {
+          total
+        }
+      }
+    }
+  ''';
+
+  static const String unreadNotification = r'''
+    mutation UnreadNotification($id: PrefixedID!) {
+      unreadNotification(id: $id) {
+        id
+        type
+      }
+    }
+  ''';
+
+  static const String deleteNotification = r'''
+    mutation DeleteNotification($id: PrefixedID!, $type: NotificationType!) {
+      deleteNotification(id: $id, type: $type) {
+        unread {
+          total
+        }
+        archive {
+          total
+        }
+      }
+    }
+  ''';
+
+  static const String deleteArchivedNotifications = r'''
+    mutation DeleteArchivedNotifications {
+      deleteArchivedNotifications {
+        unread {
+          total
+        }
+        archive {
+          total
+        }
+      }
+    }
+  ''';
 }

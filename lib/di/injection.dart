@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
+import 'package:flutter_unraid/data/repositories/notification_repository.dart';
 import 'package:flutter_unraid/data/repositories/share_repository.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/data/repositories/vm_repository.dart';
@@ -30,5 +31,8 @@ Future<void> setupDependencies() async {
   );
   getIt.registerLazySingleton<ShareRepository>(
     () => ShareRepository(getIt<GraphQLClientManager>()),
+  );
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepository(getIt<GraphQLClientManager>()),
   );
 }

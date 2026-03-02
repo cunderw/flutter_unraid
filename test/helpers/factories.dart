@@ -1,5 +1,6 @@
 import 'package:flutter_unraid/data/models/array_data.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/data/models/notification.dart';
 import 'package:flutter_unraid/data/models/share.dart';
 import 'package:flutter_unraid/data/models/system_info.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
@@ -205,17 +206,16 @@ VmDomain makeVmDomain({
   bool? autostart = true,
   String? template = 'Ubuntu',
   String? description = 'Test VM',
-}) =>
-    VmDomain(
-      id: id,
-      name: name,
-      state: state,
-      cpus: cpus,
-      memory: memory,
-      autostart: autostart,
-      template: template,
-      description: description,
-    );
+}) => VmDomain(
+  id: id,
+  name: name,
+  state: state,
+  cpus: cpus,
+  memory: memory,
+  autostart: autostart,
+  template: template,
+  description: description,
+);
 
 VmDomain makeRunningVm({String id = 'vm-1'}) =>
     makeVmDomain(id: id, state: 'RUNNING');
@@ -261,3 +261,48 @@ Share makeShare({
   color: color,
   luksStatus: luksStatus,
 );
+
+// -- Notification --
+
+Notification makeNotification({
+  String id = 'notif-1',
+  String title = 'Test Notification',
+  String subject = 'Test Subject',
+  String description = 'This is a test notification',
+  NotificationImportance importance = NotificationImportance.info,
+  String? link,
+  NotificationType type = NotificationType.unread,
+  String? timestamp,
+  String formattedTimestamp = 'Jan 1, 2025',
+}) => Notification(
+  id: id,
+  title: title,
+  subject: subject,
+  description: description,
+  importance: importance,
+  link: link,
+  type: type,
+  timestamp: timestamp ?? DateTime.now().toIso8601String(),
+  formattedTimestamp: formattedTimestamp,
+);
+
+Notification makeUnreadNotification({String id = 'notif-1'}) =>
+    makeNotification(id: id, type: NotificationType.unread);
+
+Notification makeArchivedNotification({String id = 'notif-2'}) =>
+    makeNotification(id: id, type: NotificationType.archive);
+
+Notification makeAlertNotification({String id = 'notif-3'}) => makeNotification(
+  id: id,
+  title: 'Critical Alert',
+  subject: 'Critical Alert',
+  importance: NotificationImportance.alert,
+);
+
+Notification makeWarningNotification({String id = 'notif-4'}) =>
+    makeNotification(
+      id: id,
+      title: 'Warning',
+      subject: 'Warning',
+      importance: NotificationImportance.warning,
+    );

@@ -188,6 +188,38 @@ class Queries {
     }
   ''';
 
+  static const String notifications = r'''
+    query Notifications($type: NotificationType!, $offset: Int!, $limit: Int!) {
+      notifications {
+        list(filter: { type: $type, offset: $offset, limit: $limit }) {
+          id
+          title
+          subject
+          description
+          importance
+          link
+          type
+          timestamp
+          formattedTimestamp
+        }
+        overview {
+          unread {
+            info
+            warning
+            alert
+            total
+          }
+          archive {
+            info
+            warning
+            alert
+            total
+          }
+        }
+      }
+    }
+  ''';
+
   /// Lightweight query used to test API connectivity.
   static const String testConnection = r'''
     query TestConnection {
