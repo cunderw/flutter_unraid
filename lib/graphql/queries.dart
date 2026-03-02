@@ -189,15 +189,32 @@ class Queries {
   ''';
 
   static const String notifications = r'''
-    query Notifications {
+    query Notifications($type: NotificationType!, $offset: Int!, $limit: Int!) {
       notifications {
-        items {
+        list(filter: { type: $type, offset: $offset, limit: $limit }) {
           id
+          title
           subject
           description
-          severity
+          importance
+          link
+          type
           timestamp
-          read
+          formattedTimestamp
+        }
+        overview {
+          unread {
+            info
+            warning
+            alert
+            total
+          }
+          archive {
+            info
+            warning
+            alert
+            total
+          }
         }
       }
     }

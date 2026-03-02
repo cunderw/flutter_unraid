@@ -29,23 +29,20 @@ void main() {
 
     // Stub repo methods so cubits load successfully
     when(() => mockSystemRepo.getSystemInfo()).thenAnswer(
-      (_) async => (systemInfo: makeSystemInfo(), memory: makeMemoryUtilization()),
+      (_) async =>
+          (systemInfo: makeSystemInfo(), memory: makeMemoryUtilization()),
     );
-    when(() => mockSystemRepo.getArrayData()).thenAnswer(
-      (_) async => makeArrayData(),
-    );
-    when(() => mockDockerRepo.getContainers()).thenAnswer(
-      (_) async => <DockerContainer>[],
-    );
-    when(() => mockVmRepo.getVms()).thenAnswer(
-      (_) async => <VmDomain>[],
-    );
-    when(() => mockShareRepo.getShares()).thenAnswer(
-      (_) async => <Share>[],
-    );
-    when(() => mockNotificationRepo.getNotifications()).thenAnswer(
-      (_) async => <models.Notification>[],
-    );
+    when(
+      () => mockSystemRepo.getArrayData(),
+    ).thenAnswer((_) async => makeArrayData());
+    when(
+      () => mockDockerRepo.getContainers(),
+    ).thenAnswer((_) async => <DockerContainer>[]);
+    when(() => mockVmRepo.getVms()).thenAnswer((_) async => <VmDomain>[]);
+    when(() => mockShareRepo.getShares()).thenAnswer((_) async => <Share>[]);
+    when(
+      () => mockNotificationRepo.getNotifications(),
+    ).thenAnswer((_) async => <models.Notification>[]);
 
     await resetGetIt();
     registerMockRepositories(
@@ -77,7 +74,7 @@ void main() {
       expect(find.byTooltip('Refresh'), findsOneWidget);
     });
 
-    testWidgets('displays bottom navigation bar with 5 tabs', (tester) async {
+    testWidgets('displays bottom navigation bar with 4 tabs', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
@@ -88,7 +85,6 @@ void main() {
       expect(find.text('Docker'), findsOneWidget);
       expect(find.text('VMs'), findsOneWidget);
       expect(find.text('Shares'), findsOneWidget);
-      expect(find.text('Notifications'), findsOneWidget);
     });
 
     testWidgets('displays navigation icons', (tester) async {
@@ -119,6 +115,16 @@ void main() {
       expect(find.byIcon(Icons.logout), findsOneWidget);
     });
 
+    testWidgets('displays notification bell icon in app bar', (tester) async {
+      await tester.pumpApp(const HomeScreen());
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.notifications_outlined), findsOneWidget);
+      expect(find.byTooltip('Notifications'), findsOneWidget);
+    });
+
     testWidgets('main tab is selected by default', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
@@ -131,7 +137,9 @@ void main() {
       expect(navigationBar.selectedIndex, 0);
     });
 
-    testWidgets('refresh button calls SystemCubit.refresh on main tab', (tester) async {
+    testWidgets('refresh button calls SystemCubit.refresh on main tab', (
+      tester,
+    ) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
@@ -142,11 +150,17 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify SystemCubit methods were called (initial load + refresh)
-      verify(() => mockSystemRepo.getSystemInfo()).called(greaterThanOrEqualTo(2));
-      verify(() => mockSystemRepo.getArrayData()).called(greaterThanOrEqualTo(2));
+      verify(
+        () => mockSystemRepo.getSystemInfo(),
+      ).called(greaterThanOrEqualTo(2));
+      verify(
+        () => mockSystemRepo.getArrayData(),
+      ).called(greaterThanOrEqualTo(2));
     });
 
-    testWidgets('refresh button calls DockerCubit.refresh on docker tab', (tester) async {
+    testWidgets('refresh button calls DockerCubit.refresh on docker tab', (
+      tester,
+    ) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();

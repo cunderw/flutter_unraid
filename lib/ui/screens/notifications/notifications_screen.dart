@@ -15,87 +15,100 @@ import 'package:flutter_unraid/ui/widgets/feedback/error_snackbar.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
 import 'package:flutter_unraid/ui/widgets/layout/section_header.dart';
 
-class NotificationsTab extends StatelessWidget {
-  const NotificationsTab({super.key});
+class NotificationsScreen extends StatelessWidget {
+  const NotificationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NotificationCubit, NotificationState>(
-      listenWhen: (_, current) => current is NotificationActionError,
-      listener: (context, state) {
-        if (state is NotificationActionError) {
-          showErrorSnackbar(context, message: state.message);
-        }
-      },
-      child: BlocBuilder<NotificationCubit, NotificationState>(
-        buildWhen: (_, current) => current is! NotificationActionError,
-        builder: (context, state) {
-          final notifications = switch (state) {
-            NotificationLoaded(:final notifications) => notifications,
-            NotificationActionError(:final notifications) => notifications,
-            _ => null,
-          };
-
-          if (state is NotificationInitial || state is NotificationLoading) {
-            return const LoadingIndicator(message: 'Loading notifications...');
-          }
-
-          if (state is NotificationError) {
-            return ErrorDisplay(
-              message: state.message,
-              onRetry: () => context.read<NotificationCubit>().refresh(),
-            );
-          }
-
-          if (notifications == null || notifications.isEmpty) {
-            return const EmptyState(
-              message: 'No notifications.',
-              icon: Icons.notifications_outlined,
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () => context.read<NotificationCubit>().refresh(),
-            color: AppColors.unraidOrange,
-            child: ListView(
-              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-              children: [
-                SectionHeader(
-                  title: 'Notifications',
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${notifications.length} unread',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      AppSpacing.horizontalSm,
-                      if (notifications.isNotEmpty)
-                        TextButton.icon(
-                          onPressed: () => context
-                              .read<NotificationCubit>()
-                              .archiveAllNotifications(),
-                          icon: const Icon(Icons.done_all, size: 16),
-                          label: const Text('Archive all'),
-                          style: TextButton.styleFrom(
-                            foregroundColor: AppColors.unraidOrange,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
-                            ),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        ),
-                    ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        actions: [
+          BlocBuilder<NotificationCubit, NotificationState>(
+            builder: (context, state) {
+              final notifications = switch (state) {
+                NotificationLoaded(:final notifications) => notifications,
+                NotificationActionError(:final notifications) => notifications,
+                _ => null,
+              };
+              if (notifications == null || notifications.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return TextButton.icon(
+                onPressed: () =>
+                    context.read<NotificationCubit>().archiveAllNotifications(),
+                icon: const Icon(Icons.done_all, size: 16),
+                label: const Text('Archive all'),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.unraidOrange,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
                   ),
                 ),
-                ...notifications.map((n) => _NotificationTile(notification: n)),
-              ],
-            ),
-          );
+              );
+            },
+          ),
+        ],
+      ),
+      body: BlocListener<NotificationCubit, NotificationState>(
+        listenWhen: (_, current) => current is NotificationActionError,
+        listener: (context, state) {
+          if (state is NotificationActionError) {
+            showErrorSnackbar(context, message: state.message);
+          }
         },
+        child: BlocBuilder<NotificationCubit, NotificationState>(
+          buildWhen: (_, current) => current is! NotificationActionError,
+          builder: (context, state) {
+            final notifications = switch (state) {
+              NotificationLoaded(:final notifications) => notifications,
+              NotificationActionError(:final notifications) => notifications,
+              _ => null,
+            };
+
+            if (state is NotificationInitial || state is NotificationLoading) {
+              return const LoadingIndicator(
+                message: 'Loading notifications...',
+              );
+            }
+
+            if (state is NotificationError) {
+              return ErrorDisplay(
+                message: state.message,
+                onRetry: () => context.read<NotificationCubit>().refresh(),
+              );
+            }
+
+            if (notifications == null || notifications.isEmpty) {
+              return const EmptyState(
+                message: 'No notifications.',
+                icon: Icons.notifications_outlined,
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: () => context.read<NotificationCubit>().refresh(),
+              color: AppColors.unraidOrange,
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                children: [
+                  SectionHeader(
+                    title: 'Unread',
+                    trailing: Text(
+                      '${notifications.length} notifications',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  ...notifications.map(
+                    (n) => _NotificationTile(notification: n),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

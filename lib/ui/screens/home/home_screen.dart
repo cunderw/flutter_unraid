@@ -5,6 +5,7 @@ import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/notifications/notification_cubit.dart';
+import 'package:flutter_unraid/blocs/notifications/notification_state.dart';
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
@@ -19,7 +20,7 @@ import 'package:flutter_unraid/ui/screens/home/tabs/main_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/docker_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/vms_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/shares_tab.dart';
-import 'package:flutter_unraid/ui/screens/home/tabs/notifications_tab.dart';
+import 'package:flutter_unraid/ui/screens/notifications/notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const DockerTab(),
     const VmsTab(),
     const SharesTab(),
-    const NotificationsTab(),
   ];
 
   @override
@@ -54,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
           create: (_) => SharesCubit(getIt<ShareRepository>())..load(),
         ),
         BlocProvider(
-          create: (_) => NotificationCubit(getIt<NotificationRepository>())..load(),
+          create: (_) =>
+              NotificationCubit(getIt<NotificationRepository>())..load(),
         ),
       ],
       child: Builder(
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 tooltip: 'Refresh',
                 onPressed: () => _refreshCurrentTab(context),
               ),
+              _NotificationBellButton(),
               PopupMenuButton<String>(
                 onSelected: (value) {
                   if (value == 'logout') {
@@ -116,11 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 selectedIcon: Icon(Icons.folder_shared),
                 label: 'Shares',
               ),
-              NavigationDestination(
-                icon: Icon(Icons.notifications_outlined),
-                selectedIcon: Icon(Icons.notifications),
-                label: 'Notifications',
-              ),
             ],
           ),
         ),
@@ -138,8 +135,43 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<VmCubit>().refresh();
       case 3:
         context.read<SharesCubit>().refresh();
-      case 4:
-        context.read<NotificationCubit>().refresh();
     }
+  }
+}
+
+class _NotificationBellButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NotificationCubit, NotificationState>(
+      builder: (context, state) {
+        final count = switch (state) {
+          NotificationLoaded(:final totalCount) => totalCount,
+          NotificationActionError(:final totalCount) => totalCount,
+          _ => 0,
+        };
+
+        return IconButton(
+          icon: Badge(
+            isLabelVisible: count > 0,
+            label: Text(
+              count > 99 ? '99+' : count.toString(),
+              style: const TextStyle(fontSize: 10),
+            ),
+            child: const Icon(Icons.notifications_outlined),
+          ),
+          tooltip: 'Notifications',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<NotificationCubit>(),
+                  child: const NotificationsScreen(),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

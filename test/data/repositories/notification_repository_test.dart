@@ -14,12 +14,8 @@ void main() {
   late NotificationRepository repository;
 
   setUpAll(() {
-    registerFallbackValue(
-      QueryOptions(document: gql('query {}')),
-    );
-    registerFallbackValue(
-      MutationOptions(document: gql('mutation {}')),
-    );
+    registerFallbackValue(QueryOptions(document: gql('query {}')));
+    registerFallbackValue(MutationOptions(document: gql('mutation {}')));
   });
 
   setUp(() {
@@ -51,6 +47,27 @@ void main() {
       ).called(1);
     });
 
+    test('passes filter variables to query', () async {
+      when(() => mockClient.query(any())).thenAnswer(
+        (_) async => makeQueryResult(makeNotificationsResponseJson()),
+      );
+
+      await repository.getNotifications(type: 'ARCHIVE', offset: 10, limit: 50);
+
+      verify(
+        () => mockClient.query(
+          any(
+            that: predicate<QueryOptions>(
+              (opts) =>
+                  opts.variables['type'] == 'ARCHIVE' &&
+                  opts.variables['offset'] == 10 &&
+                  opts.variables['limit'] == 50,
+            ),
+          ),
+        ),
+      ).called(1);
+    });
+
     test('throws exception on GraphQL error', () async {
       when(() => mockClient.query(any())).thenAnswer(
         (_) async => makeErrorQueryResult(
@@ -58,17 +75,20 @@ void main() {
         ),
       );
 
-      expect(() => repository.getNotifications(), throwsA(isA<OperationException>()));
+      expect(
+        () => repository.getNotifications(),
+        throwsA(isA<OperationException>()),
+      );
     });
   });
 
-  group('markAsRead', () {
+  group('archiveNotification', () {
     test('calls mutation with correct variables', () async {
-      when(() => mockClient.mutate(any())).thenAnswer(
-        (_) async => makeQueryResult(makeMutationResponseJson()),
-      );
+      when(
+        () => mockClient.mutate(any()),
+      ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
 
-      await repository.markAsRead('notif-1');
+      await repository.archiveNotification('notif-1');
 
       verify(
         () => mockClient.mutate(
@@ -88,19 +108,33 @@ void main() {
         ),
       );
 
-      expect(() => repository.markAsRead('notif-1'), throwsA(isA<OperationException>()));
+      expect(
+        () => repository.archiveNotification('notif-1'),
+        throwsA(isA<OperationException>()),
+      );
     });
   });
 
-  group('markAllAsRead', () {
-    test('calls mutation', () async {
-      when(() => mockClient.mutate(any())).thenAnswer(
-        (_) async => makeQueryResult(makeMutationResponseJson()),
-      );
+  group('archiveAllNotifications', () {
+    test('calls mutation with list of ids', () async {
+      when(
+        () => mockClient.mutate(any()),
+      ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
 
-      await repository.markAllAsRead();
+      await repository.archiveAllNotifications(['notif-1', 'notif-2']);
 
-      verify(() => mockClient.mutate(any())).called(1);
+      verify(
+        () => mockClient.mutate(
+          any(
+            that: predicate<MutationOptions>((opts) {
+              final ids = opts.variables['ids'] as List;
+              return ids.length == 2 &&
+                  ids[0] == 'notif-1' &&
+                  ids[1] == 'notif-2';
+            }),
+          ),
+        ),
+      ).called(1);
     });
 
     test('throws exception on GraphQL error', () async {
@@ -110,15 +144,51 @@ void main() {
         ),
       );
 
-      expect(() => repository.markAllAsRead(), throwsA(isA<OperationException>()));
+      expect(
+        () => repository.archiveAllNotifications(['notif-1']),
+        throwsA(isA<OperationException>()),
+      );
+    });
+  });
+
+  group('unreadNotification', () {
+    test('calls mutation with correct variables', () async {
+      when(
+        () => mockClient.mutate(any()),
+      ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
+
+      await repository.unreadNotification('notif-1');
+
+      verify(
+        () => mockClient.mutate(
+          any(
+            that: predicate<MutationOptions>(
+              (opts) => opts.variables['id'] == 'notif-1',
+            ),
+          ),
+        ),
+      ).called(1);
+    });
+
+    test('throws exception on GraphQL error', () async {
+      when(() => mockClient.mutate(any())).thenAnswer(
+        (_) async => makeErrorQueryResult(
+          OperationException(graphqlErrors: [GraphQLError(message: 'fail')]),
+        ),
+      );
+
+      expect(
+        () => repository.unreadNotification('notif-1'),
+        throwsA(isA<OperationException>()),
+      );
     });
   });
 
   group('deleteNotification', () {
     test('calls mutation with correct variables', () async {
-      when(() => mockClient.mutate(any())).thenAnswer(
-        (_) async => makeQueryResult(makeMutationResponseJson()),
-      );
+      when(
+        () => mockClient.mutate(any()),
+      ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
 
       await repository.deleteNotification('notif-1');
 
@@ -126,7 +196,9 @@ void main() {
         () => mockClient.mutate(
           any(
             that: predicate<MutationOptions>(
-              (opts) => opts.variables['id'] == 'notif-1',
+              (opts) =>
+                  opts.variables['id'] == 'notif-1' &&
+                  opts.variables['type'] == 'UNREAD',
             ),
           ),
         ),
@@ -140,17 +212,20 @@ void main() {
         ),
       );
 
-      expect(() => repository.deleteNotification('notif-1'), throwsA(isA<OperationException>()));
+      expect(
+        () => repository.deleteNotification('notif-1'),
+        throwsA(isA<OperationException>()),
+      );
     });
   });
 
-  group('deleteAll', () {
+  group('deleteArchivedNotifications', () {
     test('calls mutation', () async {
-      when(() => mockClient.mutate(any())).thenAnswer(
-        (_) async => makeQueryResult(makeMutationResponseJson()),
-      );
+      when(
+        () => mockClient.mutate(any()),
+      ).thenAnswer((_) async => makeQueryResult(makeMutationResponseJson()));
 
-      await repository.deleteAll();
+      await repository.deleteArchivedNotifications();
 
       verify(() => mockClient.mutate(any())).called(1);
     });
@@ -162,7 +237,10 @@ void main() {
         ),
       );
 
-      expect(() => repository.deleteAll(), throwsA(isA<OperationException>()));
+      expect(
+        () => repository.deleteArchivedNotifications(),
+        throwsA(isA<OperationException>()),
+      );
     });
   });
 }

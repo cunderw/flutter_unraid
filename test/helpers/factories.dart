@@ -206,17 +206,16 @@ VmDomain makeVmDomain({
   bool? autostart = true,
   String? template = 'Ubuntu',
   String? description = 'Test VM',
-}) =>
-    VmDomain(
-      id: id,
-      name: name,
-      state: state,
-      cpus: cpus,
-      memory: memory,
-      autostart: autostart,
-      template: template,
-      description: description,
-    );
+}) => VmDomain(
+  id: id,
+  name: name,
+  state: state,
+  cpus: cpus,
+  memory: memory,
+  autostart: autostart,
+  template: template,
+  description: description,
+);
 
 VmDomain makeRunningVm({String id = 'vm-1'}) =>
     makeVmDomain(id: id, state: 'RUNNING');
@@ -267,38 +266,43 @@ Share makeShare({
 
 Notification makeNotification({
   String id = 'notif-1',
-  String subject = 'Test Notification',
+  String title = 'Test Notification',
+  String subject = 'Test Subject',
   String description = 'This is a test notification',
-  NotificationSeverity severity = NotificationSeverity.normal,
+  NotificationImportance importance = NotificationImportance.info,
+  String? link,
+  NotificationType type = NotificationType.unread,
   String? timestamp,
-  bool read = false,
+  String formattedTimestamp = 'Jan 1, 2025',
 }) => Notification(
   id: id,
+  title: title,
   subject: subject,
   description: description,
-  severity: severity,
+  importance: importance,
+  link: link,
+  type: type,
   timestamp: timestamp ?? DateTime.now().toIso8601String(),
-  read: read,
+  formattedTimestamp: formattedTimestamp,
 );
 
 Notification makeUnreadNotification({String id = 'notif-1'}) =>
-    makeNotification(id: id, read: false);
+    makeNotification(id: id, type: NotificationType.unread);
 
-Notification makeReadNotification({String id = 'notif-2'}) =>
-    makeNotification(id: id, read: true);
+Notification makeArchivedNotification({String id = 'notif-2'}) =>
+    makeNotification(id: id, type: NotificationType.archive);
 
-Notification makeAlertNotification({String id = 'notif-3'}) =>
-    makeNotification(
-      id: id,
-      subject: 'Critical Alert',
-      severity: NotificationSeverity.alert,
-      read: false,
-    );
+Notification makeAlertNotification({String id = 'notif-3'}) => makeNotification(
+  id: id,
+  title: 'Critical Alert',
+  subject: 'Critical Alert',
+  importance: NotificationImportance.alert,
+);
 
 Notification makeWarningNotification({String id = 'notif-4'}) =>
     makeNotification(
       id: id,
+      title: 'Warning',
       subject: 'Warning',
-      severity: NotificationSeverity.warning,
-      read: false,
+      importance: NotificationImportance.warning,
     );

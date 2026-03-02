@@ -22,7 +22,7 @@ final class NotificationLoaded extends NotificationState {
 
   const NotificationLoaded(this.notifications);
 
-  int get unreadCount => notifications.where((n) => n.isUnread).length;
+  int get totalCount => notifications.length;
   int get alertCount => notifications.where((n) => n.isAlert).length;
   int get warningCount => notifications.where((n) => n.isWarning).length;
 
@@ -51,7 +51,7 @@ final class NotificationActionError extends NotificationState {
     required this.message,
   });
 
-  int get unreadCount => notifications.where((n) => n.isUnread).length;
+  int get totalCount => notifications.length;
 
   @override
   List<Object?> get props => [notifications, message];

@@ -3,38 +3,54 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_unraid/data/models/notification.dart';
 
 void main() {
-  group('NotificationSeverity', () {
-    test('fromString returns correct severity', () {
+  group('NotificationImportance', () {
+    test('fromString returns correct importance', () {
       expect(
-        NotificationSeverity.fromString('NORMAL'),
-        NotificationSeverity.normal,
+        NotificationImportance.fromString('INFO'),
+        NotificationImportance.info,
       );
       expect(
-        NotificationSeverity.fromString('WARNING'),
-        NotificationSeverity.warning,
+        NotificationImportance.fromString('WARNING'),
+        NotificationImportance.warning,
       );
       expect(
-        NotificationSeverity.fromString('ALERT'),
-        NotificationSeverity.alert,
+        NotificationImportance.fromString('ALERT'),
+        NotificationImportance.alert,
       );
     });
 
     test('fromString is case-insensitive', () {
       expect(
-        NotificationSeverity.fromString('normal'),
-        NotificationSeverity.normal,
+        NotificationImportance.fromString('info'),
+        NotificationImportance.info,
       );
       expect(
-        NotificationSeverity.fromString('Alert'),
-        NotificationSeverity.alert,
+        NotificationImportance.fromString('Alert'),
+        NotificationImportance.alert,
       );
     });
 
     test('fromString returns unknown for invalid value', () {
       expect(
-        NotificationSeverity.fromString('INVALID'),
-        NotificationSeverity.unknown,
+        NotificationImportance.fromString('INVALID'),
+        NotificationImportance.unknown,
       );
+    });
+  });
+
+  group('NotificationType', () {
+    test('fromString returns correct type', () {
+      expect(NotificationType.fromString('UNREAD'), NotificationType.unread);
+      expect(NotificationType.fromString('ARCHIVE'), NotificationType.archive);
+    });
+
+    test('fromString is case-insensitive', () {
+      expect(NotificationType.fromString('unread'), NotificationType.unread);
+      expect(NotificationType.fromString('Archive'), NotificationType.archive);
+    });
+
+    test('fromString returns unknown for invalid value', () {
+      expect(NotificationType.fromString('INVALID'), NotificationType.unknown);
     });
   });
 
@@ -42,88 +58,112 @@ void main() {
     test('fromJson parses valid JSON', () {
       final json = {
         'id': 'notif-1',
+        'title': 'Test Title',
         'subject': 'Test Subject',
         'description': 'Test Description',
-        'severity': 'ALERT',
+        'importance': 'ALERT',
+        'link': 'https://example.com',
+        'type': 'UNREAD',
         'timestamp': '2025-01-01T00:00:00Z',
-        'read': true,
+        'formattedTimestamp': 'Jan 1, 2025',
       };
 
       final notification = Notification.fromJson(json);
 
       expect(notification.id, 'notif-1');
+      expect(notification.title, 'Test Title');
       expect(notification.subject, 'Test Subject');
       expect(notification.description, 'Test Description');
-      expect(notification.severity, NotificationSeverity.alert);
+      expect(notification.importance, NotificationImportance.alert);
+      expect(notification.link, 'https://example.com');
+      expect(notification.type, NotificationType.unread);
       expect(notification.timestamp, '2025-01-01T00:00:00Z');
-      expect(notification.read, true);
+      expect(notification.formattedTimestamp, 'Jan 1, 2025');
     });
 
     test('fromJson handles null values with defaults', () {
-      final json = {
-        'id': 'notif-1',
-      };
+      final json = {'id': 'notif-1'};
 
       final notification = Notification.fromJson(json);
 
       expect(notification.id, 'notif-1');
+      expect(notification.title, '');
       expect(notification.subject, '');
       expect(notification.description, '');
-      expect(notification.severity, NotificationSeverity.normal);
+      expect(notification.importance, NotificationImportance.info);
+      expect(notification.link, isNull);
+      expect(notification.type, NotificationType.unread);
       expect(notification.timestamp, '');
-      expect(notification.read, false);
+      expect(notification.formattedTimestamp, '');
     });
 
     test('isUnread returns correct value', () {
-      final unread = Notification.fromJson({'id': '1', 'read': false});
-      final read = Notification.fromJson({'id': '2', 'read': true});
+      final unread = Notification.fromJson({'id': '1', 'type': 'UNREAD'});
+      final archived = Notification.fromJson({'id': '2', 'type': 'ARCHIVE'});
 
       expect(unread.isUnread, true);
-      expect(read.isUnread, false);
+      expect(archived.isUnread, false);
+    });
+
+    test('isArchived returns correct value', () {
+      final archived = Notification.fromJson({'id': '1', 'type': 'ARCHIVE'});
+      final unread = Notification.fromJson({'id': '2', 'type': 'UNREAD'});
+
+      expect(archived.isArchived, true);
+      expect(unread.isArchived, false);
     });
 
     test('isAlert returns correct value', () {
-      final alert = Notification.fromJson({'id': '1', 'severity': 'ALERT'});
-      final normal = Notification.fromJson({'id': '2', 'severity': 'NORMAL'});
+      final alert = Notification.fromJson({'id': '1', 'importance': 'ALERT'});
+      final info = Notification.fromJson({'id': '2', 'importance': 'INFO'});
 
       expect(alert.isAlert, true);
-      expect(normal.isAlert, false);
+      expect(info.isAlert, false);
     });
 
     test('isWarning returns correct value', () {
-      final warning = Notification.fromJson({'id': '1', 'severity': 'WARNING'});
-      final normal = Notification.fromJson({'id': '2', 'severity': 'NORMAL'});
+      final warning = Notification.fromJson({
+        'id': '1',
+        'importance': 'WARNING',
+      });
+      final info = Notification.fromJson({'id': '2', 'importance': 'INFO'});
 
       expect(warning.isWarning, true);
-      expect(normal.isWarning, false);
+      expect(info.isWarning, false);
     });
 
     test('Equatable props includes all fields', () {
       final notif1 = Notification.fromJson({
         'id': '1',
-        'subject': 'Test',
+        'title': 'Test',
+        'subject': 'Sub',
         'description': 'Desc',
-        'severity': 'NORMAL',
+        'importance': 'INFO',
+        'type': 'UNREAD',
         'timestamp': '2025-01-01T00:00:00Z',
-        'read': false,
+        'formattedTimestamp': 'Jan 1, 2025',
       });
 
       final notif2 = Notification.fromJson({
         'id': '1',
-        'subject': 'Test',
+        'title': 'Test',
+        'subject': 'Sub',
         'description': 'Desc',
-        'severity': 'NORMAL',
+        'importance': 'INFO',
+        'type': 'UNREAD',
         'timestamp': '2025-01-01T00:00:00Z',
-        'read': false,
+        'formattedTimestamp': 'Jan 1, 2025',
       });
 
       final notif3 = Notification.fromJson({
         'id': '2',
-        'subject': 'Test',
+        'title': 'Test',
+        'subject': 'Sub',
         'description': 'Desc',
-        'severity': 'NORMAL',
+        'importance': 'INFO',
+        'type': 'UNREAD',
         'timestamp': '2025-01-01T00:00:00Z',
-        'read': false,
+        'formattedTimestamp': 'Jan 1, 2025',
       });
 
       expect(notif1, notif2);

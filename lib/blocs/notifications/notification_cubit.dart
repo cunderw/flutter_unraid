@@ -22,33 +22,55 @@ class NotificationCubit extends Cubit<NotificationState> {
         operation: 'loading notifications',
         stackTrace: st,
       );
-      Log.e('Failed to load notifications', tag: _tag, error: e, stackTrace: st);
+      Log.e(
+        'Failed to load notifications',
+        tag: _tag,
+        error: e,
+        stackTrace: st,
+      );
       emit(NotificationError(error.message));
     }
   }
 
   Future<void> refresh() => load();
 
-  Future<void> markAsRead(String id) async {
+  Future<void> archiveNotification(String id) async {
     try {
-      await _repository.markAsRead(id);
+      Log.i('Archiving notification $id', tag: _tag);
+      await _repository.archiveNotification(id);
       await load();
     } catch (e, st) {
-      _emitActionError(e, st, 'marking notification as read', id: id);
+      _emitActionError(e, st, 'archiving notification', id: id);
     }
   }
 
-  Future<void> markAllAsRead() async {
+  Future<void> archiveAllNotifications() async {
+    final current = state;
     try {
-      await _repository.markAllAsRead();
+      Log.i('Archiving all notifications', tag: _tag);
+      if (current is NotificationLoaded) {
+        final ids = current.notifications.map((n) => n.id).toList();
+        await _repository.archiveAllNotifications(ids);
+      }
       await load();
     } catch (e, st) {
-      _emitActionError(e, st, 'marking all notifications as read');
+      _emitActionError(e, st, 'archiving all notifications');
+    }
+  }
+
+  Future<void> unreadNotification(String id) async {
+    try {
+      Log.i('Marking notification $id as unread', tag: _tag);
+      await _repository.unreadNotification(id);
+      await load();
+    } catch (e, st) {
+      _emitActionError(e, st, 'marking notification as unread', id: id);
     }
   }
 
   Future<void> deleteNotification(String id) async {
     try {
+      Log.i('Deleting notification $id', tag: _tag);
       await _repository.deleteNotification(id);
       await load();
     } catch (e, st) {
@@ -56,12 +78,13 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
-  Future<void> deleteAll() async {
+  Future<void> deleteArchivedNotifications() async {
     try {
-      await _repository.deleteAll();
+      Log.i('Deleting all archived notifications', tag: _tag);
+      await _repository.deleteArchivedNotifications();
       await load();
     } catch (e, st) {
-      _emitActionError(e, st, 'deleting all notifications');
+      _emitActionError(e, st, 'deleting archived notifications');
     }
   }
 

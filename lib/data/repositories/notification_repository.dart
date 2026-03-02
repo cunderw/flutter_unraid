@@ -12,62 +12,83 @@ class NotificationRepository {
 
   NotificationRepository(this._clientManager);
 
-  Future<List<Notification>> getNotifications() async {
-    Log.d('Fetching notifications', tag: _tag);
+  Future<List<Notification>> getNotifications({
+    String type = 'UNREAD',
+    int offset = 0,
+    int limit = 100,
+  }) async {
+    Log.d('Fetching notifications (type: $type)', tag: _tag);
     final result = await _clientManager.client.query(
       QueryOptions(
         document: gql(Queries.notifications),
+        variables: {'type': type, 'offset': offset, 'limit': limit},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
     if (result.hasException) throw result.exception!;
-    final notificationsData = result.data!['notifications'] as Map<String, dynamic>;
-    final notifications = notificationsData['items'] as List<dynamic>;
+    final notificationsData =
+        result.data!['notifications'] as Map<String, dynamic>;
+    final notifications = notificationsData['list'] as List<dynamic>;
     Log.d('Fetched ${notifications.length} notifications', tag: _tag);
     return notifications
         .map((e) => Notification.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 
-  Future<void> markAsRead(String id) async {
-    Log.i('Marking notification $id as read', tag: _tag);
+  Future<void> archiveNotification(String id) async {
+    Log.i('Archiving notification $id', tag: _tag);
     final result = await _clientManager.client.mutate(
       MutationOptions(
-        document: gql(Mutations.markNotificationAsRead),
+        document: gql(Mutations.archiveNotification),
         variables: {'id': id},
       ),
     );
     if (result.hasException) throw result.exception!;
-    Log.i('Notification $id marked as read', tag: _tag);
+    Log.i('Notification $id archived', tag: _tag);
   }
 
-  Future<void> markAllAsRead() async {
-    Log.i('Marking all notifications as read', tag: _tag);
+  Future<void> archiveAllNotifications(List<String> ids) async {
+    Log.i('Archiving ${ids.length} notifications', tag: _tag);
     final result = await _clientManager.client.mutate(
-      MutationOptions(document: gql(Mutations.markAllNotificationsAsRead)),
+      MutationOptions(
+        document: gql(Mutations.archiveNotifications),
+        variables: {'ids': ids},
+      ),
     );
     if (result.hasException) throw result.exception!;
-    Log.i('All notifications marked as read', tag: _tag);
+    Log.i('Archived ${ids.length} notifications', tag: _tag);
   }
 
-  Future<void> deleteNotification(String id) async {
+  Future<void> unreadNotification(String id) async {
+    Log.i('Marking notification $id as unread', tag: _tag);
+    final result = await _clientManager.client.mutate(
+      MutationOptions(
+        document: gql(Mutations.unreadNotification),
+        variables: {'id': id},
+      ),
+    );
+    if (result.hasException) throw result.exception!;
+    Log.i('Notification $id marked as unread', tag: _tag);
+  }
+
+  Future<void> deleteNotification(String id, {String type = 'UNREAD'}) async {
     Log.i('Deleting notification $id', tag: _tag);
     final result = await _clientManager.client.mutate(
       MutationOptions(
         document: gql(Mutations.deleteNotification),
-        variables: {'id': id},
+        variables: {'id': id, 'type': type},
       ),
     );
     if (result.hasException) throw result.exception!;
     Log.i('Notification $id deleted', tag: _tag);
   }
 
-  Future<void> deleteAll() async {
-    Log.i('Deleting all notifications', tag: _tag);
+  Future<void> deleteArchivedNotifications() async {
+    Log.i('Deleting all archived notifications', tag: _tag);
     final result = await _clientManager.client.mutate(
-      MutationOptions(document: gql(Mutations.deleteAllNotifications)),
+      MutationOptions(document: gql(Mutations.deleteArchivedNotifications)),
     );
     if (result.hasException) throw result.exception!;
-    Log.i('All notifications deleted', tag: _tag);
+    Log.i('All archived notifications deleted', tag: _tag);
   }
 }
