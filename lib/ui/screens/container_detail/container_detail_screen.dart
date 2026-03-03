@@ -11,7 +11,9 @@ import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_actions_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_config_section.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/container_links_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_logs_section.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/container_mounts_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_ports_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_status_section.dart';
 
@@ -66,9 +68,17 @@ class ContainerDetailBody extends StatelessWidget {
         ContainerStatusSection(container: container),
         AppSpacing.verticalLg,
         ContainerConfigSection(container: container),
+        if (container.hasLinks) ...[
+          AppSpacing.verticalLg,
+          ContainerLinksSection(container: container),
+        ],
         if (container.ports.isNotEmpty) ...[
           AppSpacing.verticalLg,
           ContainerPortsSection(container: container),
+        ],
+        if (container.hasMounts) ...[
+          AppSpacing.verticalLg,
+          ContainerMountsSection(container: container),
         ],
         AppSpacing.verticalLg,
         ContainerActionsSection(container: container),

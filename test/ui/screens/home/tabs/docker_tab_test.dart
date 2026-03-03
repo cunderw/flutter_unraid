@@ -152,5 +152,39 @@ void main() {
 
       expect(find.byIcon(Icons.inventory_2), findsOneWidget);
     });
+
+    testWidgets('displays Web UI button when webUiUrl is set', (tester) async {
+      final containers = [
+        makeDockerContainer(
+          state: 'RUNNING',
+          webUiUrl: 'http://localhost:8080',
+        ),
+      ];
+
+      await tester.pumpAppWithBlocs(
+        const DockerTab(),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded(containers),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Web UI'), findsOneWidget);
+      expect(find.byIcon(Icons.open_in_new), findsOneWidget);
+    });
+
+    testWidgets('does not display Web UI button when webUiUrl is null', (
+      tester,
+    ) async {
+      final containers = [makeRunningContainer()];
+
+      await tester.pumpAppWithBlocs(
+        const DockerTab(),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded(containers),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Web UI'), findsNothing);
+    });
   });
 }

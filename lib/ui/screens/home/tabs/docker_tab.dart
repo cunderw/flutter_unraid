@@ -7,7 +7,9 @@ import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_detail_screen.dart';
+import 'package:flutter_unraid/ui/screens/webview/webview_screen.dart';
 import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
+import 'package:flutter_unraid/ui/widgets/data_display/container_icon.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/empty_state.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_display.dart';
@@ -98,18 +100,11 @@ class _ContainerTile extends StatelessWidget {
           ),
         );
       },
-      leading: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Icon(
-          Icons.inventory_2,
-          color: AppColors.unraidOrange,
-          size: 18,
-        ),
+      leading: ContainerIcon(
+        iconUrl: container.iconUrl,
+        size: 32,
+        iconSize: 18,
+        borderRadius: 8,
       ),
       actions: _buildActions(context),
       child: Column(
@@ -133,6 +128,18 @@ class _ContainerTile extends StatelessWidget {
   List<Widget> _buildActions(BuildContext context) {
     final cubit = context.read<DockerCubit>();
     return [
+      if (container.webUiUrl != null)
+        _actionButton(
+          context,
+          icon: Icons.open_in_new,
+          label: 'Web UI',
+          color: AppColors.unraidOrange,
+          onPressed: () => WebViewScreen.open(
+            context,
+            url: container.webUiUrl!,
+            title: container.displayName,
+          ),
+        ),
       if (container.isStopped)
         _actionButton(
           context,

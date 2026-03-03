@@ -102,12 +102,18 @@ class Queries {
           state
           status
           autoStart
+          iconUrl
+          webUiUrl
+          projectUrl
+          supportUrl
+          registryUrl
           ports {
             ip
             privatePort
             publicPort
             type
           }
+          mounts
         }
       }
     }

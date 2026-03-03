@@ -6,7 +6,9 @@ import 'package:flutter_unraid/ui/screens/container_detail/container_detail_scre
 import 'package:flutter_unraid/ui/screens/container_detail/container_status_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_actions_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_config_section.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/container_links_section.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_logs_section.dart';
+import 'package:flutter_unraid/ui/screens/container_detail/container_mounts_section.dart';
 
 import '../../../helpers/factories.dart';
 import '../../../helpers/mocks.dart';
@@ -112,6 +114,64 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Ports'), findsNothing);
+    });
+
+    testWidgets('displays links section when container has links', (
+      tester,
+    ) async {
+      final container = makeContainerWithLinks(id: 'c1');
+      await tester.pumpAppWithBlocs(
+        const ContainerDetailScreen(containerId: 'c1'),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded([container]),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ContainerLinksSection), findsOneWidget);
+    });
+
+    testWidgets('hides links section when container has no links', (
+      tester,
+    ) async {
+      final container = makeDockerContainer(id: 'c1', state: 'RUNNING');
+      await tester.pumpAppWithBlocs(
+        const ContainerDetailScreen(containerId: 'c1'),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded([container]),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ContainerLinksSection), findsNothing);
+    });
+
+    testWidgets('displays mounts section when container has mounts', (
+      tester,
+    ) async {
+      final container = makeContainerWithMounts(id: 'c1');
+      await tester.pumpAppWithBlocs(
+        const ContainerDetailScreen(containerId: 'c1'),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded([container]),
+      );
+      await tester.pumpAndSettle();
+
+      // Mounts section may be below the fold
+      await tester.scrollUntilVisible(find.byType(ContainerMountsSection), 200);
+      expect(find.byType(ContainerMountsSection), findsOneWidget);
+    });
+
+    testWidgets('hides mounts section when container has no mounts', (
+      tester,
+    ) async {
+      final container = makeDockerContainer(id: 'c1', state: 'RUNNING');
+      await tester.pumpAppWithBlocs(
+        const ContainerDetailScreen(containerId: 'c1'),
+        dockerCubit: mockDockerCubit,
+        dockerState: DockerLoaded([container]),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ContainerMountsSection), findsNothing);
     });
 
     testWidgets('displays Container as default title when container is null', (

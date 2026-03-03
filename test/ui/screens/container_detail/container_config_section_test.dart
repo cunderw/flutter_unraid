@@ -80,6 +80,28 @@ void main() {
       await tester.pumpAndSettle();
     });
 
+    testWidgets('displays Web UI row when webUiUrl is set', (tester) async {
+      final container = makeDockerContainer(webUiUrl: 'http://localhost:8080');
+      await tester.pumpApp(ContainerConfigSection(container: container));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Web UI'), findsOneWidget);
+      expect(find.text('http://localhost:8080'), findsOneWidget);
+      // 4 standard KeyValueRows + 1 Web UI row
+      expect(find.byType(KeyValueRow), findsNWidgets(5));
+    });
+
+    testWidgets('does not display Web UI row when webUiUrl is null', (
+      tester,
+    ) async {
+      final container = makeDockerContainer();
+      await tester.pumpApp(ContainerConfigSection(container: container));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Web UI'), findsNothing);
+      expect(find.byType(KeyValueRow), findsNWidgets(4));
+    });
+
     testWidgets('displays in a card', (tester) async {
       final container = makeRunningContainer();
       await tester.pumpApp(ContainerConfigSection(container: container));

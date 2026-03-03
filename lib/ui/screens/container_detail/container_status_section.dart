@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/ui/widgets/data_display/container_icon.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
 
 class ContainerStatusSection extends StatelessWidget {
@@ -17,18 +18,11 @@ class ContainerStatusSection extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.inventory_2,
-                color: AppColors.unraidOrange,
-                size: 28,
-              ),
+            ContainerIcon(
+              iconUrl: container.iconUrl,
+              size: 48,
+              iconSize: 28,
+              borderRadius: 12,
             ),
             AppSpacing.horizontalLg,
             Expanded(

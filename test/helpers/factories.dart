@@ -19,6 +19,20 @@ ContainerPort makeContainerPort({
   type: type,
 );
 
+// -- ContainerMount --
+
+ContainerMount makeContainerMount({
+  String source = '/mnt/user/appdata/test',
+  String destination = '/data',
+  String type = 'bind',
+  String mode = 'rw',
+}) => ContainerMount(
+  source: source,
+  destination: destination,
+  type: type,
+  mode: mode,
+);
+
 // -- DockerContainer --
 
 DockerContainer makeDockerContainer({
@@ -30,9 +44,13 @@ DockerContainer makeDockerContainer({
   String status = 'Up 2 hours',
   bool autoStart = true,
   List<ContainerPort>? ports,
+  List<ContainerMount>? mounts,
   String? iconUrl,
   String? webUiUrl,
   String? templatePath,
+  String? projectUrl,
+  String? supportUrl,
+  String? registryUrl,
 }) => DockerContainer(
   id: id,
   names: names,
@@ -42,9 +60,13 @@ DockerContainer makeDockerContainer({
   status: status,
   autoStart: autoStart,
   ports: ports ?? [makeContainerPort()],
+  mounts: mounts ?? const [],
   iconUrl: iconUrl,
   webUiUrl: webUiUrl,
   templatePath: templatePath,
+  projectUrl: projectUrl,
+  supportUrl: supportUrl,
+  registryUrl: registryUrl,
 );
 
 DockerContainer makeRunningContainer({String id = 'container-1'}) =>
@@ -59,6 +81,35 @@ DockerContainer makeStoppedContainer({String id = 'container-2'}) =>
 
 DockerContainer makePausedContainer({String id = 'container-3'}) =>
     makeDockerContainer(id: id, state: 'PAUSED', status: 'Up 2 hours (Paused)');
+
+DockerContainer makeContainerWithLinks({
+  String id = 'container-1',
+  String? projectUrl = 'https://github.com/example/project',
+  String? supportUrl = 'https://forums.example.com',
+  String? registryUrl = 'https://hub.docker.com/r/example/project',
+}) => makeDockerContainer(
+  id: id,
+  projectUrl: projectUrl,
+  supportUrl: supportUrl,
+  registryUrl: registryUrl,
+);
+
+DockerContainer makeContainerWithMounts({
+  String id = 'container-1',
+  List<ContainerMount>? mounts,
+}) => makeDockerContainer(
+  id: id,
+  mounts:
+      mounts ??
+      [
+        makeContainerMount(),
+        makeContainerMount(
+          source: '/mnt/user/data',
+          destination: '/config',
+          mode: 'ro',
+        ),
+      ],
+);
 
 // -- OsInfo --
 

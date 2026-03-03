@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
+import 'package:flutter_unraid/ui/screens/webview/webview_screen.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/key_value_row.dart';
 
 class ContainerConfigSection extends StatelessWidget {
@@ -33,6 +34,27 @@ class ContainerConfigSection extends StatelessWidget {
               label: 'Auto Start',
               value: container.autoStart ? 'Yes' : 'No',
             ),
+            if (container.webUiUrl != null)
+              KeyValueRow(
+                label: 'Web UI',
+                valueWidget: GestureDetector(
+                  onTap: () => WebViewScreen.open(
+                    context,
+                    url: container.webUiUrl!,
+                    title: container.displayName,
+                  ),
+                  child: Text(
+                    container.webUiUrl!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.unraidOrange,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.unraidOrange,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
