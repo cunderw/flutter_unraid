@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/blocs/auth/auth_state.dart';
+import 'package:flutter_unraid/blocs/settings/settings_cubit.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
@@ -15,10 +16,15 @@ class UnraidApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          AuthCubit(getIt<AuthRepository>(), getIt<GraphQLClientManager>())
-            ..checkAuthStatus(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              AuthCubit(getIt<AuthRepository>(), getIt<GraphQLClientManager>())
+                ..checkAuthStatus(),
+        ),
+        BlocProvider.value(value: getIt<SettingsCubit>()),
+      ],
       child: MaterialApp(
         title: 'Unraid Manager',
         debugShowCheckedModeBanner: false,

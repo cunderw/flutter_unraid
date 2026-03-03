@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
-import 'package:flutter_unraid/ui/screens/webview/webview_screen.dart';
+import 'package:flutter_unraid/utils/url_helper.dart';
 
 class ContainerLinksSection extends StatelessWidget {
   final DockerContainer container;
@@ -63,7 +63,7 @@ class _LinkRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: InkWell(
-        onTap: () => WebViewScreen.open(context, url: url, title: label),
+        onTap: () => openUrl(context, url: url, title: label),
         borderRadius: BorderRadius.circular(4),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),

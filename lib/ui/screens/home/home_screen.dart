@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
-import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/notifications/notification_cubit.dart';
 import 'package:flutter_unraid/blocs/notifications/notification_state.dart';
@@ -21,6 +19,7 @@ import 'package:flutter_unraid/ui/screens/home/tabs/docker_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/vms_tab.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/shares_tab.dart';
 import 'package:flutter_unraid/ui/screens/notifications/notifications_screen.dart';
+import 'package:flutter_unraid/ui/screens/settings/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,24 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => _refreshCurrentTab(context),
               ),
               _NotificationBellButton(),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    context.read<AuthCubit>().logout();
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout, size: 20),
-                        SizedBox(width: AppSpacing.sm),
-                        Text('Disconnect'),
-                      ],
-                    ),
-                  ),
-                ],
+              IconButton(
+                icon: const Icon(Icons.settings),
+                tooltip: 'Settings',
+                onPressed: () => SettingsScreen.open(context),
               ),
             ],
           ),

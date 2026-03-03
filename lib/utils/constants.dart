@@ -7,6 +7,9 @@ class AppConstants {
   static const String keyServerUrl = 'server_url';
   static const String keyApiKey = 'api_key';
 
+  // Settings keys
+  static const String keyOpenLinksExternally = 'open_links_externally';
+
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 10);
 

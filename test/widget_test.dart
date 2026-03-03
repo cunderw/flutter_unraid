@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_unraid/app.dart';
+import 'package:flutter_unraid/blocs/settings/settings_cubit.dart';
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
+import 'package:flutter_unraid/data/repositories/settings_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
 import 'package:flutter_unraid/graphql/client.dart';
 
@@ -23,6 +26,16 @@ void main() {
 
     getIt.registerSingleton<AuthRepository>(mockAuthRepo);
     getIt.registerSingleton<GraphQLClientManager>(mockClientManager);
+
+    // Register SharedPreferences + SettingsCubit for app root
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    getIt.registerSingleton<SharedPreferences>(prefs);
+    final settingsRepo = SettingsRepository(prefs);
+    getIt.registerSingleton<SettingsRepository>(settingsRepo);
+    getIt.registerLazySingleton<SettingsCubit>(
+      () => SettingsCubit(settingsRepo)..loadSettings(),
+    );
   });
 
   tearDown(() async {

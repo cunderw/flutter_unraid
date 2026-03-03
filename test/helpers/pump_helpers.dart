@@ -7,6 +7,8 @@ import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/blocs/auth/auth_state.dart';
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
+import 'package:flutter_unraid/blocs/settings/settings_cubit.dart';
+import 'package:flutter_unraid/blocs/settings/settings_state.dart';
 import 'package:flutter_unraid/blocs/shares/shares_cubit.dart';
 import 'package:flutter_unraid/blocs/shares/shares_state.dart';
 import 'package:flutter_unraid/blocs/system/system_cubit.dart';
@@ -40,6 +42,8 @@ extension PumpHelpers on WidgetTester {
     VmState? vmState,
     SharesCubit? sharesCubit,
     SharesState? sharesState,
+    SettingsCubit? settingsCubit,
+    SettingsState? settingsState,
   }) async {
     final blocProviders = <BlocProvider>[];
 
@@ -77,6 +81,15 @@ extension PumpHelpers on WidgetTester {
         when(() => sharesCubit.state).thenReturn(sharesState);
       }
       blocProviders.add(BlocProvider<SharesCubit>.value(value: sharesCubit));
+    }
+
+    if (settingsCubit != null) {
+      if (settingsState != null) {
+        when(() => settingsCubit.state).thenReturn(settingsState);
+      }
+      blocProviders.add(
+        BlocProvider<SettingsCubit>.value(value: settingsCubit),
+      );
     }
 
     // Add any additional providers

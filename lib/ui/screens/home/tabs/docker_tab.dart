@@ -7,7 +7,6 @@ import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_detail_screen.dart';
-import 'package:flutter_unraid/ui/screens/webview/webview_screen.dart';
 import 'package:flutter_unraid/ui/widgets/cards/action_card.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/container_icon.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
@@ -16,6 +15,7 @@ import 'package:flutter_unraid/ui/widgets/feedback/error_display.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/error_snackbar.dart';
 import 'package:flutter_unraid/ui/widgets/feedback/loading_indicator.dart';
 import 'package:flutter_unraid/ui/widgets/layout/section_header.dart';
+import 'package:flutter_unraid/utils/url_helper.dart';
 
 class DockerTab extends StatelessWidget {
   const DockerTab({super.key});
@@ -134,7 +134,7 @@ class _ContainerTile extends StatelessWidget {
           icon: Icons.open_in_new,
           label: 'Web UI',
           color: AppColors.unraidOrange,
-          onPressed: () => WebViewScreen.open(
+          onPressed: () => openUrl(
             context,
             url: container.webUiUrl!,
             title: container.displayName,

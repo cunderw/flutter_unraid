@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
 import 'package:flutter_unraid/data/repositories/notification_repository.dart';
+import 'package:flutter_unraid/data/repositories/settings_repository.dart';
 import 'package:flutter_unraid/data/repositories/share_repository.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/data/repositories/vm_repository.dart';
@@ -19,6 +20,7 @@ void registerMockRepositories({
   VmRepository? vmRepo,
   ShareRepository? shareRepo,
   NotificationRepository? notificationRepo,
+  SettingsRepository? settingsRepo,
 }) {
   final getIt = GetIt.instance;
 
@@ -40,5 +42,9 @@ void registerMockRepositories({
 
   if (notificationRepo != null) {
     getIt.registerLazySingleton<NotificationRepository>(() => notificationRepo);
+  }
+
+  if (settingsRepo != null) {
+    getIt.registerLazySingleton<SettingsRepository>(() => settingsRepo);
   }
 }

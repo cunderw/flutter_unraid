@@ -1,3 +1,4 @@
+import 'package:flutter_unraid/data/models/app_settings.dart';
 import 'package:flutter_unraid/data/models/array_data.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/data/models/notification.dart';
@@ -110,6 +111,11 @@ DockerContainer makeContainerWithMounts({
         ),
       ],
 );
+
+// -- AppSettings --
+
+AppSettings makeAppSettings({bool openLinksExternally = false}) =>
+    AppSettings(openLinksExternally: openLinksExternally);
 
 // -- OsInfo --
 

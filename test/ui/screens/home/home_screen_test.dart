@@ -101,18 +101,14 @@ void main() {
       expect(find.byIcon(Icons.folder_shared_outlined), findsWidgets);
     });
 
-    testWidgets('displays disconnect menu option', (tester) async {
+    testWidgets('displays settings button in app bar', (tester) async {
       await tester.pumpApp(const HomeScreen());
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
-      // Open popup menu
-      await tester.tap(find.byType(PopupMenuButton<String>));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Disconnect'), findsOneWidget);
-      expect(find.byIcon(Icons.logout), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(find.byTooltip('Settings'), findsOneWidget);
     });
 
     testWidgets('displays notification bell icon in app bar', (tester) async {

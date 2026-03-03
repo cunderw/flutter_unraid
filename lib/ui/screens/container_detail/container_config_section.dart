@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
-import 'package:flutter_unraid/ui/screens/webview/webview_screen.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/key_value_row.dart';
+import 'package:flutter_unraid/utils/url_helper.dart';
 
 class ContainerConfigSection extends StatelessWidget {
   final DockerContainer container;
@@ -38,7 +38,7 @@ class ContainerConfigSection extends StatelessWidget {
               KeyValueRow(
                 label: 'Web UI',
                 valueWidget: GestureDetector(
-                  onTap: () => WebViewScreen.open(
+                  onTap: () => openUrl(
                     context,
                     url: container.webUiUrl!,
                     title: container.displayName,
