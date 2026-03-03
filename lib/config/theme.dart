@@ -86,6 +86,7 @@ final ThemeData unraidDarkTheme = ThemeData(
     backgroundColor: Color(0xFF1B1D1F),
     foregroundColor: Color(0xFFE0E0E0),
     elevation: 0,
+    scrolledUnderElevation: 0,
     centerTitle: false,
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -93,6 +94,11 @@ final ThemeData unraidDarkTheme = ThemeData(
     selectedItemColor: AppColors.unraidOrange,
     unselectedItemColor: Color(0xFF9E9E9E),
     type: BottomNavigationBarType.fixed,
+  ),
+  navigationBarTheme: NavigationBarThemeData(
+    indicatorShape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
@@ -192,6 +198,7 @@ final ThemeData unraidLightTheme = ThemeData(
     backgroundColor: Color(0xFFFAFAFA),
     foregroundColor: Color(0xFF1B1D1F),
     elevation: 0,
+    scrolledUnderElevation: 0,
     centerTitle: false,
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -199,6 +206,11 @@ final ThemeData unraidLightTheme = ThemeData(
     selectedItemColor: AppColors.unraidOrange,
     unselectedItemColor: Color(0xFF616161),
     type: BottomNavigationBarType.fixed,
+  ),
+  navigationBarTheme: NavigationBarThemeData(
+    indicatorShape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
