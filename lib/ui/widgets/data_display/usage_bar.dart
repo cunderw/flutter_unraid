@@ -43,14 +43,14 @@ class UsageBar extends StatelessWidget {
                   Text(
                     label!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 if (detail != null)
                   Text(
                     detail!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
               ],
@@ -61,7 +61,7 @@ class UsageBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: percentage.clamp(0.0, 1.0),
             minHeight: height,
-            backgroundColor: AppColors.divider,
+            backgroundColor: Theme.of(context).dividerColor,
             valueColor: AlwaysStoppedAnimation<Color>(_color),
           ),
         ),

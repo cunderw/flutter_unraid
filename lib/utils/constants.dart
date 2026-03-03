@@ -9,6 +9,7 @@ class AppConstants {
 
   // Settings keys
   static const String keyOpenLinksExternally = 'open_links_externally';
+  static const String keyThemeMode = 'theme_mode';
 
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 10);

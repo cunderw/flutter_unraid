@@ -44,7 +44,11 @@ class SharesTab extends StatelessWidget {
                         trailing: Text(
                           '${shares.length} total',
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: AppColors.textSecondary),
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ),
                       ...shares.map((s) => _ShareTile(share: s)),
@@ -72,7 +76,10 @@ class _ShareTile extends StatelessWidget {
       ),
       trailing: share.cache == true
           ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xxxs),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xxxs,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.paused.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
@@ -91,9 +98,9 @@ class _ShareTile extends StatelessWidget {
           if (share.comment != null && share.comment!.isNotEmpty) ...[
             Text(
               share.comment!,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             AppSpacing.verticalMd,
           ],

@@ -20,9 +20,9 @@ class LoadingIndicator extends StatelessWidget {
             AppSpacing.verticalLg,
             Text(
               message!,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ],

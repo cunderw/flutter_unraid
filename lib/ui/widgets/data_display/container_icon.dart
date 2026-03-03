@@ -25,7 +25,7 @@ class ContainerIcon extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: ClipRRect(

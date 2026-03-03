@@ -30,16 +30,16 @@ class ContainerPortsSection extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.lan_outlined,
                       size: 16,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     AppSpacing.horizontalSm,
                     Text(
                       p.displayString,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     if (p.ip != null && p.ip!.isNotEmpty) ...[
@@ -47,7 +47,7 @@ class ContainerPortsSection extends StatelessWidget {
                       Text(
                         p.ip!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],

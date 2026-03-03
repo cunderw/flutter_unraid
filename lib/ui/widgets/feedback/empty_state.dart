@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
-import 'package:flutter_unraid/config/theme.dart';
 
 /// Displayed when a list or section has no items.
 class EmptyState extends StatelessWidget {
@@ -27,15 +26,17 @@ class EmptyState extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             AppSpacing.verticalLg,
             Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             if (action != null) ...[AppSpacing.verticalXl, action!],
           ],

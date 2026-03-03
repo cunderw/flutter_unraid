@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_unraid/blocs/settings/settings_state.dart';
@@ -54,6 +55,32 @@ class SettingsCubit extends Cubit<SettingsState> {
         error: e,
         stackTrace: st,
       );
+      if (currentState is SettingsLoaded) {
+        // Re-emit current state — the setting wasn't saved
+        emit(SettingsLoaded(currentState.settings));
+      } else {
+        emit(SettingsError(exception.message));
+      }
+    }
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    final currentState = state;
+    try {
+      Log.i('Setting themeMode=${mode.name}', tag: _tag);
+      await _repository.setThemeMode(mode);
+      if (currentState is SettingsLoaded) {
+        emit(SettingsLoaded(currentState.settings.copyWith(themeMode: mode)));
+      } else {
+        loadSettings();
+      }
+    } catch (e, st) {
+      final exception = AppException.from(
+        e,
+        operation: 'updating theme mode',
+        stackTrace: st,
+      );
+      Log.e('Failed to update theme mode', tag: _tag, error: e, stackTrace: st);
       if (currentState is SettingsLoaded) {
         // Re-emit current state — the setting wasn't saved
         emit(SettingsLoaded(currentState.settings));

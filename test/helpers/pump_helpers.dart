@@ -22,7 +22,9 @@ extension PumpHelpers on WidgetTester {
   Future<void> pumpApp(Widget widget) async {
     await pumpWidget(
       MaterialApp(
-        theme: unraidDarkTheme,
+        theme: unraidLightTheme,
+        darkTheme: unraidDarkTheme,
+        themeMode: ThemeMode.dark,
         home: Scaffold(body: widget),
       ),
     );
@@ -99,7 +101,9 @@ extension PumpHelpers on WidgetTester {
 
     await pumpWidget(
       MaterialApp(
-        theme: unraidDarkTheme,
+        theme: unraidLightTheme,
+        darkTheme: unraidDarkTheme,
+        themeMode: ThemeMode.dark,
         home: MultiBlocProvider(
           providers: blocProviders,
           child: Scaffold(body: widget),

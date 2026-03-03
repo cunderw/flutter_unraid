@@ -9,7 +9,7 @@ void showErrorSnackbar(BuildContext context, {required String message}) {
     ..showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.card,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 5),
         showCloseIcon: true,

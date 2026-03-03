@@ -42,6 +42,38 @@ class SettingsScreen extends StatelessWidget {
           SettingsLoaded(:final settings) => ListView(
             children: [
               AppSpacing.verticalSm,
+              _SectionHeader(title: 'Appearance'),
+              RadioGroup<ThemeMode>(
+                groupValue: settings.themeMode,
+                onChanged: (value) {
+                  if (value != null) {
+                    context.read<SettingsCubit>().setThemeMode(value);
+                  }
+                },
+                child: Column(
+                  children: [
+                    RadioListTile<ThemeMode>(
+                      title: const Text('Light'),
+                      subtitle: const Text('Always use light theme'),
+                      value: ThemeMode.light,
+                      toggleable: false,
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: const Text('Dark'),
+                      subtitle: const Text('Always use dark theme'),
+                      value: ThemeMode.dark,
+                      toggleable: false,
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: const Text('System'),
+                      subtitle: const Text('Match your device settings'),
+                      value: ThemeMode.system,
+                      toggleable: false,
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
               _SectionHeader(title: 'General'),
               SwitchListTile(
                 title: const Text('Open links externally'),

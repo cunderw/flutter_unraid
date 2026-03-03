@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' hide Notification;
 import 'package:flutter_unraid/data/models/app_settings.dart';
 import 'package:flutter_unraid/data/models/array_data.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
@@ -114,8 +115,11 @@ DockerContainer makeContainerWithMounts({
 
 // -- AppSettings --
 
-AppSettings makeAppSettings({bool openLinksExternally = false}) =>
-    AppSettings(openLinksExternally: openLinksExternally);
+AppSettings makeAppSettings({
+  bool openLinksExternally = false,
+  ThemeMode themeMode = ThemeMode.system,
+}) =>
+    AppSettings(openLinksExternally: openLinksExternally, themeMode: themeMode);
 
 // -- OsInfo --
 

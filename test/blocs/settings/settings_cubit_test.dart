@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,6 +13,10 @@ void main() {
   late MockSettingsRepository mockRepository;
 
   SettingsCubit buildCubit() => SettingsCubit(mockRepository);
+
+  setUpAll(() {
+    registerFallbackValue(ThemeMode.system);
+  });
 
   setUp(() {
     mockRepository = MockSettingsRepository();
@@ -116,6 +121,81 @@ void main() {
       },
       build: buildCubit,
       act: (cubit) => cubit.setOpenLinksExternally(true),
+      expect: () => [isA<SettingsError>()],
+    );
+  });
+
+  group('setThemeMode', () {
+    blocTest<SettingsCubit, SettingsState>(
+      'emits updated Loaded state when changing to dark',
+      setUp: () {
+        when(
+          () => mockRepository.setThemeMode(ThemeMode.dark),
+        ).thenAnswer((_) async {});
+      },
+      build: buildCubit,
+      seed: () => SettingsLoaded(makeAppSettings()),
+      act: (cubit) => cubit.setThemeMode(ThemeMode.dark),
+      expect: () => [
+        SettingsLoaded(makeAppSettings(themeMode: ThemeMode.dark)),
+      ],
+      verify: (_) {
+        verify(() => mockRepository.setThemeMode(ThemeMode.dark)).called(1);
+      },
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'emits updated Loaded state when changing to light',
+      setUp: () {
+        when(
+          () => mockRepository.setThemeMode(ThemeMode.light),
+        ).thenAnswer((_) async {});
+      },
+      build: buildCubit,
+      seed: () => SettingsLoaded(makeAppSettings(themeMode: ThemeMode.dark)),
+      act: (cubit) => cubit.setThemeMode(ThemeMode.light),
+      expect: () => [
+        SettingsLoaded(makeAppSettings(themeMode: ThemeMode.light)),
+      ],
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'emits updated Loaded state when changing to system',
+      setUp: () {
+        when(
+          () => mockRepository.setThemeMode(ThemeMode.system),
+        ).thenAnswer((_) async {});
+      },
+      build: buildCubit,
+      seed: () => SettingsLoaded(makeAppSettings(themeMode: ThemeMode.dark)),
+      act: (cubit) => cubit.setThemeMode(ThemeMode.system),
+      expect: () => [
+        SettingsLoaded(makeAppSettings(themeMode: ThemeMode.system)),
+      ],
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'does not emit new state on failure when loaded (state unchanged)',
+      setUp: () {
+        when(
+          () => mockRepository.setThemeMode(any()),
+        ).thenThrow(Exception('fail'));
+      },
+      build: buildCubit,
+      seed: () => SettingsLoaded(makeAppSettings()),
+      act: (cubit) => cubit.setThemeMode(ThemeMode.dark),
+      expect: () => <SettingsState>[],
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'emits Error on failure when not loaded',
+      setUp: () {
+        when(
+          () => mockRepository.setThemeMode(any()),
+        ).thenThrow(Exception('fail'));
+      },
+      build: buildCubit,
+      act: (cubit) => cubit.setThemeMode(ThemeMode.dark),
       expect: () => [isA<SettingsError>()],
     );
   });

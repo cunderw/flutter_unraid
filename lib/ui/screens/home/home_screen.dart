@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedIndex: _currentIndex,
             onDestinationSelected: (index) =>
                 setState(() => _currentIndex = index),
-            backgroundColor: AppColors.surface,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             indicatorColor: AppColors.unraidOrange.withValues(alpha: 0.2),
             destinations: const [
               NavigationDestination(

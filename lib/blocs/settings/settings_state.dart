@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/data/models/app_settings.dart';
 
@@ -23,6 +24,7 @@ final class SettingsLoaded extends SettingsState {
   const SettingsLoaded(this.settings);
 
   bool get openLinksExternally => settings.openLinksExternally;
+  ThemeMode get themeMode => settings.themeMode;
 
   @override
   List<Object?> get props => [settings];

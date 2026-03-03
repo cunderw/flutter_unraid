@@ -45,10 +45,10 @@ class _MountRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             Icons.folder_outlined,
             size: 18,
-            color: AppColors.textSecondary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           AppSpacing.horizontalSm,
           Expanded(
@@ -61,7 +61,7 @@ class _MountRow extends StatelessWidget {
                       child: Text(
                         mount.source,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -74,14 +74,14 @@ class _MountRow extends StatelessWidget {
                       child: Icon(
                         Icons.arrow_forward,
                         size: 14,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     Flexible(
                       child: Text(
                         mount.destination,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -96,9 +96,7 @@ class _MountRow extends StatelessWidget {
                     AppSpacing.horizontalXs,
                     _Badge(
                       label: mount.mode,
-                      color: mount.isReadOnly
-                          ? AppColors.textSecondary
-                          : AppColors.running,
+                      color: mount.isReadOnly ? null : AppColors.running,
                     ),
                   ],
                 ),
@@ -113,26 +111,28 @@ class _MountRow extends StatelessWidget {
 
 class _Badge extends StatelessWidget {
   final String label;
-  final Color color;
+  final Color? color;
 
-  const _Badge({required this.label, this.color = AppColors.textSecondary});
+  const _Badge({required this.label, this.color});
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor =
+        color ?? Theme.of(context).colorScheme.onSurfaceVariant;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.xs,
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        border: Border.all(color: color.withValues(alpha: 0.5)),
+        border: Border.all(color: effectiveColor.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         label,
         style: Theme.of(
           context,
-        ).textTheme.labelSmall?.copyWith(color: color, fontSize: 10),
+        ).textTheme.labelSmall?.copyWith(color: effectiveColor, fontSize: 10),
       ),
     );
   }

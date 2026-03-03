@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
-import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/container_icon.dart';
 import 'package:flutter_unraid/ui/widgets/data_display/status_badge.dart';
@@ -32,7 +31,7 @@ class ContainerStatusSection extends StatelessWidget {
                   Text(
                     container.displayName,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -40,7 +39,7 @@ class ContainerStatusSection extends StatelessWidget {
                   Text(
                     container.status,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],

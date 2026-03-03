@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
-import 'package:flutter_unraid/config/theme.dart';
 
 /// Card with primary and optional secondary actions.
 class ActionCard extends StatelessWidget {
@@ -35,16 +34,13 @@ class ActionCard extends StatelessWidget {
               if (title != null)
                 Row(
                   children: [
-                    if (leading != null) ...[
-                      leading!,
-                      AppSpacing.horizontalSm,
-                    ],
+                    if (leading != null) ...[leading!, AppSpacing.horizontalSm],
                     Expanded(
                       child: Text(
                         title!,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                       ),

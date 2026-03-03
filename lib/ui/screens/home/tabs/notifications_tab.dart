@@ -68,7 +68,7 @@ class NotificationsTab extends StatelessWidget {
                       Text(
                         '${notifications.length} unread',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       AppSpacing.horizontalSm,
@@ -130,9 +130,9 @@ class _NotificationTile extends StatelessWidget {
           if (notification.description.isNotEmpty) ...[
             Text(
               notification.description,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -148,7 +148,7 @@ class _NotificationTile extends StatelessWidget {
               Text(
                 _formatTimestamp(notification.timestamp),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],

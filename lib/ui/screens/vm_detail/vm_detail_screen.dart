@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_unraid/blocs/vms/vm_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/vms/vm_state.dart';
-import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/vm_domain.dart';
 import 'package:flutter_unraid/ui/screens/vm_detail/vm_actions_section.dart';
 import 'package:flutter_unraid/ui/screens/vm_detail/vm_config_section.dart';
@@ -30,13 +29,15 @@ class VmDetailScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(vm?.displayName ?? 'Virtual Machine'),
-            backgroundColor: AppColors.surface,
+            backgroundColor: Theme.of(context).colorScheme.surface,
           ),
           body: vm == null
-              ? const Center(
+              ? Center(
                   child: Text(
                     'Virtual machine not found.',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 )
               : VmDetailBody(vm: vm),

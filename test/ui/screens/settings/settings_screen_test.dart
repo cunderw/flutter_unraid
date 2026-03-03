@@ -14,6 +14,10 @@ void main() {
   late MockAuthCubit mockAuthCubit;
   late MockSettingsCubit mockSettingsCubit;
 
+  setUpAll(() {
+    registerFallbackValue(ThemeMode.system);
+  });
+
   setUp(() {
     mockAuthCubit = MockAuthCubit();
     mockSettingsCubit = MockSettingsCubit();
@@ -21,6 +25,7 @@ void main() {
     when(
       () => mockSettingsCubit.setOpenLinksExternally(any()),
     ).thenAnswer((_) async {});
+    when(() => mockSettingsCubit.setThemeMode(any())).thenAnswer((_) async {});
   });
 
   Future<void> pumpSettingsScreen(
@@ -170,6 +175,120 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('General'), findsOneWidget);
       expect(find.text('Account'), findsOneWidget);
+      expect(find.text('Appearance'), findsOneWidget);
+    });
+
+    testWidgets('shows theme mode radio buttons in Loaded state', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(makeAppSettings()),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Light'), findsOneWidget);
+      expect(find.text('Dark'), findsOneWidget);
+      expect(find.text('System'), findsOneWidget);
+    });
+
+    testWidgets('system radio is selected by default', (tester) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.system),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+        find.byType(RadioGroup<ThemeMode>),
+      );
+      expect(radioGroup.groupValue, ThemeMode.system);
+    });
+
+    testWidgets('dark radio is selected when themeMode is dark', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.dark),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+        find.byType(RadioGroup<ThemeMode>),
+      );
+      expect(radioGroup.groupValue, ThemeMode.dark);
+    });
+
+    testWidgets('light radio is selected when themeMode is light', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.light),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+        find.byType(RadioGroup<ThemeMode>),
+      );
+      expect(radioGroup.groupValue, ThemeMode.light);
+    });
+
+    testWidgets('tapping Light radio calls setThemeMode with light', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.dark),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(RadioListTile<ThemeMode>, 'Light'));
+      await tester.pumpAndSettle();
+
+      verify(() => mockSettingsCubit.setThemeMode(ThemeMode.light)).called(1);
+    });
+
+    testWidgets('tapping Dark radio calls setThemeMode with dark', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.system),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(RadioListTile<ThemeMode>, 'Dark'));
+      await tester.pumpAndSettle();
+
+      verify(() => mockSettingsCubit.setThemeMode(ThemeMode.dark)).called(1);
+    });
+
+    testWidgets('tapping System radio calls setThemeMode with system', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(
+        tester,
+        settingsState: SettingsLoaded(
+          makeAppSettings(themeMode: ThemeMode.dark),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(RadioListTile<ThemeMode>, 'System'));
+      await tester.pumpAndSettle();
+
+      verify(() => mockSettingsCubit.setThemeMode(ThemeMode.system)).called(1);
     });
   });
 }

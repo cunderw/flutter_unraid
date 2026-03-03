@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
-import 'package:flutter_unraid/config/theme.dart';
 
 /// Row displaying a label-value pair.
 class KeyValueRow extends StatelessWidget {
@@ -34,7 +33,7 @@ class KeyValueRow extends StatelessWidget {
               style:
                   labelStyle ??
                   Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
           ),
@@ -48,7 +47,7 @@ class KeyValueRow extends StatelessWidget {
                   style:
                       valueStyle ??
                       Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                 ),
           ),

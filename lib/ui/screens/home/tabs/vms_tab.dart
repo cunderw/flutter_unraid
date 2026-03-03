@@ -68,7 +68,7 @@ class VmsTab extends StatelessWidget {
                   trailing: Text(
                     '${vms.where((v) => v.isRunning).length} running / ${vms.length} total',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -105,7 +105,7 @@ class _VmTile extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Icon(
@@ -152,7 +152,7 @@ class _VmTile extends StatelessWidget {
           context,
           icon: Icons.restart_alt,
           label: 'Reboot',
-          color: AppColors.textSecondary,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           onPressed: () => cubit.rebootVm(vm.id),
         ),
         _moreActionsButton(context, cubit),
@@ -189,7 +189,7 @@ class _VmTile extends StatelessWidget {
       icon: Icon(
         Icons.more_vert,
         size: 16,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
       iconSize: 16,
       padding: EdgeInsets.zero,

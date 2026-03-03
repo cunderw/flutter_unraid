@@ -69,13 +69,17 @@ class _LinkRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
           child: Row(
             children: [
-              Icon(icon, size: 18, color: AppColors.textSecondary),
+              Icon(
+                icon,
+                size: 18,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
               AppSpacing.horizontalSm,
               Text(
                 label,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               AppSpacing.horizontalSm,
               Expanded(
@@ -91,10 +95,10 @@ class _LinkRow extends StatelessWidget {
                 ),
               ),
               AppSpacing.horizontalSm,
-              const Icon(
+              Icon(
                 Icons.open_in_new,
                 size: 14,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ],
           ),

@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   AppSpacing.verticalSm,
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     'Connect to your Unraid server',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   AppSpacing.verticalXxxxl,
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Find your API key in Unraid Settings → Management Access → API.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   AppSpacing.verticalXxxl,

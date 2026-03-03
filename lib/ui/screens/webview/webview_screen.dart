@@ -84,7 +84,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             LinearProgressIndicator(
               value: _progress,
               color: AppColors.unraidOrange,
-              backgroundColor: AppColors.surface,
+              backgroundColor: Theme.of(context).colorScheme.surface,
             ),
           Expanded(child: WebViewWidget(controller: _controller)),
         ],

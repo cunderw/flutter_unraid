@@ -70,7 +70,7 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
                       else if (hasData || hasError)
                         IconButton(
                           icon: const Icon(Icons.refresh, size: 20),
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           onPressed: () =>
                               context.read<ContainerLogsCubit>().refresh(),
                           padding: EdgeInsets.zero,
@@ -81,7 +81,7 @@ class _ContainerLogsSectionState extends State<ContainerLogsSection> {
                         _expanded
                             ? Icons.keyboard_arrow_up
                             : Icons.keyboard_arrow_down,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ],
                   ),
@@ -126,15 +126,18 @@ class _LogsContent extends StatelessWidget {
         AppSpacing.lg,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: lines.isEmpty
-          ? const Padding(
-              padding: EdgeInsets.all(AppSpacing.lg),
+          ? Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Text(
                 'No logs available.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
               ),
             )
           : Scrollbar(
@@ -154,16 +157,18 @@ class _LogsContent extends StatelessWidget {
                           if (timestamp != null)
                             TextSpan(
                               text: '${_formatTimestamp(timestamp)} ',
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
+                              style: TextStyle(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 fontSize: 11,
                                 fontFamily: 'monospace',
                               ),
                             ),
                           TextSpan(
                             text: message,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 11,
                               fontFamily: 'monospace',
                             ),

@@ -268,7 +268,9 @@ class _MainTabState extends State<MainTab> {
                                     style: TextStyle(
                                       color: (disk.temp ?? 0) > 45
                                           ? AppColors.warning
-                                          : AppColors.textSecondary,
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
                                     ),
                                   )
                                 : null,

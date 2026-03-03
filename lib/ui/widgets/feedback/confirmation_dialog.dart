@@ -15,9 +15,12 @@ Future<bool> showConfirmationDialog(
   final result = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       title: Text(title),
-      content: Text(message, style: TextStyle(color: AppColors.textSecondary)),
+      content: Text(
+        message,
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),

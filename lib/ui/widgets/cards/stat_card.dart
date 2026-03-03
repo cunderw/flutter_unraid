@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
-import 'package:flutter_unraid/config/theme.dart';
 
 /// Compact card displaying a single stat value with label.
 class StatCard extends StatelessWidget {
@@ -32,13 +31,17 @@ class StatCard extends StatelessWidget {
             Row(
               children: [
                 if (icon != null) ...[
-                  Icon(icon, size: 16, color: AppColors.textSecondary),
+                  Icon(
+                    icon,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                   AppSpacing.horizontalXs,
                 ],
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 if (trailing != null) ...[const Spacer(), trailing!],
@@ -48,7 +51,7 @@ class StatCard extends StatelessWidget {
             Text(
               value,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: valueColor ?? AppColors.textPrimary,
+                color: valueColor ?? Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),

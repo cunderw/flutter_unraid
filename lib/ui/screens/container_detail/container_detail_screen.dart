@@ -6,7 +6,6 @@ import 'package:flutter_unraid/ui/screens/container_detail/cubit/container_logs_
 import 'package:flutter_unraid/blocs/docker/docker_cubit.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/blocs/docker/docker_state.dart';
-import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/models/docker_container.dart';
 import 'package:flutter_unraid/data/repositories/docker_repository.dart';
 import 'package:flutter_unraid/ui/screens/container_detail/container_actions_section.dart';
@@ -39,13 +38,15 @@ class ContainerDetailScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(container?.displayName ?? 'Container'),
-            backgroundColor: AppColors.surface,
+            backgroundColor: Theme.of(context).colorScheme.surface,
           ),
           body: container == null
-              ? const Center(
+              ? Center(
                   child: Text(
                     'Container not found.',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 )
               : ContainerDetailBody(container: container),

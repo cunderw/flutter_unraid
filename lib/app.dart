@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_unraid/blocs/auth/auth_cubit.dart';
 import 'package:flutter_unraid/blocs/auth/auth_state.dart';
 import 'package:flutter_unraid/blocs/settings/settings_cubit.dart';
+import 'package:flutter_unraid/blocs/settings/settings_state.dart';
 import 'package:flutter_unraid/config/theme.dart';
 import 'package:flutter_unraid/data/repositories/auth_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
@@ -25,21 +26,41 @@ class UnraidApp extends StatelessWidget {
         ),
         BlocProvider.value(value: getIt<SettingsCubit>()),
       ],
-      child: MaterialApp(
-        title: 'Unraid Manager',
-        debugShowCheckedModeBanner: false,
-        theme: unraidDarkTheme,
-        home: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) => switch (state) {
-            AuthInitial() || AuthLoading() => const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(color: AppColors.unraidOrange),
-              ),
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        buildWhen: (previous, current) {
+          final prevMode = previous is SettingsLoaded
+              ? previous.themeMode
+              : ThemeMode.system;
+          final currMode = current is SettingsLoaded
+              ? current.themeMode
+              : ThemeMode.system;
+          return prevMode != currMode;
+        },
+        builder: (context, settingsState) {
+          final themeMode = settingsState is SettingsLoaded
+              ? settingsState.themeMode
+              : ThemeMode.system;
+          return MaterialApp(
+            title: 'Unraid Manager',
+            debugShowCheckedModeBanner: false,
+            theme: unraidLightTheme,
+            darkTheme: unraidDarkTheme,
+            themeMode: themeMode,
+            home: BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) => switch (state) {
+                AuthInitial() || AuthLoading() => const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.unraidOrange,
+                    ),
+                  ),
+                ),
+                Authenticated() => const HomeScreen(),
+                Unauthenticated() || AuthError() => const LoginScreen(),
+              },
             ),
-            Authenticated() => const HomeScreen(),
-            Unauthenticated() || AuthError() => const LoginScreen(),
-          },
-        ),
+          );
+        },
       ),
     );
   }

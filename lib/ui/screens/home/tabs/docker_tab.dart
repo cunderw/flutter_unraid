@@ -67,7 +67,7 @@ class DockerTab extends StatelessWidget {
                   trailing: Text(
                     '${containers.where((c) => c.isRunning).length} running / ${containers.length} total',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -112,9 +112,9 @@ class _ContainerTile extends StatelessWidget {
         children: [
           Text(
             container.image,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
