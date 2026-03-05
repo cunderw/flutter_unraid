@@ -1,0 +1,157 @@
+name: Build & Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+  bump-version:
+    name: Bump Version
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      tag: ${{ steps.bump.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump version
+        id: bump
+        run: |
+          NEW_VERSION=$(./scripts/bump_version.sh "${{ inputs.bump }}")
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v${NEW_VERSION%%+*}" >> "$GITHUB_OUTPUT"
+          echo "Bumped to $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.version }}"
+          git tag "${{ steps.bump.outputs.tag }}"
+          git push
+          git push --tags
+
+  build-android:
+    name: Build Android
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.tag }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  build-ios:
+    name: Build iOS
+    needs: bump-version
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.tag }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Archive iOS build
+        run: |
+          cd build/ios/iphoneos
+          zip -r ../../../ios-release.zip Runner.app
+
+      - name: Upload iOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app
+          path: ios-release.zip
+
+  release:
+    name: Create Release
+    needs: [bump-version, build-android, build-ios]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.bump-version.outputs.tag }}
+          name: Release ${{ needs.bump-version.outputs.tag }}
+          generate_release_notes: true
+          files: |
+            artifacts/android-apk/app-release.apk
+            artifacts/android-aab/app-release.aab
+            artifacts/ios-app/ios-release.zip
