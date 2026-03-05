@@ -1,5 +1,12 @@
 # Flutter Unraid
 
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/cunderw/flutter_unraid/actions/workflows/test.yml/badge.svg)](https://github.com/cunderw/flutter_unraid/actions/workflows/test.yml)
+[![GitHub stars](https://img.shields.io/github/stars/cunderw/flutter_unraid?style=flat&logo=github)](https://github.com/cunderw/flutter_unraid/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey?logo=apple&logoColor=white)](https://github.com/cunderw/flutter_unraid)
+
 A Flutter app for managing an [Unraid](https://unraid.net/) server via its GraphQL API — monitor system health, control Docker containers, manage VMs, and browse shares, all from your phone.
 
 ## About This Project
