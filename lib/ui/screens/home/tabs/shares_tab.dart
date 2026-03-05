@@ -108,7 +108,7 @@ class _ShareTile extends StatelessWidget {
             percentage: share.usagePercent,
             label: '${(share.usagePercent * 100).toStringAsFixed(1)}% used',
             detail:
-                '${Formatters.formatKilobytes(share.used)} / ${Formatters.formatKilobytes(share.size)}',
+                '${Formatters.formatKilobytes(share.used)} / ${Formatters.formatKilobytes(share.free)}',
           ),
         ],
       ),

@@ -78,33 +78,38 @@ void main() {
 
     group('usagePercent', () {
       test('calculates usage percentage correctly', () {
-        final share = makeShare(used: 250, size: 1000);
+        final share = makeShare(used: 1000, free: 750);
         expect(share.usagePercent, 0.25);
       });
 
       test('returns 0 when used is null', () {
-        final share = makeShare(used: null, size: 1000);
+        final share = makeShare(used: null, free: 500);
         expect(share.usagePercent, 0);
       });
 
-      test('returns 0 when size is null', () {
-        final share = makeShare(used: 500, size: null);
+      test('returns 0 when free is null', () {
+        final share = makeShare(used: 1000, free: null);
         expect(share.usagePercent, 0);
       });
 
-      test('returns 0 when size is 0', () {
-        final share = makeShare(used: 500, size: 0);
+      test('returns 0 when used is 0', () {
+        final share = makeShare(used: 0, free: 0);
         expect(share.usagePercent, 0);
       });
 
-      test('clamps usage to 1.0 when used > size', () {
-        final share = makeShare(used: 1500, size: 1000);
+      test('clamps usage to 1.0 when free is 0', () {
+        final share = makeShare(used: 1000, free: 0);
         expect(share.usagePercent, 1.0);
       });
 
-      test('returns full usage when used equals size', () {
-        final share = makeShare(used: 1000, size: 1000);
+      test('returns full usage when free equals 0', () {
+        final share = makeShare(used: 1000, free: 0);
         expect(share.usagePercent, 1.0);
+      });
+
+      test('returns 0 when share is empty (free equals used)', () {
+        final share = makeShare(used: 1000, free: 1000);
+        expect(share.usagePercent, 0.0);
       });
     });
   });

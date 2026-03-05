@@ -36,8 +36,8 @@ class Share {
   String get displayName => name ?? id;
 
   double get usagePercent {
-    if (used == null || size == null || size == 0) return 0;
-    return (used! / size!).clamp(0.0, 1.0);
+    if (used == null || used == 0 || free == null) return 0;
+    return ((used! - free!) / used!).clamp(0.0, 1.0);
   }
 
   factory Share.fromJson(Map<String, dynamic> json) => Share(
