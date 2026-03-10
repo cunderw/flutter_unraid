@@ -1,7 +1,7 @@
 class AppConstants {
   AppConstants._();
 
-  static const String appName = 'Unraid Manager';
+  static const String appName = 'Funraid';
 
   // Secure storage keys
   static const String keyServerUrl = 'server_url';

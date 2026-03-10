@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   AppSpacing.verticalLg,
                   Text(
-                    'Unraid Manager',
+                    'Funraid',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,

@@ -41,7 +41,7 @@ class UnraidApp extends StatelessWidget {
               ? settingsState.themeMode
               : ThemeMode.system;
           return MaterialApp(
-            title: 'Unraid Manager',
+            title: 'Funraid',
             debugShowCheckedModeBanner: false,
             theme: unraidLightTheme,
             darkTheme: unraidDarkTheme,

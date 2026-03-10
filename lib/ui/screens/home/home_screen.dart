@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Builder(
         builder: (context) => Scaffold(
           appBar: AppBar(
-            title: const Text('Unraid Manager'),
+            title: const Text('Funraid'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.refresh),

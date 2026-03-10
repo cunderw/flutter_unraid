@@ -61,7 +61,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
 
-      expect(find.text('Unraid Manager'), findsOneWidget);
+      expect(find.text('Funraid'), findsOneWidget);
     });
 
     testWidgets('displays refresh button in app bar', (tester) async {

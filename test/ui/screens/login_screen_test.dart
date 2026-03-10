@@ -23,7 +23,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Unraid Manager'), findsOneWidget);
+      expect(find.text('Funraid'), findsOneWidget);
       expect(find.text('Connect to your Unraid server'), findsOneWidget);
       expect(find.byType(TextFormField), findsNWidgets(2));
       expect(find.text('Server Address'), findsOneWidget);
