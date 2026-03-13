@@ -20,15 +20,18 @@ class UsageBar extends StatelessWidget {
     this.height = 8,
   });
 
-  Color get _color {
+  Color _resolveColor(double pct) {
     if (barColor != null) return barColor!;
-    if (percentage > 0.9) return AppColors.stopped;
-    if (percentage > 0.75) return AppColors.warning;
+    if (pct > 0.9) return AppColors.stopped;
+    if (pct > 0.75) return AppColors.warning;
     return AppColors.running;
   }
 
   @override
   Widget build(BuildContext context) {
+    final clampedPct = percentage.clamp(0.0, 1.0);
+    final trackColor = Theme.of(context).dividerColor;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -56,14 +59,43 @@ class UsageBar extends StatelessWidget {
               ],
             ),
           ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(height / 2),
-          child: LinearProgressIndicator(
-            value: percentage.clamp(0.0, 1.0),
-            minHeight: height,
-            backgroundColor: Theme.of(context).dividerColor,
-            valueColor: AlwaysStoppedAnimation<Color>(_color),
-          ),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: clampedPct),
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeOut,
+          builder: (context, value, _) {
+            final color = _resolveColor(value);
+            return SizedBox(
+              height: height,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    children: [
+                      Container(
+                        width: constraints.maxWidth,
+                        height: height,
+                        decoration: BoxDecoration(
+                          color: trackColor,
+                          borderRadius: BorderRadius.circular(height / 2),
+                        ),
+                      ),
+                      if (value > 0)
+                        Container(
+                          width: constraints.maxWidth * value,
+                          height: height,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [color.withValues(alpha: 0.75), color],
+                            ),
+                            borderRadius: BorderRadius.circular(height / 2),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         ),
       ],
     );

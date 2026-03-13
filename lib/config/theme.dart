@@ -80,13 +80,15 @@ final ThemeData unraidDarkTheme = ThemeData(
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(12)),
+      side: BorderSide(color: Color(0xFF404244), width: 0.5),
     ),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF1B1D1F),
     foregroundColor: Color(0xFFE0E0E0),
     elevation: 0,
-    scrolledUnderElevation: 0,
+    scrolledUnderElevation: 2,
+    shadowColor: Colors.black,
     centerTitle: false,
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -192,13 +194,15 @@ final ThemeData unraidLightTheme = ThemeData(
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(12)),
+      side: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
     ),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFFFAFAFA),
     foregroundColor: Color(0xFF1B1D1F),
     elevation: 0,
-    scrolledUnderElevation: 0,
+    scrolledUnderElevation: 2,
+    shadowColor: Colors.black12,
     centerTitle: false,
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(

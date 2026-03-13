@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
+import 'package:flutter_unraid/config/theme.dart';
 
 /// Section header with optional trailing widget.
 class SectionHeader extends StatelessWidget {
@@ -26,6 +27,15 @@ class SectionHeader extends StatelessWidget {
       padding: padding,
       child: Row(
         children: [
+          Container(
+            width: 3,
+            height: 14,
+            decoration: BoxDecoration(
+              color: AppColors.unraidOrange,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          AppSpacing.horizontalSm,
           Text(
             title.toUpperCase(),
             style: Theme.of(context).textTheme.labelMedium?.copyWith(

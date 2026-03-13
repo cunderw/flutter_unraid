@@ -229,14 +229,21 @@ class _VmTile extends StatelessWidget {
     required Color color,
     required VoidCallback onPressed,
   }) {
-    return TextButton.icon(
+    return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, size: 16, color: color),
-      label: Text(label, style: TextStyle(color: color, fontSize: 12)),
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      icon: Icon(icon, size: 14, color: color),
+      label: Text(label),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: color,
+        side: BorderSide(color: color.withValues(alpha: 0.6)),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xxs,
+        ),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
     );
   }

@@ -74,6 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => SettingsScreen.open(context),
               ),
             ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(0.5),
+              child: Divider(
+                height: 0.5,
+                thickness: 0.5,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+            ),
           ),
           body: IndexedStack(index: _currentIndex, children: _tabs),
           bottomNavigationBar: NavigationBar(

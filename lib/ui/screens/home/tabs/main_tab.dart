@@ -5,6 +5,7 @@ import 'package:flutter_unraid/blocs/system/system_cubit.dart';
 import 'package:flutter_unraid/blocs/system/system_state.dart';
 import 'package:flutter_unraid/config/spacing.dart';
 import 'package:flutter_unraid/config/theme.dart';
+import 'package:flutter_unraid/data/models/array_data.dart';
 import 'package:flutter_unraid/data/repositories/system_repository.dart';
 import 'package:flutter_unraid/di/injection.dart';
 import 'package:flutter_unraid/ui/screens/home/tabs/main_tab/cubit/system_logs_cubit.dart';
@@ -262,6 +263,7 @@ class _MainTabState extends State<MainTab> {
                         .map(
                           (disk) => InfoCard(
                             title: disk.displayName,
+                            onTap: () => _showDiskDetails(context, disk),
                             trailing: disk.temp != null
                                 ? Text(
                                     Formatters.formatTemperature(disk.temp),
@@ -293,6 +295,166 @@ class _MainTabState extends State<MainTab> {
           ),
         },
       ),
+    );
+  }
+
+  void _showDiskDetails(BuildContext context, ArrayDisk disk) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.85,
+        expand: false,
+        builder: (context, scrollController) =>
+            _DiskDetailSheet(disk: disk, scrollController: scrollController),
+      ),
+    );
+  }
+}
+
+class _DiskDetailSheet extends StatelessWidget {
+  final ArrayDisk disk;
+  final ScrollController scrollController;
+
+  const _DiskDetailSheet({
+    required this.disk,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final statusColor = AppColors.forDiskStatus(disk.status);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Handle bar
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.md),
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colorScheme.outline,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ),
+        // Header
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xxl,
+            AppSpacing.lg,
+            AppSpacing.xxl,
+            AppSpacing.md,
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.storage,
+                  color: statusColor,
+                  size: 24,
+                ),
+              ),
+              AppSpacing.horizontalMd,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      disk.displayName,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (disk.device != null)
+                      Text(
+                        disk.device!,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        // Scrollable content
+        Expanded(
+          child: ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(AppSpacing.xxl),
+            children: [
+              // Usage bar
+              UsageBar(
+                percentage: disk.usagePercent,
+                label: '${(disk.usagePercent * 100).toStringAsFixed(1)}% used',
+                detail:
+                    '${Formatters.formatKilobytes(disk.fsUsed)} / ${Formatters.formatKilobytes(disk.fsSize)}',
+                height: 10,
+              ),
+              AppSpacing.verticalXl,
+              // Details
+              if (disk.status != null)
+                KeyValueRow(label: 'Status', value: disk.status!),
+              if (disk.type != null)
+                KeyValueRow(label: 'Type', value: disk.type!),
+              if (disk.fsType != null)
+                KeyValueRow(label: 'Filesystem', value: disk.fsType!),
+              if (disk.temp != null)
+                KeyValueRow(
+                  label: 'Temperature',
+                  value: Formatters.formatTemperature(disk.temp),
+                  valueStyle: TextStyle(
+                    color: (disk.temp ?? 0) > 45
+                        ? AppColors.warning
+                        : colorScheme.onSurface,
+                  ),
+                ),
+              if (disk.numReads != null)
+                KeyValueRow(
+                  label: 'Reads',
+                  value: disk.numReads!.toString(),
+                ),
+              if (disk.numWrites != null)
+                KeyValueRow(
+                  label: 'Writes',
+                  value: disk.numWrites!.toString(),
+                ),
+              if (disk.numErrors != null && disk.numErrors! > 0)
+                KeyValueRow(
+                  label: 'Errors',
+                  value: disk.numErrors!.toString(),
+                  valueStyle: const TextStyle(color: AppColors.stopped),
+                ),
+              if (disk.comment != null && disk.comment!.isNotEmpty)
+                KeyValueRow(label: 'Comment', value: disk.comment!),
+              SizedBox(
+                height: MediaQuery.of(context).padding.bottom + AppSpacing.lg,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -50,10 +50,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Logo / Title
-                  Icon(
-                    Icons.dns_rounded,
-                    size: 72,
-                    color: AppColors.unraidOrange,
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.xxl),
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: [
+                            AppColors.unraidOrange.withValues(alpha: 0.18),
+                            AppColors.unraidOrange.withValues(alpha: 0.0),
+                          ],
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(AppSpacing.xl),
+                        decoration: BoxDecoration(
+                          color: AppColors.unraidOrange.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.unraidOrange.withValues(alpha: 0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.dns_rounded,
+                          size: 48,
+                          color: AppColors.unraidOrange,
+                        ),
+                      ),
+                    ),
                   ),
                   AppSpacing.verticalLg,
                   Text(

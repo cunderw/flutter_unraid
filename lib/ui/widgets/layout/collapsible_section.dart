@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_unraid/config/spacing.dart';
+import 'package:flutter_unraid/config/theme.dart';
 
 /// A collapsible section with a header and expandable content.
 class CollapsibleSection extends StatelessWidget {
@@ -33,6 +34,15 @@ class CollapsibleSection extends StatelessWidget {
             ),
             child: Row(
               children: [
+                Container(
+                  width: 3,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: AppColors.unraidOrange,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                AppSpacing.horizontalSm,
                 Text(
                   title.toUpperCase(),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -50,7 +60,13 @@ class CollapsibleSection extends StatelessWidget {
             ),
           ),
         ),
-        if (isExpanded) ...children,
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          child: Column(
+            children: isExpanded ? children : const [],
+          ),
+        ),
       ],
     );
   }
