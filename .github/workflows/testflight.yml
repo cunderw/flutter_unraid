@@ -1,0 +1,195 @@
+name: Deploy to TestFlight
+
+# Required GitHub Secrets:
+#
+#   APPLE_CERTIFICATE_BASE64        — base64-encoded iOS Distribution .p12 certificate
+#   APPLE_CERTIFICATE_PASSWORD      — password for the .p12 certificate
+#   APPLE_PROVISIONING_PROFILE_BASE64 — base64-encoded App Store provisioning profile (.mobileprovision)
+#   APPLE_TEAM_ID                   — 10-character Apple Developer Team ID (e.g. ABC123XYZ9)
+#   KEYCHAIN_PASSWORD               — any strong random password used for the temporary keychain
+#   APP_STORE_CONNECT_API_KEY_ID    — Key ID from App Store Connect → Users & Access → Keys
+#   APP_STORE_CONNECT_API_KEY_ISSUER_ID — Issuer ID from the same page
+#   APP_STORE_CONNECT_API_KEY_CONTENT_BASE64 — base64-encoded content of the downloaded .p8 file
+#
+# One-liners for encoding files to base64:
+#   base64 -i certificate.p12 | pbcopy
+#   base64 -i profile.mobileprovision | pbcopy
+#   base64 -i AuthKey_KEYID.p8 | pbcopy
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+  bump-version:
+    name: Bump Version
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      build_name: ${{ steps.bump.outputs.build_name }}
+      build_number: ${{ steps.bump.outputs.build_number }}
+      tag: ${{ steps.bump.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump version
+        id: bump
+        run: |
+          NEW_VERSION=$(./scripts/bump_version.sh "${{ inputs.bump }}")
+          BUILD_NAME="${NEW_VERSION%%+*}"
+          BUILD_NUMBER="${NEW_VERSION##*+}"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "build_name=$BUILD_NAME" >> "$GITHUB_OUTPUT"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "tag=v$BUILD_NAME" >> "$GITHUB_OUTPUT"
+          echo "Bumped to $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.version }}"
+          git tag "${{ steps.bump.outputs.tag }}"
+          git push
+          git push --tags
+
+  testflight:
+    name: Build & Upload to TestFlight
+    needs: bump-version
+    runs-on: macos-latest
+    env:
+      KEYCHAIN_PATH: ${{ runner.temp }}/app-signing.keychain-db
+      CERTIFICATE_PATH: ${{ runner.temp }}/build_certificate.p12
+      PP_PATH: ${{ runner.temp }}/build_pp.mobileprovision
+      EXPORT_OPTIONS_PATH: ${{ runner.temp }}/ExportOptions.plist
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.tag }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install certificate and provisioning profile
+        env:
+          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # Decode secrets to temp files
+          echo -n "$APPLE_CERTIFICATE_BASE64" | base64 --decode -o "$CERTIFICATE_PATH"
+          echo -n "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode -o "$PP_PATH"
+
+          # Create a temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Import the distribution certificate
+          security import "$CERTIFICATE_PATH" \
+            -P "$APPLE_CERTIFICATE_PASSWORD" \
+            -A -t cert -f pkcs12 \
+            -k "$KEYCHAIN_PATH"
+          security set-key-partition-list \
+            -S apple-tool:,apple: \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+
+          # Install the provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Write ExportOptions.plist
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          cat > "$EXPORT_OPTIONS_PATH" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>teamID</key>
+            <string>$APPLE_TEAM_ID</string>
+            <key>uploadSymbols</key>
+            <true/>
+            <key>signingStyle</key>
+            <string>automatic</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Build IPA
+        run: |
+          flutter build ipa --release \
+            --build-name="${{ needs.bump-version.outputs.build_name }}" \
+            --build-number="${{ needs.bump-version.outputs.build_number }}" \
+            --export-options-plist="$EXPORT_OPTIONS_PATH"
+
+      - name: Upload to TestFlight
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT_BASE64 }}
+        run: |
+          # Write the App Store Connect API private key
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo -n "$APP_STORE_CONNECT_API_KEY_CONTENT_BASE64" | base64 --decode \
+            > ~/.appstoreconnect/private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8
+
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -1)
+          echo "Uploading $IPA_PATH to TestFlight"
+
+          xcrun altool --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_API_KEY_ISSUER_ID"
+
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain "$KEYCHAIN_PATH" || true
+          rm -f "$PP_PATH" || true
